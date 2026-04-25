@@ -1,0 +1,21 @@
+h1 {
+    color: rgb(2, 1, 0);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 67px;
+    /* justify-self: center; */
+}
+
+.indexpage {
+    /* display: grid;
+    grid-area: span; */
+    background-color: aliceblue;
+    display: grid;
+} 
+/* Flexbox: 1-dimensional layouts (single row or column). Great for navbars, toolbars, aligning items along one axis, simple responsive wrapping.
+Grid: 2-dimensional layouts (rows + columns). Great for full pages, complex component layouts, explicit placement of items. */
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
