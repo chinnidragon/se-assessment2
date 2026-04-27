@@ -2,7 +2,9 @@ h1 {
     color: rgb(2, 1, 0);
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-size: 67px;
-    /* justify-self: center; */
+    margin-left: 10%;
+    margin-right: 10%;
+    text-justify: center;
 }
 
 .indexpage {
@@ -13,9 +15,29 @@ h1 {
 } 
 /* Flexbox: 1-dimensional layouts (single row or column). Great for navbars, toolbars, aligning items along one axis, simple responsive wrapping.
 Grid: 2-dimensional layouts (rows + columns). Great for full pages, complex component layouts, explicit placement of items. */
-.title {
+.genericflex {
     display: flex;
     justify-content: center;
     align-items: center;
 
+}
+
+button.a {
+    color: brown;
+    text-decoration: none;
+    font-style: italic;
+    text-decoration: underline;
+}
+
+button {
+    width: fit-content;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 24px;
+    justify-self: center;
+    border-color: rgba(255, 255, 255, 0.734);
+    text-decoration: none;
+}
+
+.form {
+    justify-content: center;
 }
