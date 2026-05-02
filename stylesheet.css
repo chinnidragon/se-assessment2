@@ -4,7 +4,7 @@ h1 {
     font-size: 67px;
     margin-left: 10%;
     margin-right: 10%;
-    text-justify: center;
+    text-align: center;
 }
 
 .indexpage {
@@ -71,11 +71,19 @@ button:hover {
     align-items: center;
     gap: 30px;
     padding: 12px;
-    width: 1000px;
+    width:auto;
     background-color: aqua;
+    min-width:max-content;
 }
 
 .navtext {
     display: flex;
     gap: 20px;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    padding:10px;
+    row-gap: 20px;
 }
