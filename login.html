@@ -7,25 +7,29 @@
 </head>
 <link rel="stylesheet" href="stylesheet.css">
 <body>
-    <div class="title">
+    <div class="login">
         <h2>
             Login
         </h2>
         <form class="form" action="homepage.html" method="post">
-            <p>
-                <label for "name">Name</label>
-                <input type="text" name="name" required>
-            </p>
-            <p>
-                <label for "password">Password</label>
-                <input type="text" name="password" required>
-            </p>
-        <input type="submit" value="Let's Go!!">
+            <div style="display:flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; flex-direction: column; max-width: fit-content;">
+                    <label for "name">Email</label>
+                    <input type="email" name="name" required>
+                </div>
+                <div style="display: flex; flex-direction: column; max-width: fit-content;" >
+                    <label for "password">Password</label>
+                    <input type="text" name="password" required>
+                </div>
+            </div>
+            
+            <div>
+                <input class="btn"type="submit" value="Let's Go!!">
+            </div>
+        </form>
         <h3>
             <a href="signup.html">Request membership</a>
         </h3>
-
-
     </div>
     <img src="images/millions slices.png">
 

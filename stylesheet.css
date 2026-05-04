@@ -30,6 +30,7 @@ Grid: 2-dimensional layouts (rows + columns). Great for full pages, complex comp
     text-decoration: none;
     font-style: italic;
     border-radius: 10px; 
+    font-size: 20px;
 }
 
 .btn:hover {
@@ -61,7 +62,10 @@ button:hover {
 }
 
 .form {
-    justify-content: center;
+    display: flex; 
+    flex-direction: column;
+    gap: 20px; 
+
 }
 
 .navbar {
@@ -86,4 +90,31 @@ nav {
     flex-direction: column;
     padding:10px;
     row-gap: 20px;
+}
+
+.login {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    .btn {
+        padding: 0.5rem 1rem;
+        max-width: fit-content;
+    }
+}
+
+
+@media (max-width: 300px) {
+    h1 { font-size: 40px; }
+
+    .navbar { 
+        flex-direction: column;
+        gap: 10px;
+        justify-content: right;
+    }
+
+    /* make buttons more compact */
+    .btn, button { padding: 0.5rem 1rem; }
+
+    /* center form inputs in a column (if .form is a flex container) */
+    /* .form { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; } */
 }
