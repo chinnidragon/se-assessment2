@@ -76,7 +76,7 @@ button:hover {
     gap: 30px;
     padding: 12px;
     width:auto;
-    background-color: aqua;
+    background-color: rgb(115, 6, 6);
     min-width:max-content;
 }
 
@@ -103,13 +103,14 @@ nav {
 }
 
 
-@media (max-width: 300px) {
+@media (max-width: 700px) {
     h1 { font-size: 40px; }
 
     .navbar { 
         flex-direction: column;
         gap: 10px;
         justify-content: right;
+        .img
     }
 
     /* make buttons more compact */
