@@ -10,7 +10,7 @@ def init_db():
     cursor.executescript('''
         CREATE TABLE IF NOT EXISTS logins (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL UNIQUE,
+            email TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL UNIQUE,
         );
         CREATE TABLE IF NOT EXISTS notices (
@@ -48,29 +48,28 @@ def get_login():
     try:
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
-        cursor.execute('SELECT username FROM logins')
+        cursor.execute('SELECT email FROM logins')
         username = {row[0]: row[1] for row in cursor.fetchall()} 
         return jsonify(username)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# @app.route('/save_login', methods=['POST'])
-# def save_notes():
-#     try:
-#         data = request.json
-#         conn = sqlite3.connect('dnd.db')
-#         cursor = conn.cursor()
-#         for day, note in data.items():
-#             cursor.execute('''
-#                 INSERT INTO notes (day, note)
-#                 VALUES (?, ?)
-#                 ON CONFLICT(day) DO UPDATE SET note=excluded.note
-#             ''', (day, note))
-#         conn.commit()
-#         conn.close()
-#         return jsonify({'status': 'success'})
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 500
+@app.route('/save_login', methods=['POST'])
+def save_notes():
+    try:
+        data = request.json
+        conn = sqlite3.connect('dnd.db')
+        cursor = conn.cursor()
+        for email, password in data.items():
+            cursor.execute('''
+                INSERT INTO logins (email, password)
+                VALUES (?, ?)
+            ''', (email, password))
+        conn.commit()
+        conn.close()
+        return jsonify({'status': 'success'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
