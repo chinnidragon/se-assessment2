@@ -1,23 +1,16 @@
 const VERSION = "v1";
+const CACHE_NAME = `app-cache-${VERSION}`;
+
 
 const APP_STATIC_RESOURCES = [
     "/",
     "/index.html",
     "/stylesheet.css",
     "/app.js",
-    "/icon-512.png",
+    "/millionsslices.png",
   ];
 // the cache includes all the NECESSARY files
-// the service worker file itself does NOT need ot be cached
-
-self.addEventListener("install", (e) => {
-    e.waitUntil(
-      (async () => {
-        const cache = await caches.open("cacheName_identifier");
-        cache.addAll(["/", "/index.html", "/style.css", "/app.js"]);
-      })(),
-    );
-  });
+// the service worker file itself does NOT need to be cached
 
 self.addEventListener("install", (event) => {
     event.waitUntil(
