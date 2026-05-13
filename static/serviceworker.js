@@ -15,7 +15,7 @@ const APP_STATIC_RESOURCES = [
 self.addEventListener("install", (event) => {
     event.waitUntil(
       (async () => {
-        const cache = await caches.open(CACHE_NAME);
+        const cache = await caches.open(DND_CACHE);
         cache.addAll(APP_STATIC_RESOURCES);
       })(),
     );
@@ -27,7 +27,7 @@ self.addEventListener("install", (event) => {
         const names = await caches.keys();
         await Promise.all(
           names.map((name) => {
-            if (name !== CACHE_NAME) {
+            if (name !== DND_CACHE) {
               return caches.delete(name);
             }
             return undefined;
@@ -50,7 +50,7 @@ self.addEventListener("install", (event) => {
     // For every other request type
     event.respondWith(
       (async () => {
-        const cache = await caches.open(CACHE_NAME);
+        const cache = await caches.open(DND_CACHE);
         const cachedResponse = await cache.match(event.request.url);
         if (cachedResponse) {
           // Return the cached response if it's available.

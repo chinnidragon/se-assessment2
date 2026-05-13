@@ -7,24 +7,22 @@ app = Flask(__name__)
 def init_db():
     conn = sqlite3.connect('dnd.db')
     cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS 
-        login (
+    cursor.executescript('''
+        CREATE TABLE IF NOT EXISTS logins (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL UNIQUE,
-            # note TEXT NOT NULL
-        )
-        CREATE TABLE IF NOT EXISTS 
-        notices (
+        );
+        CREATE TABLE IF NOT EXISTS notices (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             titletext TEXT NOT NULL,
             bodytext TEXT NOT NULL,
             date INTEGER NOT NULL
-        )
-        CREATE TABLE IF NOT EXISTS 
-        charsheets (
+        );
+        CREATE TABLE IF NOT EXISTS charsheets (
+            id INTEGER PRIMARY KEY AUTOINCREMEMNT,
             name TEXT NOT NULL,
             info TEXT NOT NULL,
-            # img INTEGER NOT NULL ts needs to be a URL... to the png of the character...
         )
     ''')
     conn.commit()
@@ -48,32 +46,31 @@ def manifest():
 @app.route('/get-login', methods=['GET'])
 def get_login():
     try:
-        conn = sqlite3.connect('memberlogin.db')
+        conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
-        cursor.execute('SELECT day, note FROM notes')
-        notes = {row[0]: row[1] for row in cursor.fetchall()}
-        conn.close()
-        return jsonify(notes)
+        cursor.execute('SELECT username FROM logins')
+        username = {row[0]: row[1] for row in cursor.fetchall()} 
+        return jsonify(username)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/save_login', methods=['POST'])
-def save_notes():
-    try:
-        data = request.json
-        conn = sqlite3.connect('memberlogin.db')
-        cursor = conn.cursor()
-        for day, note in data.items():
-            cursor.execute('''
-                INSERT INTO notes (day, note)
-                VALUES (?, ?)
-                ON CONFLICT(day) DO UPDATE SET note=excluded.note
-            ''', (day, note))
-        conn.commit()
-        conn.close()
-        return jsonify({'status': 'success'})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+# @app.route('/save_login', methods=['POST'])
+# def save_notes():
+#     try:
+#         data = request.json
+#         conn = sqlite3.connect('dnd.db')
+#         cursor = conn.cursor()
+#         for day, note in data.items():
+#             cursor.execute('''
+#                 INSERT INTO notes (day, note)
+#                 VALUES (?, ?)
+#                 ON CONFLICT(day) DO UPDATE SET note=excluded.note
+#             ''', (day, note))
+#         conn.commit()
+#         conn.close()
+#         return jsonify({'status': 'success'})
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
