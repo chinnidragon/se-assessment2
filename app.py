@@ -11,7 +11,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS logins (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL
         );
         CREATE TABLE IF NOT EXISTS notices (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,10 +20,10 @@ def init_db():
             date INTEGER NOT NULL
         );
         CREATE TABLE IF NOT EXISTS charsheets (
-            id INTEGER PRIMARY KEY AUTOINCREMEMNT,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
-            info TEXT NOT NULL,
-        )
+            info TEXT NOT NULL
+        );
     ''')
     conn.commit()
     conn.close()
@@ -35,7 +35,7 @@ init_db()
 def index():
     return render_template('index.html')
 
-@app.route('/login')
+@app.route('/')
 def login():
     return render_template('login.html')
 
@@ -55,7 +55,7 @@ def get_login():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/save_login', methods=['POST'])
-def save_notes():
+def save_login():
     try:
         data = request.json
         conn = sqlite3.connect('dnd.db')
