@@ -5,6 +5,8 @@ h1 {
     margin-left: 10%;
     margin-right: 10%;
     text-align: center;
+    word-spacing: 1.5px;
+    letter-spacing: 1.5px;
 }
 
 .indexpage {
@@ -101,6 +103,7 @@ nav {
         max-width: fit-content;
     }
 }
+
 
 
 @media (max-width: 700px) {
