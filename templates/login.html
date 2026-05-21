@@ -5,39 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<link rel="stylesheet" href="stylesheet.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}">
 <body>
     <div class="login">
         <h2>
             Login
         </h2>
-        <form class="form" action="homepage.html" method="post">
+        <form class="form" action="{{ url_for('homepage') }}" method="post">
             <div style="display:flex; flex-direction: column; gap: 10px;">
                 <div style="display: flex; flex-direction: column; max-width: fit-content;">
-                    <label for "name">Email</label>
+                    <label="name">Email</label>
                     <input type="email" id="email" required>
                 </div>
                 <div style="display: flex; flex-direction: column; max-width: fit-content;" >
-                    <label for "password">Password</label>
+                    <label="password">Password</label>
                     <input type="text" id="password" required>
                 </div>
             </div>
             <div>
-                <input class="btn" type="submit" value="Let's Go!!">
-                <!-- <button type="submit" value="Let's Go!!"> -->
+                <!-- <input class="btn" type="submit" value="Let's Go!!"> -->
+                <button id="savelogin" type="submit" value="Let's Go!!">
             </div>
         </form>
         <h3>
             <a href="signup.html">Request membership</a>
         </h3>
     </div>
-    <img src="images/millions slices.png">
+    <img src="{{ url_for('static', filename='images/millionsslices.png')}}">
     <script>
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        form.addEventListener('submit'); {
-            console.log(email, password);
-        }
+        const form = document.querySelectorAll('.form');
+        form.addEventListener('submit', async () => {
+            const profile = {}
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            profile[email] = password
+
+            // console.log(email, password);
+            try {
+                const response = await fetch("/save_login", {
+                    method: "POST",
+                    headers: {
+                    "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(profile),
+                });
+
+                if (!response.ok) {
+                    throw new Error("oops... try again...");
+                }
+                
+
+                alert("Account created! Welcome to DND!");
+                } catch (error) {
+                console.error("Error saving membership", error);
+                alert("Failed to create account... try again maybe?");
+                }
+        });
+
+        // const saveNotesButton = document.querySelector("#save-notes-btn");
+
+        // saveNotesButton.addEventListener("click", async () => {
+                // const notesData = {};
+                // document.querySelectorAll(".day").forEach((day) => {
+                // const dayTitle = day.querySelector(".daytitle").textContent;
+                // const notesField = day.querySelector(".notes");
+
+                // notesData[dayTitle] = notesField.value;
+                // });
+
+                // try {
+                // const response = await fetch("/save_notes", {
+                //     method: "POST",
+                //     headers: {
+                //     "Content-Type": "application/json",
+                //     },
+                //     body: JSON.stringify(notesData),
+                // });
+
+                // if (!response.ok) {
+                //     throw new Error("Failed to save notes");
+                // }
+
+                // alert("All notes have been saved!");
+                // } catch (error) {
+                // console.error("Error saving notes:", error);
+                // alert("Failed to save notes!");
+                // }
+
 
 
 
@@ -54,4 +108,4 @@
     </script>
 
 </body>
-</html>
+</html> sa

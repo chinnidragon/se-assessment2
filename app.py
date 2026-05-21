@@ -43,12 +43,17 @@ def login():
 def signup():
     return render_template('signup.html')
 
+
+@app.route('/homepage.html')
+def homepage():
+    return render_template('homepage.html')
+
 @app.route('/manifest.json')
 def manifest():
     return send_from_directory('static', 'manifest.json', mimetype='application/json')
 
 @app.route('/dnd.db', methods=['GET'])
-def profile():
+def get_profile():
     try:
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
@@ -57,6 +62,7 @@ def profile():
         return jsonify(username)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 @app.route('/save_login', methods=['POST'])
 def save_login():
