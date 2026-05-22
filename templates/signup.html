@@ -18,6 +18,37 @@
         </p>
         <input type="submit" value="Let's Go!!">
     </form>
-    
+    <script>
+        const form = document.getElementById('.form');
+        form.addEventListener('submit', async (e) => {
+            // Preventing the default event (here it stops the browser's default behaviour)
+            e.preventDefault();
+            const profile = {}
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            profile["email"] = email
+            profile["password"] = password
+            //debug
+            console.log(profile)
+            try {
+                const response = await fetch("/save_login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(profile),
+                });
+                if (!response.ok) {
+                    throw new Error("oops... try again...");
+                }
+                else {
+                    alert("Account created! Welcome to DND!");
+                };
+                } catch (error) {
+                    console.error("Error saving membership", error);
+                    alert("Failed to create account... try again maybe?");
+                    }
+        });
+    </script>
 </body>
 </html>

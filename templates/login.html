@@ -16,11 +16,11 @@
             <div style="display:flex; flex-direction: column; gap: 10px;">
                 <div style="display: flex; flex-direction: column; max-width: fit-content;">
                     <label for="email">Email</label>
-                    <input type="email" id="email" required>
+                    <input type="email" id="email" name="password" required>
                 </div>
                 <div style="display: flex; flex-direction: column; max-width: fit-content;" >
                     <label for="password">Password</label>
-                    <input type="password" id="password" required>
+                    <input type="password" id="password" name="password" required>
                 </div>
             </div>
             <div>
@@ -33,37 +33,7 @@
         </h3>
     </div>
     <img src="{{ url_for('static', filename='images/millionsslices.png')}}">
-    <script>
-        const form = document.getElementById('.form');
-        form.addEventListener('submit', async (e) => {
-            // Preventing the default event (here it stops the browser's default behaviour)
-            e.preventDefault();
-            const profile = {}
-            const email = document.getElementById('email').value.trim().toLowerCase();
-            const password = document.getElementById('password').value;
-            profile[email] = password
 
-            try {
-                const response = await fetch("/save_login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(profile),
-                });
-                if (!response.ok) {
-                    throw new Error("oops... try again...");
-                }
-                else {
-                    alert("Account created! Welcome to DND!");
-                };
-                } catch (error) {
-                    console.error("Error saving membership", error);
-                    alert("Failed to create account... try again maybe?");
-                    }
-        });
-
-    </script>
 
 </body>
 </html> 
