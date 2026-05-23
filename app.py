@@ -21,6 +21,7 @@ def init_db():
         );
         CREATE TABLE IF NOT EXISTS charsheets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL REFERENCES logins(id)
             name TEXT NOT NULL,
             info TEXT NOT NULL
         );
@@ -43,7 +44,6 @@ def login():
 def signup():
     return render_template('signup.html')
 
-
 @app.route('/homepage.html')
 def homepage():
     return render_template('homepage.html')
@@ -52,20 +52,50 @@ def homepage():
 def manifest():
     return send_from_directory('static', 'manifest.json', mimetype='application/json')
 
-@app.route('/dnd.db', methods=['GET'])
-def get_profile():
+# @app.route('/', methods=['GET'])
+# def get_profile():
+#     try:
+#         conn = sqlite3.connect('dnd.db')
+#         cursor = conn.cursor()
+#         cursor.execute('SELECT email FROM logins')
+#         username = {row[0]: row[1] for row in cursor.fetchall()} 
+#         return jsonify(username)
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/login', methods=['POST'])
+def verify_profile():
     try:
+        data = request.json
         conn = sqlite3.connect('dnd.db')
+        
         cursor = conn.cursor()
-        cursor.execute('SELECT email FROM logins')
-        username = {row[0]: row[1] for row in cursor.fetchall()} 
-        return jsonify(username)
+        cursor.execute('SELECT email, password FROM logins')
+        logins = {row[0]: row[1] for row in cursor.fetchall()} 
+        
+        email = data.get('email')   
+        password = data.get('password')
+        if email in logins:
+            if password == logins[email]:
+                return True
+            else:
+                return False
+        else:
+            return False
+            
+
+        
+        # if data.items() in logins:
+        #     return jsonify({'status': 'success'})
+        # else:
+        #     return jsonify({'status': 'fail'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/save_login', methods=['POST'])
-def save_login():
+
+@app.route('/api/signup', methods=['POST'])
+def save_profile():
     try:
         data = request.json
         conn = sqlite3.connect('dnd.db')

@@ -12,11 +12,11 @@
         <h2>
             Login
         </h2>
-        <form class="form" action="{{ url_for('homepage') }}" method="post">
+        <form class="form" id="form" action="{{ url_for('homepage') }}" method="post">
             <div style="display:flex; flex-direction: column; gap: 10px;">
                 <div style="display: flex; flex-direction: column; max-width: fit-content;">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="password" required>
+                    <input type="email" id="email" name="email" required>
                 </div>
                 <div style="display: flex; flex-direction: column; max-width: fit-content;" >
                     <label for="password">Password</label>
@@ -34,6 +34,48 @@
     </div>
     <img src="{{ url_for('static', filename='images/millionsslices.png')}}">
 
+    <script>
+        const form = document.getElementById('form');
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+            // Preventing the default event (here it stops the browser's default behaviour)
+                e.preventDefault();
+                const profile = {}
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                profile['email'] = email
+                profile['password'] = password
+                console.log(profile)
+                try {
+                    const response = await fetch("/save_login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(profile)
+                    });
+                    if (response == true) {
+                        //redirect to the homepage
+                        console.log('Hello, World!')
+                    } else {
+                        console.log('Incorrect email/password. Maybe check your spelling lol')
+                    }
 
+                    // const saved_logins = await response.json();
+                    // if (profile["email"] !== saved_logins[email] || profile["password"] !== saved_logins[password] ) {
+                    //     console.log("Username/password is incorrect")
+                    // } else {
+                        //code for redirecting to homepage
+                    // }
+
+                    } catch (error) {
+                        // console.error("Error saving membership", error);
+                        alert("Error, try again later");
+                        }
+            });
+        } else {
+            console.error("wheres the form vro")
+        }
+    </script>
 </body>
 </html> 
