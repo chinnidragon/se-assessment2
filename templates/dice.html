@@ -3,42 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="../static/stylesheet.css" />
+    <title>lets roll the dice!</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}" />
 </head>
 <body>
     <h1>
         Dice time...!!!!!
     </h1>
 
-    <form class="form">
-        <label>
-            How many sides blud
-        </label>
-        <select name="dice" id="dice">
-            <option value="20">20</option>
-            <option value="12">12</option>
-            <option value="10">10</option>
-            <option value="8">8</option>
-            <option value="6">6</option>
-            <option value="4">4</option>
-        </select>
-        <input class="btn" type="submit" value="Let's Go!!">
-        <button 
-        
-    </form>
+    <div class="genericflex">
+
+
+        <form id="form" style="align-items: center;">
+            <fieldset>
+                <legend>Choose a die</legend>
+                <div class="dicebar">
+                <!-- <div style="display: flex; flex-direction: column; row-gap: 10px;"> -->
+                    <!-- need to make these the actual dice images and like nonstatic links lol -->
+                <div>
+                    <img src="../static/images/millionsslices.png" width="70px">
+                    <div>
+                        <input id="dice20" name="dice" type="radio" value="20">
+                        <label for="dice20">d20</label>
+                    </div>
+                </div>
+
+                <div>
+                    <img src="../static/images/millionsslices.png" width="70px">
+                    <div>
+                        <input id="dice12" name="dice" type="radio" value="12">
+                        <label for="dice12">d12</label>
+                    </div>
+                </div>
+
+                <div>
+                    <img src="../static/images/millionsslices.png" width="70px">
+                    <div>
+                        <input id="dice10" name="dice" type="radio" value="10">
+                        <label for="dice10">d10</label>
+                    </div>
+                </div>
+                    
+                <div>
+                    <img src="../static/images/millionsslices.png" width="70px">
+                    <div>
+                        <input id="dice8" name="dice" type="radio" value="8">
+                        <label for="dice8">d8</label>
+                    </div>
+                </div>
+
+                <div>
+                    <img src="../static/images/millionsslices.png" width="70px">
+                    <div>
+                        <input id="dice6" name="dice" type="radio" value="6">
+                        <label for="dice6">d6</label>
+                    </div>
+                </div>
+
+                <div>
+                    <img src="../static/images/millionsslices.png" width="70px">
+                    <div>
+                        <input id="dice4" name="dice" type="radio" value="4">
+                        <label for="dice4">d4</label>
+                    </div>
+                </div>
+                </div>
+            </fieldset>
+            
+            <input class="btn"id="dicesubmit" type="submit" value="Roll with this dice!">
+        </form>
+
+    </div>
+
+
+
+
     <script>
-        // form.addEventListener('submit', async (e) => {
-        //     e.preventDefault();
-        //     const sides = document.getElementById('dice').value;
-        //     const res = await fetch('/roll', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({ sides })
-        //     });
-        //     const json = await res.json();
-        //     console.log('Server roll:', json.value);
-        // });
+        const form = document.getElementById('form');
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+            // Preventing the default event (here it stops the browser's default behaviour)
+                e.preventDefault();
+                // Getting the dice that was picked in the form (e.g 20d, 8d, 6d)
+                const dicesides = document.querySelector('input[name="dice"]:checked').value;
+                // debug
+                // console.log(dicesides)
+                // Dice must be selected
+                if (!dicesides) {
+                    alert('Please select a die first');
+                    return;
+                }
+            const dice = {}
+            //max value that the dice can roll (same as the number of sides on the dice)
+            // alert(dice)
+            dice["max-value"] = dicesides
+
+            // debug
+            console.log(dice["max-value"])
+            // console.log(dice)
+                // currentDice = dice;
+                //could probably also add biases here if i had time sighhh maybe maybe not Okay does anyone even need bias calculators anyway colton ang should die Okayyy like lowkey it doesnt matter and he can just calculate it anyway right...
+            try {
+                //removing the OLD dice roll result ONLY if there is one
+                const old = document.getElementById('diceDiv');
+                if (old) old.remove();
+                
+                //calling the dice roll API
+                const response = await fetch("/api/dice", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(dice)
+                });
+
+                //debug
+                // alert(response.json())
+                //if there was no response from the dice roll API
+                if (!response.ok) {
+                    alert('Sorry, there was an error! Try again?');
+                }
+
+                const data = await response.json();
+                const rolledValue = data.number;
+                
+                //dynamically creating new elements to display the user's dice roll
+                    //the value of the roll and a new button to reroll
+                const diceDiv = document.createElement('div');
+                diceDiv.id = 'diceDiv'
+                diceDiv.class = 'genericflex'
+                //can add styling and stuff like later.....
+                const diceValueTitle = document.createElement('h1');
+                diceValueTitle.textContent = `With the ${dicesides} side dice:`
+
+                const diceValue = document.createElement('p');
+                diceValue.textContent = `You rolled a ${rolledValue}!`
+                // diceValue.className = 'h2';
+                // add styling later...
+
+                const roller = document.createElement('button')
+                roller.className = 'btn';
+                roller.textContent = 'Roll Again!';
+                // add styling later...
+                roller.addEventListener('click', async () => {
+                    try {
+                        //calling the dice roll api again (when the roll button is clicked)
+                        const response = await fetch("/api/dice", {
+                            method: "POST",
+                            headers: {"Content-Type": "application/json"},
+                            body: JSON.stringify(dice)
+                    });
+                        if (response.ok) { //adding the NEW rolled value to the page
+                            const newData = await response.json();
+                            const rolledValue = newData.number;
+                            diceValue.textContent = `You rolled a ${rolledValue}!`
+                        }
+                    } catch (err) { //having the same error messages to increase security (malicious parties cannot glean information from the error message)
+                        alert("Error: something went wrong! Try again?")
+                    }
+                });
+            
+            // attaching the newly created elements (Dice value, roll button)
+            // as a child to the all-encompassing Dice Div
+            // which is in turn attached to the DOM (so that it becomes visible)
+            diceDiv.appendChild(diceValue);
+            diceDiv.appendChild(roller);
+            document.body.appendChild(diceDiv);
+            form.reset();
+            
+            } catch (error) {
+                alert("Sorry, there was an error! Try again?");
+            }
+        });
+    } else { //if the form wasnt found?? lol
+        console.error("wheres the form vro...");
+    }
     </script>
 </body>
 </html>

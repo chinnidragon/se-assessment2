@@ -1,3 +1,5 @@
+/* TODO: Consider the use of Syntactically Awesome StyleSheets.. LATER!! */
+     /* also actually style everything everything is so FREAKING ugly rn it brings a tear to my eye. */
 h1 {
     color: rgb(2, 1, 0);
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -70,6 +72,17 @@ button:hover {
 
 }
 
+.dicebar {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    gap: 5vw;
+    padding: 12px;
+    /* max-width: fit-content; */
+    /* min-width:max-content;   */
+    /* width: clamp(10px, 5vw) */
+}
+
 .navbar {
     display: flex;
     align-content: center;
@@ -105,8 +118,16 @@ nav {
 }
 
 
+/* 
+@media (max-width: 550px) {
+    .dicebar {
 
-@media (max-width: 700px) {
+        
+    }
+} */
+
+
+@media (max-width: 300px) {
     h1 { font-size: 40px; }
 
     .navbar { 
@@ -117,6 +138,12 @@ nav {
 
     /* make buttons more compact */
     .btn, button { padding: 0.5rem 1rem; }
+
+    .dicebar {
+        flex-direction: column;
+        gap: 10px;
+        justify-content: right;
+    }
 
     /* center form inputs in a column (if .form is a flex container) */
     /* .form { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; } */

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-<link rel="stylesheet" href="../static/stylesheet.css"/>
+    <title>welcome home!</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
 </head>
 <body>
     <div class = "navbar">
@@ -33,6 +33,7 @@
                     Login
                 </a>
             </ul> -->
+            <!-- need to make these ALL dynamic urls -->
             <ul>
                 <a href="profile.html">
                     Profile
@@ -44,7 +45,7 @@
                 </a>
             </ul>
             <ul>
-                <a href="dice.html">
+                <a href="{{ url_for('dice')}}">
                     Die rolling
                 </a>
             </ul>

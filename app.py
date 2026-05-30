@@ -1,7 +1,24 @@
-from flask import Flask, render_template, request, jsonify, send_from_directory, url_for
+#server
+from flask import Flask, render_template, request, jsonify, send_from_directory, url_for, session
+#database
 import sqlite3
+# for generating session IDs
+import os
+import secrets #specifically using secrets as it uses OS entropy (more random than random module --> more secure)
+#for password hashes
+from werkzeug.security import generate_password_hash, check_password_hash
+#for the dice roll api
+import random
+
+#TODO: add SESSION KEYS.... it needs the user to STAY logged in lol
 
 app = Flask(__name__)
+#checking if there is an existing secret key
+if os.environ.get('SECRET_KEY'):
+    app.secret_key = os.environ.get('SECRET_KEY')
+else:
+    #generates a 32 bit secret key ``
+    app.secret_key = secrets.token_urlsafe(32)
 
 # Initialize SQLite Database
 def init_db():
@@ -15,15 +32,28 @@ def init_db():
         );
         CREATE TABLE IF NOT EXISTS notices (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            titletext TEXT NOT NULL,
+            title TEXT NOT NULL,
             bodytext TEXT NOT NULL,
             date INTEGER NOT NULL
         );
         CREATE TABLE IF NOT EXISTS charsheets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL REFERENCES logins(id)
+            user_id INTEGER NOT NULL REFERENCES logins(id),
             name TEXT NOT NULL,
-            info TEXT NOT NULL
+            info TEXT NOT NULL,
+            stats TEXT NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS notes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL REFERENCES logins(id),
+            date DATE NOT NULL,
+            notes TEXT NOT NULL,
+        );
+        CREATE TABLE IF NOT EXISTS profile (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL REFERENCES logins(id),
+            display_name TEXT NOT NULL,
+            bio TEXT NOT NULL
         );
     ''')
     conn.commit()
@@ -47,6 +77,22 @@ def signup():
 @app.route('/homepage.html')
 def homepage():
     return render_template('homepage.html')
+
+@app.route('/dice.html')
+def dice():
+    return render_template('dice.html')
+
+@app.route('/profile.html')
+def profile():
+    return render_template('profile.html')
+
+@app.route('/charsheets.html')
+def charsheets():
+    return render_template('charsheets.html')
+
+@app.route('/timetable.html')
+def timetable():
+    return render_template('timetable.html')
 
 @app.route('/manifest.json')
 def manifest():
@@ -77,58 +123,63 @@ def verify_profile():
         password = data.get('password')
         if email in logins:
             if password == logins[email]:
-                return True
+                return jsonify({'status': 'success'})
             else:
-                return False
+                return jsonify({'status': 'fail', 'message' : "Email/password is incorrect."})
         else:
             return False
             
-
-        
-        # if data.items() in logins:
-        #     return jsonify({'status': 'success'})
-        # else:
-        #     return jsonify({'status': 'fail'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 
 
-@app.route('/api/signup', methods=['POST'])
+@app.route('/api/profile', methods=['GET'])
 def save_profile():
     try:
         data = request.json
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
-        for email, password in data.items():
+        email = data.get('email')   
+        password = data.get('password')
+        try:
             cursor.execute('''
                 INSERT INTO logins (email, password)
                 VALUES (?, ?)
             ''', (email, password))
-        conn.commit()
-        conn.close()
-        return jsonify({'status': 'success'})
+            conn.commit()
+            conn.close()
+            return jsonify({'status': 'success'})
+        except sqlite3.IntegrityError:
+                return jsonify({'status': 'fail', 'message': 'Email already registered'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/dice', methods=['POST'])
+def roll_dice():
+    #the data this function needs is the NUMBER OF SIDES on the die and any boosters in the characters
+    data = request.json
+
+    side_num = int(data.get("max-value"))
+    # print(side_num)
+
+    roll = random.randint(1, side_num)
+    # print(roll)
+    return jsonify({'number':roll})
+
+# @app.route('/api/profile', methods=['POST'])
+# def roll_dice():
+#     #the data this function needs is the NUMBER OF SIDES on the die and any boosters in the characters
+#     data = request.json
+
+#     side_num = int(data.get("max-value"))
+#     # print(side_num)
+
+#     roll = random.randint(1, side_num)
+#     # print(roll)
+#     return jsonify({'number':roll})
+# functions defined after this line DO NOT RUN do NOT define a function after this
 if __name__ == '__main__':
     app.run(debug=True)
 
 
-# @app.route('/')
-# def index():
-#     return 'index'
-
-# @app.route('/login')
-# def login():
-#     return 'login'
-
-# @app.route('/user/<username>')
-# def profile(username):
-#     return f'{username}\'s profile'
-
-# with app.test_request_context():
-#     print(url_for('index'))
-#     print(url_for('login'))
-#     print(url_for('login', next='/'))
-#     print(url_for('profile', username='John Doe'))

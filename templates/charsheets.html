@@ -3,14 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>character sheets!</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}" />
 </head>
 <body>
     <h1>
         yeah we got character sheets in here
     </h1>
-    <div>
-        <textarea class="" placeholder="Enter notes for Friday"></textarea>
-    </div>
+    <!--okay so i need it to be like with a TEMPLATE and also a MAKE UR OWN..!!! -->
+    <!-- i need to learn how to do dynamic js -->
+    
+    <h2>
+        Template
+    </h2>
+    <form>
+        <fieldset>
+            <legend>Character information</legend>
+            <textarea name="ch_name" id="ch_name" placeholder="Character's name"></textarea>
+            <textarea name="ch_stats" id="ch_name" placeholder="Character's name"></textarea>
+            <textarea name="ch_name" id="ch_name" placeholder="Character's name"></textarea>
+            <textarea name="ch_stats" id="ch_name" placeholder="Character's name"></textarea>
+        </fieldset>
+
+        <fieldset>
+            <legend>something else</legend>
+            <textarea name="ch_name" id="ch_name" placeholder="Character's name"></textarea>
+            <textarea name="ch_stats" id="ch_name" placeholder="Character's name"></textarea>
+            <textarea name="ch_name" id="ch_name" placeholder="Character's name"></textarea>
+            <textarea name="ch_stats" id="ch_name" placeholder="Character's name"></textarea>
+        </fieldset>
+
+        <fieldset>
+            <legend>something else</legend>
+            <input name="char_img" type="file" accept="image/*">
+        </fieldset>
+
+    </form>
+
+    <h2>... or just do your own lol</h2>
+    <textarea placeholder="js go buckwild vro"></textarea>
+    
+    <!-- <fieldset>
+  <legend>Choose a die</legend>
+  <div>
+    <input id="dice20" name="dice" type="radio" value="20">
+    <label for="dice20">d20</label>
+  </div>
+  <div>
+    <input id="dice12" name="dice" type="radio" value="12">
+    <label for="dice12">d12</label>
+  </div>
+</fieldset> -->
 </body>
 </html>
