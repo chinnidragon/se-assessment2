@@ -46,7 +46,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL REFERENCES logins(id),
             date DATE NOT NULL,
-            notes TEXT NOT NULL,
+            notes TEXT NOT NULL
         );
         CREATE TABLE IF NOT EXISTS profile (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -115,21 +115,24 @@ def verify_profile():
         password = data.get('password')
         if email in logins:
             if check_password_hash(logins[email], password):
-                user_id = cursor.execute('SELECT id FROM logins WHERE email = ?', email)
-                session['user_id'] = user_id
+                # email NEEDS to be passed as a one item tuple (it will be treated as a string otherwise)
+                cursor.execute('SELECT id FROM logins WHERE email = ?', (email,))
+                user_id = cursor.fetchone()
+                # default setting: the browser cookie is non-permanent, user will log out when browser is closed
+                session['user_id'] = int(user_id[0])
                 cursor.close()
                 return jsonify({'status': 'success'})
             else:
                 cursor.close()
                 return jsonify({'status': 'fail', 'message' : "Email/password is incorrect."})
         else:
-            return False
+            return jsonify({'status': 'fail', 'message' : "Email/password is incorrect."})
             
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/api/signup', methods=['GET'])
+@app.route('/api/signup', methods=['POST'])
 def save_profile():
     try:
         data = request.json
@@ -151,13 +154,10 @@ def save_profile():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
-
 @app.route('/api/dice', methods=['POST'])
 def roll_dice():
-    #the data this function needs is the NUMBER OF SIDES on the die and any boosters in the characters
+    #the data this function needs is the NUMBER OF SIDES on the die
     data = request.json
-
     side_num = int(data.get("max-value"))
     # print(side_num)
 
@@ -165,17 +165,7 @@ def roll_dice():
     # print(roll)
     return jsonify({'number':roll})
 
-# @app.route('/api/profile', methods=['POST'])
-# def roll_dice():
-#     #the data this function needs is the NUMBER OF SIDES on the die and any boosters in the characters
-#     data = request.json
 
-#     side_num = int(data.get("max-value"))
-#     # print(side_num)
-
-#     roll = random.randint(1, side_num)
-#     # print(roll)
-#     return jsonify({'number':roll})
 # functions defined after this line DO NOT RUN do NOT define a function after this
 if __name__ == '__main__':
     app.run(debug=True)
