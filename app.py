@@ -19,7 +19,6 @@ if os.environ.get('SECRET_KEY'):
 else:
     #generates a 32 bit secret key ``
     app.secret_key = secrets.token_urlsafe(32)
-
 # Initialize SQLite Database
 def init_db():
     conn = sqlite3.connect('dnd.db')
@@ -62,6 +61,7 @@ def init_db():
 # Initialize the database when the app starts
 init_db()
 
+#serving page routes
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -98,17 +98,7 @@ def timetable():
 def manifest():
     return send_from_directory('static', 'manifest.json', mimetype='application/json')
 
-# @app.route('/', methods=['GET'])
-# def get_profile():
-#     try:
-#         conn = sqlite3.connect('dnd.db')
-#         cursor = conn.cursor()
-#         cursor.execute('SELECT email FROM logins')
-#         username = {row[0]: row[1] for row in cursor.fetchall()} 
-#         return jsonify(username)
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 500
-
+#apis
 @app.route('/api/login', methods=['POST'])
 def verify_profile():
     try:
@@ -117,14 +107,20 @@ def verify_profile():
         
         cursor = conn.cursor()
         cursor.execute('SELECT email, password FROM logins')
+        #concisely creates a dict where emails map to passwords
+        #e.g {dante.s@gmail.com: hashedpassword, vr.tsoi@education.nsw.gov.au: hashedpassword} etc etc
         logins = {row[0]: row[1] for row in cursor.fetchall()} 
-        
+
         email = data.get('email')   
         password = data.get('password')
         if email in logins:
-            if password == logins[email]:
+            if check_password_hash(logins[email], password):
+                user_id = cursor.execute('SELECT id FROM logins WHERE email = ?', email)
+                session['user_id'] = user_id
+                cursor.close()
                 return jsonify({'status': 'success'})
             else:
+                cursor.close()
                 return jsonify({'status': 'fail', 'message' : "Email/password is incorrect."})
         else:
             return False
@@ -133,8 +129,7 @@ def verify_profile():
         return jsonify({'error': str(e)}), 500
 
 
-
-@app.route('/api/profile', methods=['GET'])
+@app.route('/api/signup', methods=['GET'])
 def save_profile():
     try:
         data = request.json
@@ -142,11 +137,12 @@ def save_profile():
         cursor = conn.cursor()
         email = data.get('email')   
         password = data.get('password')
+        hashed_pass = generate_password_hash(password)
         try:
             cursor.execute('''
                 INSERT INTO logins (email, password)
                 VALUES (?, ?)
-            ''', (email, password))
+            ''', (email, hashed_pass))
             conn.commit()
             conn.close()
             return jsonify({'status': 'success'})
@@ -154,6 +150,8 @@ def save_profile():
                 return jsonify({'status': 'fail', 'message': 'Email already registered'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
 
 @app.route('/api/dice', methods=['POST'])
 def roll_dice():
