@@ -9,7 +9,7 @@
 <body>
     <div class="indexpage">
         <div class="genericflex">
-            <h1> Welcome to DMD (Dante Must Die) Club! </h1>
+            <h1> Welcome to DND </h1>
         </div>
     </div>
     <p>
@@ -27,17 +27,35 @@
     <p>
         omg hahhahhahaha thank you girll!!!! i freaking love dante i think he must die hahah
     </p>
-    <a class="btn" href="{{ url_for('login') }}"">
+    <!-- <a class="btn" href="{{ url_for('login') }}"">
         Let's Go!
-    </a class="btn">
+    </a class="btn"> -->
+    <button type="button" class="btn" id="nextpage-btn">Let's Go!</button>
     <script>
-        // const nextpage = getElementById("nextpage-btn")
-        // nextpage.addEventListener('click', function () {
-        //     window.location.href = "127.0.0.1:3000/login.html"
-        // });
+        const nextpage = document.getElementById("nextpage-btn")
+        nextpage.addEventListener("click", async (e) => {
+            e.preventDefault();
+            try {
+                //no need for headers in a GET
+                const response = await fetch("/api/sessionID", {
+                    method: "GET", 
+                    credentials: 'same-origin'
+                }); //SOP mitigates CSRF attacks
+                const data = await response.json()
+                //debug
+                console.log(data)
+                if (data.active) {
+                    window.location.href = "{{ url_for ('homepage') }}";
+                } else {
+                    window.location.href = "{{ url_for ('login') }}";
+                }
+        } catch (error) {
+            alert('Something went wrong.')
+        }
+        });
 
         // const infopage = getElementById("infopage")
-        // nextpage.addEventListener(click,window.open("login.html", '_blank')
+        // nextpage.addEventListener(click,window.open("login.html", '_blank'))
     </script>
 </body>
 </html>

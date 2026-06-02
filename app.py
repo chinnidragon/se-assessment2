@@ -1,5 +1,5 @@
 #server
-from flask import Flask, render_template, request, jsonify, send_from_directory, url_for, session
+from flask import Flask, render_template, request, jsonify, send_from_directory, url_for, session #serverside sessions
 #database
 import sqlite3
 # for generating session IDs
@@ -17,7 +17,7 @@ app = Flask(__name__)
 if os.environ.get('SECRET_KEY'):
     app.secret_key = os.environ.get('SECRET_KEY')
 else:
-    #generates a 32 bit secret key ``
+    #generates a 32 bit secret key 
     app.secret_key = secrets.token_urlsafe(32)
 # Initialize SQLite Database
 def init_db():
@@ -114,12 +114,14 @@ def verify_profile():
         email = data.get('email')   
         password = data.get('password')
         if email in logins:
-            if check_password_hash(logins[email], password):
+            hashed_pass = generate_password_hash(password)
+            if logins[email] == hashed_pass:
                 # email NEEDS to be passed as a one item tuple (it will be treated as a string otherwise)
                 cursor.execute('SELECT id FROM logins WHERE email = ?', (email,))
                 user_id = cursor.fetchone()
                 # default setting: the browser cookie is non-permanent, user will log out when browser is closed
                 session['user_id'] = int(user_id[0])
+                session.permanent = True
                 cursor.close()
                 return jsonify({'status': 'success'})
             else:
@@ -130,7 +132,6 @@ def verify_profile():
             
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
 
 @app.route('/api/signup', methods=['POST'])
 def save_profile():
@@ -153,6 +154,13 @@ def save_profile():
                 return jsonify({'status': 'fail', 'message': 'Email already registered'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/sessionID', methods=['GET'])
+def check_sessionID():
+    if 'user_id' in session:
+        return jsonify({'active': True})
+    else:
+        return jsonify({'active': False})
 
 @app.route('/api/dice', methods=['POST'])
 def roll_dice():

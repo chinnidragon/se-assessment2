@@ -55,6 +55,7 @@
                 }
                 else {
                     alert("Account created! Welcome to DND!");
+                    window.location.href = "{{ url_for('homepage') }}"
                 };
                 } catch (error) {
                     // console.error("Error saving membership", error);

@@ -51,9 +51,10 @@
                     const response = await fetch("/api/login", {
                         method: "POST",
                         headers: {"Content-Type": "application/json"},
+                        credentials: 'same-origin',
                         body: JSON.stringify(profile)
                 });
-                    if (response.ok) {
+                    if (response['status'] == 'success') {
                         window.location.href = "{{ url_for('homepage') }}"
                         // debug
                         // console.log('Hello, World!')
