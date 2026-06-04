@@ -16,43 +16,87 @@
     <h2>
         Template
     </h2>
-    <form>
+    <form id="form">
+        <div style="display:flex; flex-direction: column; padding: 10px;">
         <fieldset>
             <legend>Character information</legend>
             <textarea name="ch_name" id="ch_name" placeholder="Character's name"></textarea>
-            <textarea name="ch_stats" id="ch_name" placeholder="Character's name"></textarea>
-            <textarea name="ch_name" id="ch_name" placeholder="Character's name"></textarea>
-            <textarea name="ch_stats" id="ch_name" placeholder="Character's name"></textarea>
+            <input name="ch_age" id="ch_age" placeholder="Character's age" type="number" min="0"></input>
+            <textarea name="ch_desc" id="ch_desc" placeholder="Character's description"></textarea>
+            <textarea name="ch_race" id="ch_race" placeholder="Character's race"></textarea>
         </fieldset>
 
         <fieldset>
-            <legend>something else</legend>
-            <textarea name="ch_name" id="ch_name" placeholder="Character's name"></textarea>
-            <textarea name="ch_stats" id="ch_name" placeholder="Character's name"></textarea>
-            <textarea name="ch_name" id="ch_name" placeholder="Character's name"></textarea>
-            <textarea name="ch_stats" id="ch_name" placeholder="Character's name"></textarea>
+            <legend>Character stats</legend>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <input name="ch_str" id="ch_str" placeholder="Strength" type="number" min="0" max="20">
+                <input name="ch_dex" id="ch_dex" placeholder="Dexterity" type="number" min="0" max="20">
+                <input name="ch_con" id="ch_con" placeholder="Constitution" type="number" min="0" max="20">
+                <input name="ch_int" id="ch_int" placeholder="Intelligence" type="number" min="0" max="20">
+            </div>
+
         </fieldset>
 
         <fieldset>
-            <legend>something else</legend>
-            <input name="char_img" type="file" accept="image/*">
+            <legend>Image of the character</legend>
+            <input class="btn" name="ch_img" id="ch_img" type="file" accept="image/*">
         </fieldset>
-
+    </div>
+        <input class="btn" type="submit" name="charsheet-submit" id="charsheet-submit">
     </form>
 
-    <h2>... or just do your own lol</h2>
-    <textarea placeholder="js go buckwild vro"></textarea>
-    
-    <!-- <fieldset>
-  <legend>Choose a die</legend>
-  <div>
-    <input id="dice20" name="dice" type="radio" value="20">
-    <label for="dice20">d20</label>
-  </div>
-  <div>
-    <input id="dice12" name="dice" type="radio" value="12">
-    <label for="dice12">d12</label>
-  </div>
-</fieldset> -->
+
+    <script>
+        const form = document.getElementById('form');
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+            // Preventing the default event (here it stops the browser's default behaviour)
+                e.preventDefault();
+                // loading all information into a dictionary to send to the backend
+                const ch_info = {}
+                const general_info = {}
+                name = document.getElementById('ch_name').value;
+                age = document.getElementById('ch_age').value;
+                desc = document.getElementById('ch_desc').value;
+                race = document.getElementById('ch_race').value;
+                general_info['name'] = name
+                general_info['age'] = age
+                general_info['desc'] = desc
+                general_info['race'] = race
+                const stats = {}
+                const str = document.getElementById('ch_str').value;
+                const dex = document.getElementById('ch_dex').value;
+                const con = document.getElementById('ch_con').value;
+                const int = document.getElementById('ch_int').value;
+                stats['str'] = str
+                stats['dex'] = dex
+                stats['con'] = con
+                stats['int'] = int
+                ch_info['general_info'] = general_info
+                ch_info['stats'] = stats
+
+                try {
+                    const response = await fetch("/api/savechar", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        credentials: 'same-origin',
+                        body: JSON.stringify(ch_info)
+                });
+                    if (response['status'] == 'success') {
+                        alert("Character sheet successfully saved!")
+                        // debug
+                        // console.log('Hello, World!')
+                } else {
+                        alert("Error, try again later")
+                }
+                    } catch (error) {
+                        // console.error("Error saving membership", error);
+                        alert("Error, try again later");
+                    }
+            });
+    } else {
+        console.error("wheres the form vro")
+    }
+    </script>
 </body>
 </html>

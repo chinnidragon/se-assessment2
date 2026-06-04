@@ -38,8 +38,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS charsheets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL REFERENCES logins(id),
-            name TEXT NOT NULL,
-            info TEXT NOT NULL,
+            general_info TEXT NOT NULL,
             stats TEXT NOT NULL
         );
         CREATE TABLE IF NOT EXISTS notes (
@@ -121,6 +120,7 @@ def verify_profile():
                 user_id = cursor.fetchone()
                 # default setting: the browser cookie is non-permanent, user will log out when browser is closed
                 session['user_id'] = int(user_id[0])
+                print(session['user_id'])
                 session.permanent = True
                 cursor.close()
                 return jsonify({'status': 'success'})
@@ -172,6 +172,35 @@ def roll_dice():
     roll = random.randint(1, side_num)
     # print(roll)
     return jsonify({'number':roll})
+
+@app.route('/api/savechar', methods=['POST'])
+def save_char():
+    try:
+        data = request.json
+        conn = sqlite3.connect('dnd.db')
+        cursor = conn.cursor()
+        general_info = data.get('general_info')   
+        stats = data.get('stats')
+        # try:
+        cursor.execute('''
+            INSERT INTO char (general_info, stats)
+            VALUES (?, ?)
+        ''', (general_info, stats))
+        conn.commit()
+        conn.close()
+        return jsonify({'status': 'success'})
+        # except sqlite3.IntegrityError: 
+        #         return jsonify({'status': 'fail', 'message': 'Uhmmffff....'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# @app.route('/profile', methods=['GET'])
+# def get_user_profile():
+    
+# the conext processor - runs everytime a template is rendered
+    # the template can READ the variables without the view function explicitly passing them
+# @app.context_processor
+# def display_username():
 
 
 # functions defined after this line DO NOT RUN do NOT define a function after this
