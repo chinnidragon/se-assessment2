@@ -27,7 +27,8 @@ def init_db():
         CREATE TABLE IF NOT EXISTS logins (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL
+            password TEXT NOT NULL,
+            role TEXT NOT NULL DEFAULT 'user'
         );
         CREATE TABLE IF NOT EXISTS notices (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -142,11 +143,19 @@ def save_profile():
         email = data.get('email')   
         password = data.get('password')
         hashed_pass = generate_password_hash(password)
+            
         try:
-            cursor.execute('''
-                INSERT INTO logins (email, password)
-                VALUES (?, ?)
-            ''', (email, hashed_pass))
+            # might not be that secure lol
+            if email == 'chloedndadmin@gmail.com' or 'coltondndadmin@gmail.com':
+                cursor.execute('''
+                    INSERT INTO logins (email, password, role)
+                    VALUES (?, ?)
+                ''', (email, hashed_pass, 'admin'))
+            else:
+                cursor.execute('''
+                    INSERT INTO logins (email, password, role)
+                    VALUES (?, ?)
+                ''', (email, hashed_pass))
             conn.commit()
             conn.close()
             return jsonify({'status': 'success'})
