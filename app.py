@@ -46,7 +46,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL REFERENCES logins(id),
             date DATE NOT NULL,
-            notes TEXT NOT NULL
+            notebody TEXT NOT NULL
         );
         CREATE TABLE IF NOT EXISTS profile (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -149,7 +149,7 @@ def save_profile():
             if email == 'chloedndadmin@gmail.com' or 'coltondndadmin@gmail.com':
                 cursor.execute('''
                     INSERT INTO logins (email, password, role)
-                    VALUES (?, ?)
+                    VALUES (?, ?, ?)
                 ''', (email, hashed_pass, 'admin'))
             else:
                 cursor.execute('''
@@ -185,24 +185,65 @@ def roll_dice():
 @app.route('/api/savechar', methods=['POST'])
 def save_char():
     try:
-        data = request.json
-        conn = sqlite3.connect('dnd.db')
-        cursor = conn.cursor()
-        general_info = data.get('general_info')   
-        stats = data.get('stats')
-        # try:
-        cursor.execute('''
-            INSERT INTO char (general_info, stats)
-            VALUES (?, ?)
-        ''', (general_info, stats))
-        conn.commit()
-        conn.close()
-        return jsonify({'status': 'success'})
+        if 'user_id' in session:
+            data = request.json
+            conn = sqlite3.connect('dnd.db')
+            cursor = conn.cursor()
+            general_info = data.get('general_info')   
+            stats = data.get('stats')
+            # try:
+            cursor.execute('''
+                INSERT INTO char (user_id, general_info, stats)
+                VALUES (?, ?, ?)
+            ''', (session['user_id'], general_info, stats))
+            conn.commit()
+            conn.close()
+            return jsonify({'status': 'success'})
+        else:
+            return jsonify({'status':'fail','message':'unauthenticated'})
+
+        # except sqlite3.IntegrityError: 
+        #         return jsonify({'status': 'fail', 'message': 'Uhmmffff....'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/api/savenotes', methods=['POST'])
+def save_notes():
+    try:
+        if 'user_id' in session:
+            data = request.json
+            conn = sqlite3.connect('dnd.db')
+            cursor = conn.cursor()
+            date = data.get('date')   
+            body = data.get('body')
+            # try:
+            cursor.execute('''
+                INSERT INTO notes (userid, date, notebody)
+                VALUES (?, ?, ?)
+            ''', (session['user_id'], date, body))
+            conn.commit()
+            conn.close()
+            return jsonify({'status': 'success'})
+        else:
+            return jsonify({'status':'fail','message':'unauthenticated'})
         # except sqlite3.IntegrityError: 
         #         return jsonify({'status': 'fail', 'message': 'Uhmmffff....'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/getnotes', methods=['GET'])
+def get_notes():
+    try:
+        if not 'user_id' in session:
+            return jsonify({'status':'fail','message':'unauthenticated'})
+        conn = sqlite3.connect('dnd.db')
+        cursor = conn.cursor
+        cursor.execute('SELECT date, notebody FROM notes WHERE user_id = ?', (session['user_id'],))
+        notes = {row[0]: row[1] for row in cursor.fetchall()} 
+        return jsonify(notes)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 # @app.route('/profile', methods=['GET'])
 # def get_user_profile():
     

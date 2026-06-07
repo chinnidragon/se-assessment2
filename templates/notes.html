@@ -11,18 +11,86 @@
     </h1>
 
 
-    <form action="{{ url_for(homepage) }}">
+    <form id=form action="{{ url_for(homepage) }}">
         <fieldset>
             <legend>Take notes here</legend>
-            <input name="title" id="note_title" textvalue="New Note">
-        <textarea name="ch_name" id="ch_name" placeholder="Add your notes here!"></textarea>
+            <textarea name="note_body" id="note_body" placeholder="Add your notes here!"></textarea>
         </fieldset>
 
-        <input type="submit" class="btn" value="Submit session nots for today">
+        <input type="submit" class="btn" value="Submit session notes for today">
     </form>
 
-    <script>
+    <h2>
+        Previous notes
+    </h2>
+    <div id="previous-notes" style="display: flex;">
+        
+    </div>
 
+    <script>
+        try {
+            const response = await fetch("/api/getnotes", {method: "GET", credentials: 'same-origin'});
+            const container = document.getElementById('previous-notes');
+            if (response['status'] == 'success') {
+                const data = await response.json();
+                for (const [date, body] of Object.entries(data)) {
+                    const previousnote = document.createElement('div');
+                    previousnote.innerHTML(`<h3>${date}</h3><p style="background=#B00B69">${escapeHtml(body)}</p>`);
+                    container.appendChild(previousnote);
+                }
+
+            } else {
+                alert("Error,", response['message']);
+
+        }
+            } catch (error) {
+                alert("Error, try again later");
+            }
+        
+        // document.querySelectorAll(".day").forEach((day) => {
+        // const dayTitle = day.querySelector(".daytitle").textContent;
+        // const notesField = day.querySelector(".notes");
+
+        // if (notes[dayTitle]) {
+        //     notesField.value = notes[dayTitle];
+        // }
+        // });
+        // console.log("Notes loaded successfully.");
+        // } catch (error) {
+        //     console.error("Error loading notes:", error);
+        // }
+        
+        const form = document.getElementById('form');
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+            // Preventing the default event (here it stops the browser's default behaviour)
+                e.preventDefault();
+                // loading all information into a dictionary to send to the backend
+                const notes = {}
+                const now = new Date();
+                body = document.getElementById('note_body').value;
+                notes['body'] = body
+                notes['date'] = now.toDateString()
+
+                try {
+                    const response = await fetch("/api/savenotes", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        credentials: 'same-origin',
+                        body: JSON.stringify(notes)
+                });
+                    if (response['status'] == 'success') {
+                        alert("Notes successfully saved!")
+                } else {
+                        alert("Error, try again later")
+                }
+                    } catch (error) {
+                        alert("Error, try again later");
+                    }
+            });
+    } else {
+        console.error("wheres the form vro")
+    }
     </script>
 </body>
 </html>
