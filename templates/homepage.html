@@ -15,7 +15,9 @@
             <a href="{{ url_for('index')}}">Start</a>
             <a href="{{ url_for('profile')}}">Profile</a>
             <a href="{{ url_for('timetable')}}">Timetable</a>
-            <a href="{{ url_for('charsheets')}}">Character sheets/information</a>
+            <a href="{{ url_for('charsheets')}}">Character sheets</a>
+            <a href=" {{url_for('logout')}}">Log out</a>
+            <a href="{{ url_for('notes')}}">Notes</a>
         </div>
     </div>
     
@@ -55,10 +57,18 @@
                     Noticeboard
                 </a>
             </ul>
+            <ul>
+                <a href="{{ url_for('notes.html')}}">
+                    Note taking
+                </a>
+            </ul>
         </fieldset>
 
 
     </nav>
 
+    <script>
+        // response = fetch('/api/checksessionID')
+    </script>
 </body>
 </html>

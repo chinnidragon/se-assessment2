@@ -7,5 +7,25 @@
 </head>
 <body>
     
+    <script>
+        response = fetch('/api/checksessionID')
+        try {
+            const response = await fetch("/api/sessionID", {
+                method: "GET",
+                credentials: 'same-origin'
+            });
+            if (response['status'] == 'success') {
+                session['user_id']
+                // window.location.href = "{{ url_for('homepage') }}"
+                    // debug
+                    // console.log('Hello, World!')
+            } else {
+                    alert('Incorrect email/password. Maybe check your spelling lol')
+            }
+                } catch (error) {
+                    // console.error("Error saving membership", error);
+                    alert("Error, try again later");
+        }
+    </script>
 </body>
 </html>

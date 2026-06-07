@@ -244,6 +244,38 @@ def get_notes():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/api/savenotices', methods=['GET'])
+def save_notices():
+    try:
+        if not 'user_id' in session:
+            return jsonify({'status':'fail','message':'unauthenticated'})
+        conn = sqlite3.connect('dnd.db')
+        cursor = conn.cursor
+        cursor.execute('SELECT title, bodytext, date FROM notices', (session['user_id'],))
+        notes = {row[0]: row[1] for row in cursor.fetchall()} 
+        return jsonify(notes)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/getnotices', methods=['GET'])
+def get_notices():
+    try:
+        if not 'user_id' in session:
+            return jsonify({'status':'fail','message':'unauthenticated'})
+        conn = sqlite3.connect('dnd.db')
+        cursor = conn.cursor
+        cursor.execute('SELECT title, bodytext, date FROM notices', (session['user_id'],))
+        notices = []
+        for row in cursor.fetchall():
+            notice = {'title': row[0], 'bodytext': row[1], 'date':row[2]}
+            notices.append(notice)
+
+        return jsonify(notices)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 # @app.route('/profile', methods=['GET'])
 # def get_user_profile():
     
