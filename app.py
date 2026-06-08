@@ -114,14 +114,12 @@ def verify_profile():
         email = data.get('email')   
         password = data.get('password')
         if email in logins:
-            hashed_pass = generate_password_hash(password)
-            if logins[email] == hashed_pass:
+            if check_password_hash(logins[email], password):
                 # email NEEDS to be passed as a one item tuple (it will be treated as a string otherwise)
                 cursor.execute('SELECT id FROM logins WHERE email = ?', (email,))
                 user_id = cursor.fetchone()
                 # default setting: the browser cookie is non-permanent, user will log out when browser is closed
                 session['user_id'] = int(user_id[0])
-                print(session['user_id'])
                 session.permanent = True
                 cursor.close()
                 return jsonify({'status': 'success'})
@@ -146,7 +144,7 @@ def save_profile():
             
         try:
             # might not be that secure lol
-            if email == 'chloedndadmin@gmail.com' or 'coltondndadmin@gmail.com':
+            if email == 'chloedndadmin@gmail.com' or email == 'coltondndadmin@gmail.com':
                 cursor.execute('''
                     INSERT INTO logins (email, password, role)
                     VALUES (?, ?, ?)
