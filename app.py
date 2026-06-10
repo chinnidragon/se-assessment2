@@ -94,10 +94,17 @@ def charsheets():
 def timetable():
     return render_template('timetable.html')
 
+@app.route('/notes.html')
+def notes():
+    return render_template('notes.html')
+
 @app.route('/manifest.json')
 def manifest():
     return send_from_directory('static', 'manifest.json', mimetype='application/json')
 
+@app.route('/username')
+def user():
+    return session.get('username')
 #apis
 @app.route('/api/login', methods=['POST'])
 def verify_profile():
@@ -113,21 +120,25 @@ def verify_profile():
 
         email = data.get('email')   
         password = data.get('password')
-        if email in logins:
-            if check_password_hash(logins[email], password):
+        if email in logins and check_password_hash(logins[email], password):
                 # email NEEDS to be passed as a one item tuple (it will be treated as a string otherwise)
                 cursor.execute('SELECT id FROM logins WHERE email = ?', (email,))
                 user_id = cursor.fetchone()
-                # default setting: the browser cookie is non-permanent, user will log out when browser is closed
+
                 session['user_id'] = int(user_id[0])
+                cursor.execute('SELECT display_name FROM profile WHERE user_id = ?', (session['user_id'],))
+                username = cursor.fetchone()
+                session['username'] = username
+                # default setting: the browser cookie is non-permanent, user will log out when browser is closed
                 session.permanent = True
                 cursor.close()
+                conn.close()
                 return jsonify({'status': 'success'})
-            else:
-                cursor.close()
-                return jsonify({'status': 'fail', 'message' : "Email/password is incorrect."})
         else:
+            cursor.close()
+            conn.close()
             return jsonify({'status': 'fail', 'message' : "Email/password is incorrect."})
+
             
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -141,10 +152,9 @@ def save_profile():
         email = data.get('email')   
         password = data.get('password')
         hashed_pass = generate_password_hash(password)
-            
         try:
             # might not be that secure lol
-            if email == 'chloedndadmin@gmail.com' or email == 'coltondndadmin@gmail.com':
+            if email in ('chloedndadmin@gmail.com', 'coltondndadmin@gmail.com'):
                 cursor.execute('''
                     INSERT INTO logins (email, password, role)
                     VALUES (?, ?, ?)
@@ -152,8 +162,8 @@ def save_profile():
             else:
                 cursor.execute('''
                     INSERT INTO logins (email, password, role)
-                    VALUES (?, ?)
-                ''', (email, hashed_pass))
+                    VALUES (?, ?, ?)
+                ''', (email, hashed_pass, 'user'))
             conn.commit()
             conn.close()
             return jsonify({'status': 'success'})
