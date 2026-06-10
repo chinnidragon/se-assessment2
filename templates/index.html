@@ -32,6 +32,7 @@
     </a class="btn"> -->
     <button type="button" class="btn" id="nextpage-btn">Let's Go!</button>
     <script>
+
         const nextpage = document.getElementById("nextpage-btn")
         nextpage.addEventListener("click", async (e) => {
             e.preventDefault();
@@ -42,8 +43,6 @@
                     credentials: 'same-origin'
                 }); //SOP mitigates CSRF attacks
                 const data = await response.json()
-                //debug
-                console.log(data)
                 if (data.active) {
                     window.location.href = "{{ url_for ('homepage') }}";
                 } else {

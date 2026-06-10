@@ -8,9 +8,9 @@
 <body>
     
     <script>
-        response = fetch('/api/checksessionID')
+        response = fetch('/api/getnotices')
         try {
-            const response = await fetch("/api/sessionID", {
+            const response = await fetch("/api/getnotices", {
                 method: "GET",
                 credentials: 'same-origin'
             });
