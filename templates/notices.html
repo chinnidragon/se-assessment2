@@ -6,25 +6,42 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <h1>
+        your notices
+    </h1>
+    <div id="previous-notices">
+
+    </div>
+
     <script>
-        response = fetch('/api/getnotices')
-        try {
-            const response = await fetch("/api/getnotices", {
-                method: "GET",
-                credentials: 'same-origin'
-            });
-            if (response['status'] == 'success') {
-                session['user_id']
-                // window.location.href = "{{ url_for('homepage') }}"
-                    // debug
-                    // console.log('Hello, World!')
+        async function getnotices() {
+            try {
+                // retrieving the notices
+                const response = await fetch("/api/getnotices", {method: "GET", credentials: 'same-origin'});
+                // defining the container for the notices (the empty div with the previous-notes ID)
+                const container = document.getElementById('previous-notices');
+                if (response['status'] == 'success') {
+                    const data = await response.json();
+                    // for loop that iterates through all the note entries, then 
+                    for (const [date, body] of Object.entries(data['notes'])) {
+                        const previousnotice = document.createElement('div');
+                        previousnotice.innerHTML = `<h3>${date}</h3><p style="background=#000000">${escapeHtml(body)}</p>`;
+                        container.appendChild(previousnotice);
+                }
             } else {
-                    alert('Incorrect email/password. Maybe check your spelling lol')
+                alert("Error,", response['message']);
+        }
+            } catch (error) {
+                alert("Error, try again later");
             }
-                } catch (error) {
-                    // console.error("Error saving membership", error);
-                    alert("Error, try again later");
+        }
+        getnotices()
+
+        const response = await fetch('/adminnotices');
+        if (response['admin']) {
+            const noticeButtonDiv = document.createElement('div');
+            noticeButtonDiv.innerHTML = `<button script="">Add new notice</button>`;
+            container.appendChild(previousnote);
         }
     </script>
 </body>

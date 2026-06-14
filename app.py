@@ -19,6 +19,7 @@ if os.environ.get('SECRET_KEY'):
 else:
     #generates a 32 bit secret key 
     app.secret_key = secrets.token_urlsafe(32)
+
 # Initialize SQLite Database
 def init_db():
     conn = sqlite3.connect('dnd.db')
@@ -120,20 +121,21 @@ def verify_profile():
 
         email = data.get('email')   
         password = data.get('password')
+        # more concise than 2 if statements
         if email in logins and check_password_hash(logins[email], password):
-                # email NEEDS to be passed as a one item tuple (it will be treated as a string otherwise)
-                cursor.execute('SELECT id FROM logins WHERE email = ?', (email,))
-                user_id = cursor.fetchone()
+            # email NEEDS to be passed as a one item tuple (it will be treated as a string otherwise)
+            cursor.execute('SELECT id FROM logins WHERE email = ?', (email,))
+            user_id = cursor.fetchone()
 
-                session['user_id'] = int(user_id[0])
-                cursor.execute('SELECT display_name FROM profile WHERE user_id = ?', (session['user_id'],))
-                username = cursor.fetchone()
-                session['username'] = username
-                # default setting: the browser cookie is non-permanent, user will log out when browser is closed
-                session.permanent = True
-                cursor.close()
-                conn.close()
-                return jsonify({'status': 'success'})
+            session['user_id'] = int(user_id[0])
+            cursor.execute('SELECT display_name FROM profile WHERE user_id = ?', (session['user_id'],))
+            username = cursor.fetchone()
+            session['username'] = username
+            # default setting: the browser cookie is non-permanent, user will log out when browser is closed
+            session.permanent = True
+            cursor.close()
+            conn.close()
+            return jsonify({'status': 'success'})
         else:
             cursor.close()
             conn.close()
@@ -164,8 +166,18 @@ def save_profile():
                     INSERT INTO logins (email, password, role)
                     VALUES (?, ?, ?)
                 ''', (email, hashed_pass, 'user'))
+            
+            cursor.execute('SELECT id FROM logins WHERE email = ?', (email,))
+            user_id = cursor.fetchone()
+            session['user_id'] = int(user_id[0])
+            cursor.execute('SELECT display_name FROM profile WHERE user_id = ?', (session['user_id'],))
+            username = cursor.fetchone()
+            session['username'] = username
+            # default setting: the browser cookie is non-permanent, user will log out when browser is closed
+            session.permanent = True
             conn.commit()
             conn.close()
+
             return jsonify({'status': 'success'})
         except sqlite3.IntegrityError:
                 return jsonify({'status': 'fail', 'message': 'Email already registered'})
@@ -178,6 +190,22 @@ def check_sessionID():
         return jsonify({'active': True})
     else:
         return jsonify({'active': False})
+    
+@app.route('/api/adminnotices', methods=['GET'])
+def admin_createnotice():
+    if 'user_id' in session:
+        conn = sqlite3.connect('dnd.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT id FROM logins WHERE role = admin')
+        adminIDs = cursor.fetchall()
+        if session.get('user_id') in adminIDs:
+            return jsonify({'admin': True})
+        else:
+            return jsonify({'admin': False})
+    else:
+        return jsonify({'admin': False})
+
+
 
 @app.route('/api/dice', methods=['POST'])
 def roll_dice():
@@ -224,9 +252,9 @@ def save_notes():
             cursor = conn.cursor()
             date = data.get('date')   
             body = data.get('body')
-            # try:
+
             cursor.execute('''
-                INSERT INTO notes (userid, date, notebody)
+                INSERT INTO notes (user_id, date, notebody)
                 VALUES (?, ?, ?)
             ''', (session['user_id'], date, body))
             conn.commit()
@@ -245,11 +273,10 @@ def get_notes():
         if not 'user_id' in session:
             return jsonify({'status':'fail','message':'unauthenticated'})
         conn = sqlite3.connect('dnd.db')
-        cursor = conn.cursor
+        cursor = conn.cursor()
         cursor.execute('SELECT date, notebody FROM notes WHERE user_id = ?', (session['user_id'],))
         notes = {row[0]: row[1] for row in cursor.fetchall()} 
-        return jsonify(notes)
-
+        return jsonify({'status': 'success', 'notes': notes})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     

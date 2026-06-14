@@ -64,6 +64,27 @@
     </div>
     <script>
         // different buttons will be visible for people with different perms
+        async function getnotes() {
+            try {
+                // retrieving the saved notes
+                const response = await fetch("/api/getnotices", {method: "GET", credentials: 'same-origin'});
+                // defining the container for tthe notices
+                const container = document.getElementById('previous-notes');
+                if (response['status'] == 'success') {
+                    const data = await response.json();
+                    // for loop that iterates through all the note entries, then 
+                    for (const [date, body] of Object.entries(data['notes'])) {
+                        const previousnote = document.createElement('div');
+                        previousnote.innerHTML = `<h3>${date}</h3><p style="background=#B00B69">${escapeHtml(body)}</p>`;
+                        container.appendChild(previousnote);
+                }
+            } else {
+                alert("Error,", response['message']);
+        }
+            } catch (error) {
+                alert("Error, try again later");
+            }
+        }
     </script>
 </body>
 </html>

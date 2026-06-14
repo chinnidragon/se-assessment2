@@ -100,8 +100,6 @@
 
             // debug
             console.log(dice["max-value"])
-            // console.log(dice)
-                // currentDice = dice;
                 //could probably also add biases here if i had time sighhh maybe maybe not Okay does anyone even need bias calculators anyway colton ang should die Okayyy like lowkey it doesnt matter and he can just calculate it anyway right...
             try {
                 //removing the OLD dice roll result ONLY if there is one
@@ -115,8 +113,6 @@
                     body: JSON.stringify(dice)
                 });
 
-                //debug
-                // alert(response.json())
                 //if there was no response from the dice roll API
                 if (!response.ok) {
                     alert('Sorry, there was an error! Try again?');

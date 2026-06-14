@@ -10,8 +10,8 @@
         notetaker heaven over here :heart emoji:
     </h1>
 
-
-    <form id=form action="{{ url_for(homepage) }}">
+<!-- action="{{ url_for('homepage') }}" -->
+    <form id="form" >
         <fieldset>
             <legend>Take notes here</legend>
             <textarea name="note_body" id="note_body" placeholder="Add your notes here!"></textarea>
@@ -28,25 +28,29 @@
     </div>
 
     <script>
-        try {
-            const response = await fetch("/api/getnotes", {method: "GET", credentials: 'same-origin'});
-            const container = document.getElementById('previous-notes');
-            if (response['status'] == 'success') {
-                const data = await response.json();
-                for (const [date, body] of Object.entries(data)) {
-                    const previousnote = document.createElement('div');
-                    previousnote.innerHTML(`<h3>${date}</h3><p style="background=#B00B69">${escapeHtml(body)}</p>`);
-                    container.appendChild(previousnote);
+        async function getnotes() {
+            try {
+                // retrieving the saved notes
+                const response = await fetch("/api/getnotes", {method: "GET", credentials: 'same-origin'});
+                // defining the container for these saved notes (the empty div with the previous-notes ID)
+                const container = document.getElementById('previous-notes');
+                if (response['status'] == 'success') {
+                    const data = await response.json();
+                    // for loop that iterates through all the note entries, then 
+                    for (const [date, body] of Object.entries(data['notes'])) {
+                        const previousnote = document.createElement('div');
+                        previousnote.innerHTML = `<h3>${date}</h3><p style="background=#B00B69">${escapeHtml(body)}</p>`;
+                        container.appendChild(previousnote);
                 }
-
             } else {
                 alert("Error,", response['message']);
-
         }
             } catch (error) {
                 alert("Error, try again later");
             }
-        
+        }
+
+        getnotes()
         // document.querySelectorAll(".day").forEach((day) => {
         // const dayTitle = day.querySelector(".daytitle").textContent;
         // const notesField = day.querySelector(".notes");
@@ -70,17 +74,21 @@
                 const now = new Date();
                 body = document.getElementById('note_body').value;
                 notes['body'] = body
+                // readable human format
                 notes['date'] = now.toDateString()
 
                 try {
                     const response = await fetch("/api/savenotes", {
                         method: "POST",
                         headers: {"Content-Type": "application/json"},
+                        //mitigating CSRF - ONLY accepts it from 127.0.0.1:5000
                         credentials: 'same-origin',
                         body: JSON.stringify(notes)
                 });
-                    if (response['status'] == 'success') {
+                r.response = await response.json
+                    if (r.response['status'] == 'success') {
                         alert("Notes successfully saved!")
+                        window.location.href = "{{ url_for('homepage') }}";
                 } else {
                         alert("Error, try again later")
                 }

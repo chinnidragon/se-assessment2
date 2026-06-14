@@ -98,7 +98,9 @@ button:hover {
 .navtext {
     display: flex;
     gap: 20px;
+    
 }
+
 
 nav {
     display: flex;
