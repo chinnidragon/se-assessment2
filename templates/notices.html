@@ -7,42 +7,46 @@
 </head>
 <body>
     <h1>
-        your notices
+        notices..!
     </h1>
     <div id="previous-notices">
 
     </div>
 
     <script>
-        async function getnotices() {
-            try {
-                // retrieving the notices
-                const response = await fetch("/api/getnotices", {method: "GET", credentials: 'same-origin'});
-                // defining the container for the notices (the empty div with the previous-notes ID)
-                const container = document.getElementById('previous-notices');
-                if (response['status'] == 'success') {
-                    const data = await response.json();
-                    // for loop that iterates through all the note entries, then 
-                    for (const [date, body] of Object.entries(data['notes'])) {
-                        const previousnotice = document.createElement('div');
-                        previousnotice.innerHTML = `<h3>${date}</h3><p style="background=#000000">${escapeHtml(body)}</p>`;
-                        container.appendChild(previousnotice);
-                }
-            } else {
-                alert("Error,", response['message']);
-        }
-            } catch (error) {
-                alert("Error, try again later");
+        try {
+            // retrieving the notices
+            const response = await fetch("/api/getnotices", {method: "GET", credentials: 'same-origin'});
+            // defining the container for the notices (the empty div with the previous-notes ID)
+            const container = document.getElementById('previous-notices');
+            if (response['status'] == 'success') {
+                const data = await response.json();
+                // for loop that iterates through all the note entries, then 
+                for (const [date, body] of Object.entries(data['notes'])) {
+                    const previousnotice = document.createElement('div');
+                    previousnotice.innerHTML = `<h3>${date}</h3><p style="background=#000000">${escapeHtml(body)}</p>`;
+                    container.appendChild(previousnotice);
             }
+        } else {
+            alert("Error,", response['message']);
+    }
+        } catch (error) {
+            alert("Error, try again later");
         }
+
         getnotices()
 
         const response = await fetch('/adminnotices');
-        if (response['admin']) {
+        if (response.admin) {
             const noticeButtonDiv = document.createElement('div');
-            noticeButtonDiv.innerHTML = `<button script="">Add new notice</button>`;
+            noticeButtonDiv.innerHTML = `<button id="newnotice">Add new notice</button>`;
             container.appendChild(previousnote);
         }
+
+        newnotice.addEventListener("click", async (e) => {
+            e.preventDefault();
+            window.open('/notices/create');
+        });
     </script>
 </body>
 </html>

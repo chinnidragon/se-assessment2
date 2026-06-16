@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    please wait...
+    <script>
+        const response = await fetch('/api/logout', {methods:['GET'], credentials:'same-origin'})
+        logoutSuccess = await response.json()
+        if (logout.status = "success") {
+            alert('Logged out successfuly! Taking you to the start:')
+            window.location.href = "{{ url_for ('home') }}"
+        } else {
+            alert('Error, try again')
+        }
+    </script>
+</body>
+</html>

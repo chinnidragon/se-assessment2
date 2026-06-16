@@ -33,6 +33,7 @@ def init_db():
         );
         CREATE TABLE IF NOT EXISTS notices (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL REFERENCES logins(id),
             title TEXT NOT NULL,
             bodytext TEXT NOT NULL,
             date INTEGER NOT NULL
@@ -67,37 +68,51 @@ init_db()
 def index():
     return render_template('index.html')
 
-@app.route('/login.html')
+@app.route('/auth/login')
 def login():
     return render_template('login.html')
 
-@app.route('/signup.html')
+@app.route('/auth/signup')
 def signup():
     return render_template('signup.html')
 
-@app.route('/homepage.html')
-def homepage():
+@app.route('/home')
+def home():
     return render_template('homepage.html')
 
-@app.route('/dice.html')
+@app.route('/diceroll')
 def dice():
     return render_template('dice.html')
 
-@app.route('/profile.html')
+@app.route('/profile')
 def profile():
     return render_template('profile.html')
 
-@app.route('/charsheets.html')
+@app.route('/charactersheets')
 def charsheets():
     return render_template('charsheets.html')
 
-@app.route('/timetable.html')
+@app.route('/timetable')
 def timetable():
     return render_template('timetable.html')
 
-@app.route('/notes.html')
+@app.route('/notes')
 def notes():
     return render_template('notes.html')
+
+@app.roue('/logout')
+def notes():
+    return render_template('logout.html')
+
+# IF I HAVE TIMEEE i can have the normal notes that would only show the last like 3 notes AND a /notes/view to see ALL notes
+
+@app.route('/notices')
+def notices():
+    return render_template('notices.html')
+
+@app.route('/notices/create')
+def create_notices():
+    return render_template('create_notice.html')
 
 @app.route('/manifest.json')
 def manifest():
@@ -183,6 +198,14 @@ def save_profile():
                 return jsonify({'status': 'fail', 'message': 'Email already registered'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/logout', methods=['GET'])
+def user_logout():
+    try:
+        session.pop('user_id', None) 
+        return jsonify({'status':'success'})
+    except Exception as e:
+        return jsonify({'status':'fail'})
 
 @app.route('/api/sessionID', methods=['GET'])
 def check_sessionID():
@@ -280,17 +303,27 @@ def get_notes():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-@app.route('/api/savenotices', methods=['GET'])
+
+#notices basically the EXACT same logic as the notes
+@app.route('/api/savenotices', methods=['POST'])
 def save_notices():
     try:
-        if not 'user_id' in session:
+        if 'user_id' in session:
+            data = request.json
+            conn = sqlite3.connect('dnd.db')
+            cursor = conn.cursor()
+            date = data.get('date') 
+            title = data.get('title')
+            body = data.get('body')
+            cursor.execute('''
+                INSERT INTO notices (user_id, title, bodytext, date)
+                VALUES (?, ?, ?, ?)
+            ''', (session['user_id'], title, body, date))
+            conn.commit()
+            conn.close()
+            return jsonify({'status': 'success'})
+        else:
             return jsonify({'status':'fail','message':'unauthenticated'})
-        conn = sqlite3.connect('dnd.db')
-        cursor = conn.cursor
-        cursor.execute('SELECT title, bodytext, date FROM notices', (session['user_id'],))
-        notes = {row[0]: row[1] for row in cursor.fetchall()} 
-        return jsonify(notes)
-
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -300,28 +333,24 @@ def get_notices():
         if not 'user_id' in session:
             return jsonify({'status':'fail','message':'unauthenticated'})
         conn = sqlite3.connect('dnd.db')
-        cursor = conn.cursor
-        cursor.execute('SELECT title, bodytext, date FROM notices', (session['user_id'],))
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT 
+                notices.title, 
+                notices.bodytext, 
+                notices.date, 
+                logins.email
+            FROM notices 
+            JOIN logins ON notices.id = logins.user_id''')
         notices = []
         for row in cursor.fetchall():
             notice = {'title': row[0], 'bodytext': row[1], 'date':row[2]}
             notices.append(notice)
-
-        return jsonify(notices)
+        return jsonify({"status": "success", "notices": jsonify(notices)})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-# @app.route('/profile', methods=['GET'])
-# def get_user_profile():
-    
-# the conext processor - runs everytime a template is rendered
-    # the template can READ the variables without the view function explicitly passing them
-# @app.context_processor
-# def display_username():
-
 
 # functions defined after this line DO NOT RUN do NOT define a function after this
 if __name__ == '__main__':
     app.run(debug=True)
-
-

@@ -44,7 +44,7 @@
                 }); //SOP mitigates CSRF attacks
                 const data = await response.json()
                 if (data.active) {
-                    window.location.href = "{{ url_for ('homepage') }}";
+                    window.location.href = "{{ url_for ('home') }}";
                 } else {
                     window.location.href = "{{ url_for ('login') }}";
                 }

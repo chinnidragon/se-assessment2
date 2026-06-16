@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <form id="form" class="form" action="{{ url_for('homepage') }}" method="post">
+    <form id="form" class="form" action="{{ url_for('home') }}" method="post">
         <div style="display:flex; flex-direction: column; gap: 10px;">
             <div style="display: flex; flex-direction: column; max-width: fit-content;">
                 <label for="email">Email</label>
@@ -36,7 +36,6 @@
             e.preventDefault();
             const profile = {}
             const email = document.getElementById('email').value;
-            //NEED TO HASH THESE
             const password = document.getElementById('password').value;
             profile["email"] = email
             profile["password"] = password
@@ -55,7 +54,7 @@
                 }
                 else {
                     alert("Account created! Welcome to DND!");
-                    window.location.href = "{{ url_for('homepage') }}"
+                    window.location.href = "{{ url_for('home') }}"
                 };
                 } catch (error) {
                     // console.error("Error saving membership", error);

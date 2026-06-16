@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>
+        create a notice
+    </h1>
+
+    <form id="form" >
+        <fieldset>
+            <legend>New notice</legend>
+            <input type="text" id="notice_title" value="Title">
+            <textarea name="notice_body" id="notice_body" placeholder="Notice body..."></textarea>
+        </fieldset>
+
+        <input type="submit" class="btn" value="Create notice">
+    </form>
+
+
+    <script>
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+            // Preventing the default event (here it stops the browser's default behaviour)
+                e.preventDefault();
+                // loading all information into a dictionary to send to the backend
+                const notices = {}
+                const now = new Date();
+                title = document.getElementById('notice_title').value;
+                notices['title'] = title
+                body = document.getElementById('notice_body').value;
+                notices['body'] = body
+                // readable human format
+                notices['date'] = now.toDateString()
+
+                try {
+                    const response = await fetch("/api/savenotices", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        //mitigating CSRF - ONLY accepts it from 127.0.0.1:5000
+                        credentials: 'same-origin',
+                        body: JSON.stringify(notices)
+                });
+                r.response = await response.json
+                    if (r.response['status'] == 'success') {
+                        alert("Notice successfully saved!")
+                        window.location.href = "{{ url_for('notices') }}";
+                } else {
+                        alert("Error, try again later")
+                }
+                    } catch (error) {
+                        alert("Error, try again later");
+                    }
+            });
+    } else {
+        console.error("wheres the form vro")
+    }
+    </script>
+</body>
+</html>
