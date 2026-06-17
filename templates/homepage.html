@@ -6,7 +6,7 @@
     <title>welcome home!</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
 </head>
-<body>
+<body class="homepage">
     <!-- the navbar -->
     <div class = "navbar">
         <div class="logosmall">
@@ -32,19 +32,14 @@
             <legend>
                 Where do you want to go?
             </legend>
-            <!-- <ul>
-                <a href="login.html">
-                    Login
-                </a>
-            </ul> -->
-            <!-- need to make these ALL dynamic urls -->
+
             <ul>
                 <a href="profile.html">
                     Profile
                 </a>
             </ul>
             <ul>
-                <a href="charsheets.html">
+                <a href="{{ url_for('charsheets')}}"">
                     Character sheets
                 </a>
             </ul>
@@ -54,12 +49,12 @@
                 </a>
             </ul>
             <ul>
-                <a href="notice.html">
+                <a href="{{ url_for('notices')}}">
                     Noticeboard
                 </a>
             </ul>
             <ul>
-                <a href="{ {url_for('notes') }}""
+                <a href="{ {url_for('notes') }}">
                     Note taking
                 </a>
             </ul>

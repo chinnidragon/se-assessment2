@@ -1,3 +1,12 @@
+.homepage body {
+    background-color: rgb(244, 184, 184);
+}
+
+.homepage legend {
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
 h1 {
     color: rgb(2, 1, 0);
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;

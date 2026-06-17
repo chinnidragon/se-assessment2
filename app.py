@@ -20,6 +20,9 @@ else:
     #generates a 32 bit secret key 
     app.secret_key = secrets.token_urlsafe(32)
 
+#debug
+# app.secret_key = 676767676767
+
 # Initialize SQLite Database
 def init_db():
     conn = sqlite3.connect('dnd.db')
@@ -48,7 +51,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL REFERENCES logins(id),
             date DATE NOT NULL,
-            notebody TEXT NOT NULL
+            notes TEXT NOT NULL
         );
         CREATE TABLE IF NOT EXISTS profile (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -100,11 +103,9 @@ def timetable():
 def notes():
     return render_template('notes.html')
 
-@app.roue('/logout')
-def notes():
+@app.route('/logout')
+def logout():
     return render_template('logout.html')
-
-# IF I HAVE TIMEEE i can have the normal notes that would only show the last like 3 notes AND a /notes/view to see ALL notes
 
 @app.route('/notices')
 def notices():
@@ -274,12 +275,13 @@ def save_notes():
             conn = sqlite3.connect('dnd.db')
             cursor = conn.cursor()
             date = data.get('date')   
+            print(date)
             body = data.get('body')
-
+            print(body)
             cursor.execute('''
-                INSERT INTO notes (user_id, date, notebody)
+                INSERT INTO notes (user_id, date, notes)
                 VALUES (?, ?, ?)
-            ''', (session['user_id'], date, body))
+            ''', (session.get('user_id'), date, body))
             conn.commit()
             conn.close()
             return jsonify({'status': 'success'})
@@ -288,20 +290,37 @@ def save_notes():
         # except sqlite3.IntegrityError: 
         #         return jsonify({'status': 'fail', 'message': 'Uhmmffff....'})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'status': 'fail', 'message': str(e)}), 500
 
 @app.route('/api/getnotes', methods=['GET'])
 def get_notes():
     try:
-        if not 'user_id' in session:
+        if 'user_id' in session:
+            conn = sqlite3.connect('dnd.db')
+            cursor = conn.cursor()
+            cursor.execute('SELECT date, notes FROM notes WHERE user_id = ? ORDER BY date desc', (session['user_id'],))
+            print(cursor.fetchall())
+            rows = cursor.fetchall();
+            notices = [
+                {'date': r[2], 'notes': r[3]}
+                for r in rows
+            ]
+            conn.close()
+            # notes = {}
+            # notes = {row[0]: row[1] for row in cursor.fetchall()}
+            # for row in cursor.fetchall():
+            #     row_note = {}
+            #     date = row[0]
+            #     note = row[1]
+            #     row_note['date'] = date
+            #     row_note['note']= note
+            #     notes
+            # print(notes)
+            return jsonify({'status': 'success', 'notes': notes})
+        else:
             return jsonify({'status':'fail','message':'unauthenticated'})
-        conn = sqlite3.connect('dnd.db')
-        cursor = conn.cursor()
-        cursor.execute('SELECT date, notebody FROM notes WHERE user_id = ?', (session['user_id'],))
-        notes = {row[0]: row[1] for row in cursor.fetchall()} 
-        return jsonify({'status': 'success', 'notes': notes})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'status': 'fail', 'message': str(e)}), 500
     
 
 #notices basically the EXACT same logic as the notes
