@@ -17,6 +17,39 @@
         try {
             // retrieving the notices
             const response = await fetch("/api/getnotices", {method: "GET", credentials: 'same-origin'});
+            const data = await response.json();
+            // defining the container for these saved notes (the empty div with the previous-notes ID)
+
+            if (data.status === 'success') {
+                const container = document.getElementById('previous-notices');
+                container.innerHTML = '';
+                // for loop that iterates through all the created notices
+                for (const note of data.notices) {
+                    // previous notice div
+                    const pNotice = document.createElement('div');
+                    // creating the date, body and author of the notice
+                    const h = document.createElement('h3'); h.textContent = note.date;
+                    const author = document.createElement('p'); author.textContent = note.author;
+                    const p = document.createElement('p'); p.textContent = note.body;
+                    pNotice.style.background = '#B00B69';
+                    pNotice.appendChild(h);
+                    pNotice.appendChild(author);
+                    pNotice.appendChild(p);
+                    container.appendChild(pNotice);
+            }
+        } else {
+            alert(`Error:  ${data['message']}`);
+    }
+        } catch (error) {
+            console.error(err);
+            alert("Error, try again later");
+        }
+
+
+
+        try {
+            // retrieving the notices
+            const response = await fetch("/api/getnotices", {method: "GET", credentials: 'same-origin'});
             // defining the container for the notices (the empty div with the previous-notes ID)
             const container = document.getElementById('previous-notices');
             if (response['status'] == 'success') {

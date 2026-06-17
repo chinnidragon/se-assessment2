@@ -38,9 +38,11 @@
                 if (data.status === 'success') {
                     const container = document.getElementById('previous-notes');
                     container.innerHTML = '';
-                    // for loop that iterates through all the note entries, then 
+                    // for loop that iterates through all the note entries 
                     for (const note of data.notes) {
+                        // previous note div
                         const previousnote = document.createElement('div');
+                        // creating the date and body of the note
                         const h = document.createElement('h3'); h.textContent = date;
                         const p = document.createElement('p'); p.textContent = body;
                         p.style.background = '#B00B69';

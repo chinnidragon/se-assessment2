@@ -38,7 +38,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL REFERENCES logins(id),
             title TEXT NOT NULL,
-            bodytext TEXT NOT NULL,
+            body TEXT NOT NULL,
             date INTEGER NOT NULL
         );
         CREATE TABLE IF NOT EXISTS charsheets (
@@ -262,8 +262,6 @@ def save_char():
         else:
             return jsonify({'status':'fail','message':'unauthenticated'})
 
-        # except sqlite3.IntegrityError: 
-        #         return jsonify({'status': 'fail', 'message': 'Uhmmffff....'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
@@ -275,9 +273,7 @@ def save_notes():
             conn = sqlite3.connect('dnd.db')
             cursor = conn.cursor()
             date = data.get('date')   
-            print(date)
             body = data.get('body')
-            print(body)
             cursor.execute('''
                 INSERT INTO notes (user_id, date, notes)
                 VALUES (?, ?, ?)
@@ -306,16 +302,6 @@ def get_notes():
                 for r in rows
             ]
             conn.close()
-            # notes = {}
-            # notes = {row[0]: row[1] for row in cursor.fetchall()}
-            # for row in cursor.fetchall():
-            #     row_note = {}
-            #     date = row[0]
-            #     note = row[1]
-            #     row_note['date'] = date
-            #     row_note['note']= note
-            #     notes
-            # print(notes)
             return jsonify({'status': 'success', 'notes': notes})
         else:
             return jsonify({'status':'fail','message':'unauthenticated'})
@@ -335,9 +321,9 @@ def save_notices():
             title = data.get('title')
             body = data.get('body')
             cursor.execute('''
-                INSERT INTO notices (user_id, title, bodytext, date)
+                INSERT INTO notices (title, body, date, user_id)
                 VALUES (?, ?, ?, ?)
-            ''', (session['user_id'], title, body, date))
+            ''', (title, body, date, session['user_id']))
             conn.commit()
             conn.close()
             return jsonify({'status': 'success'})
@@ -356,16 +342,18 @@ def get_notices():
         cursor.execute('''
             SELECT 
                 notices.title, 
-                notices.bodytext, 
+                notices.body, 
                 notices.date, 
                 logins.email
             FROM notices 
-            JOIN logins ON notices.id = logins.user_id''')
+            JOIN logins ON notices.user_id = logins.id
+            ORDER BY notices.date DESC
+        ''')
         notices = []
         for row in cursor.fetchall():
-            notice = {'title': row[0], 'bodytext': row[1], 'date':row[2]}
+            notice = {'title': row[0], 'body': row[1], 'date':row[2], 'author':row[3]}
             notices.append(notice)
-        return jsonify({"status": "success", "notices": jsonify(notices)})
+        return jsonify({"status": "success", "notices": notices})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
