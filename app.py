@@ -20,9 +20,6 @@ else:
     #generates a 32 bit secret key 
     app.secret_key = secrets.token_urlsafe(32)
 
-#debug
-# app.secret_key = 676767676767
-
 # Initialize SQLite Database
 def init_db():
     conn = sqlite3.connect('dnd.db')
@@ -63,7 +60,7 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Initialize the database when the app starts
+# initialise the database when the app starts
 init_db()
 
 #serving page routes
@@ -119,10 +116,17 @@ def create_notices():
 def manifest():
     return send_from_directory('static', 'manifest.json', mimetype='application/json')
 
+@app.route('/slices')
+def slices():
+    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/json')
+
 @app.route('/username')
 def user():
     return session.get('username')
-#apis
+
+#APIs
+
+#logging in 
 @app.route('/api/login', methods=['POST'])
 def verify_profile():
     try:
@@ -161,6 +165,7 @@ def verify_profile():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+#signing up (request membership)
 @app.route('/api/signup', methods=['POST'])
 def save_profile():
     try:
@@ -200,6 +205,7 @@ def save_profile():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+#logout
 @app.route('/api/logout', methods=['GET'])
 def user_logout():
     try:
@@ -208,6 +214,7 @@ def user_logout():
     except Exception as e:
         return jsonify({'status':'fail'})
 
+#checking session ID
 @app.route('/api/sessionID', methods=['GET'])
 def check_sessionID():
     if 'user_id' in session:
@@ -215,6 +222,8 @@ def check_sessionID():
     else:
         return jsonify({'active': False})
     
+
+#checking admin status (specifically for notices)
 @app.route('/api/adminnotices', methods=['GET'])
 def admin_createnotice():
     if 'user_id' in session:
@@ -229,8 +238,7 @@ def admin_createnotice():
     else:
         return jsonify({'admin': False})
 
-
-
+#dice
 @app.route('/api/dice', methods=['POST'])
 def roll_dice():
     #the data this function needs is the NUMBER OF SIDES on the die
@@ -265,6 +273,8 @@ def save_char():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
+
+#notes
 @app.route('/api/savenotes', methods=['POST'])
 def save_notes():
     try:
@@ -294,13 +304,14 @@ def get_notes():
         if 'user_id' in session:
             conn = sqlite3.connect('dnd.db')
             cursor = conn.cursor()
-            cursor.execute('SELECT date, notes FROM notes WHERE user_id = ? ORDER BY date desc', (session['user_id'],))
-            print(cursor.fetchall())
-            rows = cursor.fetchall();
-            notices = [
-                {'date': r[2], 'notes': r[3]}
-                for r in rows
-            ]
+            cursor.execute('SELECT date, notes FROM notes WHERE user_id = ? ORDER BY date DESC', (session['user_id'],))
+            # print(cursor.fetchall())
+            rows = cursor.fetchall()
+            print(rows)
+            notes = []
+            for r in rows:
+                notes.append({'date': r[0], 'notes': r[1]})
+            
             conn.close()
             return jsonify({'status': 'success', 'notes': notes})
         else:

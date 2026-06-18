@@ -23,7 +23,7 @@
     <h2>
         Previous notes
     </h2>
-    <div id="previous-notes" style="display: flex;">
+    <div id="previous-notes" style="display: flex; flex-direction: column;">
         
     </div>
 
@@ -43,18 +43,24 @@
                         // previous note div
                         const previousnote = document.createElement('div');
                         // creating the date and body of the note
-                        const h = document.createElement('h3'); h.textContent = date;
-                        const p = document.createElement('p'); p.textContent = body;
-                        p.style.background = '#B00B69';
+                        const h = document.createElement('h3'); h.textContent = note.date;
+                        const p = document.createElement('p'); p.textContent = note.notes;
+                        p.style.background = '#FE4036';
                         previousnote.appendChild(h);
                         previousnote.appendChild(p);
                         container.appendChild(previousnote);
                 }
             } else {
-                alert(`Error:  ${data['message']}`);
+                if (data.message === "unauthenticated") {
+                    alert("Sign in to see/save your previous notes")
+                    window.location.href = ('{{ url_for("login")}}')
+                } else {
+                    alert("Error, try again later");
+                }
+                
         }
             } catch (error) {
-                console.error(err);
+                console.error(error);
                 alert("Error, try again later");
             }
         }
@@ -69,7 +75,7 @@
                 sessionID = await response.json();
                 if (!sessionID.active) {
                     alert("Sign in first");
-                    return;
+                    window.location.href = ('{{ url_for("login")}}')
                 }
                 // Preventing the default event (here it stops the browser's default behaviour)
                 

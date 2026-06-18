@@ -85,6 +85,18 @@
                 alert("Error, try again later");
             }
         }
+
+        const response = await fetch('/adminnotices', {methods: ['GET'], credentials:"same-origin"});
+        if (response.admin) {
+            const noticeButtonDiv = document.createElement('div');
+            noticeButtonDiv.innerHTML = `<button id="newnotice">Add new notice</button>`;
+            container.appendChild(previousnote);
+        }
+
+        newnotice.addEventListener("click", async (e) => {
+            e.preventDefault();
+            window.open("{{ url_for('notices') }}");
+        });
     </script>
 </body>
 </html>
