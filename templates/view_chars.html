@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>
+        Viewing characters
+    </h1>
+    <a class="btn" href="{{ url_for('charsheets')}}">Create your own!</a>
+    <div id="characters">
+
+    </div>
+    <script>
+        async function getchars() {
+            try {
+                // retrieving the saved notes
+                const response = await fetch("/api/getchars", {method: "GET", credentials: 'same-origin'});
+                const data = await response.json();
+                // defining the container for these saved notes (the empty div with the previous-notes ID)
+
+                if (data.status === 'success') {
+                    const container = document.getElementById('characters');
+                    container.innerHTML = '';
+                    // for loop that iterates through all the note entries 
+                    if (data.signedin) {
+                        const user_h = document.createElement('h2'); h.textContent = "Your characters";
+                        for (const ch_entry of data.user_c) {
+                            // previous note div
+                            const u_characters = document.createElement('div');
+                            // creating the date and body of the note
+                            const c_name = document.createElement('h3'); c_name.textContent = ch_entry.name;
+                            const c_info = document.createElement('p'); c_info.textContent = ch_entry.info;
+                            const c_stats = document.createElement('p'); c_stats.textContent = ch_entry.stats;
+                            u_characters.appendChild(c_name);
+                            u_characters.appendChild(c_info);
+                            u_characters.appendChild(c_stats);
+                        };
+                        
+                        const other_h = document.createElement('h2'); h.textContent = "Other's characters";
+                        for (const ch_entry of data.all_c) {
+                            // previous note div
+                            const a_characters = document.createElement('div');
+                            // creating the date and body of the note
+                            const a_name = document.createElement('h3'); a_name.textContent = ch_entry.name;
+                            const a_info = document.createElement('p'); a_info.textContent = ch_entry.info;
+                            const a_stats = document.createElement('p'); a_stats.textContent = ch_entry.stats;
+                            a_characters.appendChild(a_name);
+                            a_characters.appendChild(a_info);
+                            a_characters.appendChild(a_stats);
+                        };
+                        container.append(u_characters);
+
+                    } else {
+                        const all_h = document.createElement('h2'); h.textContent = "All characters";
+                        for (const ch_entry of data.all_c) {
+                            // previous note div
+                            const a_characters = document.createElement('div');
+                            // creating the date and body of the note
+                            const a_name = document.createElement('h3'); a_name.textContent = ch_entry.name;
+                            const a_info = document.createElement('p'); a_info.textContent = ch_entry.info;
+                            const a_stats = document.createElement('p'); a_stats.textContent = ch_entry.stats;
+                            a_characters.appendChild(a_name);
+                            a_characters.appendChild(a_info);
+                            a_characters.appendChild(a_stats);
+                        };
+                    };
+                    container.append(a_characters);
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Error, try again later");
+            };
+        };
+
+        getchars()
+
+
+    </script>
+</body>
+</html>

@@ -1,3 +1,9 @@
+.logolarge {
+    display: block;
+    text-align: center; 
+    padding: 30px;
+}
+
 .homepage body {
     background-color: rgb(244, 184, 184);
 }
@@ -7,6 +13,7 @@
     font-family: Arial, Helvetica, sans-serif;
 
 }
+
 
 h1 {
     color: rgb(2, 1, 0);
@@ -140,6 +147,16 @@ button:hover {
     /* width: clamp(10px, 5vw) */
 }
 
+.logolarge {
+    width:auto;
+    padding: 12px;
+    background-color: rgb(115, 6, 6);
+    min-width: max-content;
+    justify-content: center;
+    align-items: center;
+}
+
+
 .navbar {
     display: flex;
     align-content: center;
@@ -151,6 +168,7 @@ button:hover {
     background-color: rgb(115, 6, 6);
     min-width:max-content;
 }
+
 
 .navbar a {
     color: aliceblue;

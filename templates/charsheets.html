@@ -12,7 +12,10 @@
     </h1>
     <!--okay so i need it to be like with a TEMPLATE and also a MAKE UR OWN..!!! -->
     <!-- i need to learn how to do dynamic js -->
-    
+    <h2>
+        View everyone else's characters!
+    </h2>
+    <a class="btn" href='{{ url_for("view_chars")}}'></a>
     <h2>
         Template
     </h2>
@@ -82,7 +85,8 @@
                         credentials: 'same-origin',
                         body: JSON.stringify(ch_info)
                 });
-                    if (response['status'] == 'success') {
+                    data = await response.json();
+                    if (data.status == 'success') {
                         alert("Character sheet successfully saved!")
                         // debug
                         // console.log('Hello, World!')

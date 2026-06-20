@@ -88,9 +88,17 @@ def dice():
 def profile():
     return render_template('profile.html')
 
+@app.route('/profile/edit')
+def editprofile():
+    return render_template('edit_profile.html')
+
 @app.route('/charactersheets')
 def charsheets():
     return render_template('charsheets.html')
+
+@app.route('/charactersheets/view')
+def view_chars():
+    return render_template('view_chars.html')
 
 @app.route('/timetable')
 def timetable():
@@ -128,11 +136,10 @@ def user():
 
 #logging in 
 @app.route('/api/login', methods=['POST'])
-def verify_profile():
+def verify_login():
     try:
         data = request.json
         conn = sqlite3.connect('dnd.db')
-        
         cursor = conn.cursor()
         cursor.execute('SELECT email, password FROM logins')
         #concisely creates a dict where emails map to passwords
@@ -167,7 +174,7 @@ def verify_profile():
 
 #signing up (request membership)
 @app.route('/api/signup', methods=['POST'])
-def save_profile():
+def save_login():
     try:
         data = request.json
         conn = sqlite3.connect('dnd.db')
@@ -204,6 +211,11 @@ def save_profile():
                 return jsonify({'status': 'fail', 'message': 'Email already registered'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/saveprofile', methods=['POST'])
+def save_profile():
+    data = request.json()
+    conn = 
 
 #logout
 @app.route('/api/logout', methods=['GET'])
@@ -273,6 +285,42 @@ def save_char():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
+
+@app.route('/api/getchars', methods=['GET'])
+def get_chars():
+    try:
+        conn = sqlite3.connect('dnd.db')
+        cursor = conn.cursor()
+        cursor.execute('''SELECT logins.email, c.name, c.info, c.stats 
+                    FROM charsheets c 
+                    JOIN logins ON logins.id = c.user_id 
+                    GROUP BY logins.email
+                    ORDER BY logins.email DESC 
+                ''')
+        rows = cursor.fetchall()
+        if 'user_id' in session:
+            all_characters = []
+            user_characters = []
+            cursor.execute('SELECT email FROM logins WHERE id = ?', (session.get('user_id'),))
+            for c in rows:
+                if c[0] == session.get('user_id'):
+                    user_characters.append({'name': c[1], 'info': c[2], 'stats': c[3]})
+                else:
+                    all_characters.append({'user': c[0], 'name': c[1], 'info': c[2], 'stats': c[3]})
+            print(all_characters)
+            print(user_characters)
+            conn.close()
+            return jsonify({'status': 'success', 'signedin': True, 'all_c': all_characters, 'user_c': user_characters})
+        else:
+            user_characters = []
+            for c in rows:
+                all_characters.append({'user': c[0], 'name': c[1], 'info': c[2], 'stats': c[3]})
+            print(all_characters)
+            conn.close()
+            return jsonify({'status': 'success', 'signedin': False, 'all_c': all_characters})
+
+    except Exception as e:
+        return jsonify({'status': 'fail', 'message': str(e)}), 500
 
 #notes
 @app.route('/api/savenotes', methods=['POST'])
