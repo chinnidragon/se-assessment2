@@ -24,50 +24,69 @@
                 if (data.status === 'success') {
                     const container = document.getElementById('characters');
                     container.innerHTML = '';
+                    //creating the character divs
+                    const u_characters = document.createElement('div');
+                    const a_characters = document.createElement('div');
                     // for loop that iterates through all the note entries 
                     if (data.signedin) {
-                        const user_h = document.createElement('h2'); h.textContent = "Your characters";
+                        const userH = document.createElement('h2'); userH.textContent = "Your characters";
+                        u_characters.appendChild(userH);
                         for (const ch_entry of data.user_c) {
                             // previous note div
-                            const u_characters = document.createElement('div');
                             // creating the date and body of the note
-                            const c_name = document.createElement('h3'); c_name.textContent = ch_entry.name;
-                            const c_info = document.createElement('p'); c_info.textContent = ch_entry.info;
-                            const c_stats = document.createElement('p'); c_stats.textContent = ch_entry.stats;
-                            u_characters.appendChild(c_name);
-                            u_characters.appendChild(c_info);
-                            u_characters.appendChild(c_stats);
+                            if (data.user_c.length === 0) {
+                                const p = document.createElement('p'); p.textContent = 'No characters yet.';
+                                u_characters.appendChild(p)
+                            } else {
+                                const c_name = document.createElement('h3'); c_name.textContent = ch_entry.name;
+                                const c_info = document.createElement('p'); c_info.textContent = ch_entry.info;
+                                const c_stats = document.createElement('p'); c_stats.textContent = ch_entry.stats;
+                                u_characters.appendChild(c_name);
+                                u_characters.appendChild(c_info);
+                                u_characters.appendChild(c_stats);
+                            };
+
                         };
                         
-                        const other_h = document.createElement('h2'); h.textContent = "Other's characters";
+                        const otherH = document.createElement('h2'); otherH.textContent = "Other's characters";
+                        a_characters.appendChild(otherH);
                         for (const ch_entry of data.all_c) {
                             // previous note div
-                            const a_characters = document.createElement('div');
                             // creating the date and body of the note
-                            const a_name = document.createElement('h3'); a_name.textContent = ch_entry.name;
-                            const a_info = document.createElement('p'); a_info.textContent = ch_entry.info;
-                            const a_stats = document.createElement('p'); a_stats.textContent = ch_entry.stats;
-                            a_characters.appendChild(a_name);
-                            a_characters.appendChild(a_info);
-                            a_characters.appendChild(a_stats);
+                            if (data.user_c.length === 0) {
+                                const p = document.createElement('p'); p.textContent = 'No characters yet.';
+                                u_characters.appendChild(p)
+                            } else {
+                                const a_name = document.createElement('h3'); a_name.textContent = ch_entry.name;
+                                const a_info = document.createElement('p'); a_info.textContent = ch_entry.info;
+                                const a_stats = document.createElement('p'); a_stats.textContent = ch_entry.stats;
+                                a_characters.appendChild(a_name);
+                                a_characters.appendChild(a_info);
+                                a_characters.appendChild(a_stats);
+                            };
                         };
                         container.append(u_characters);
-
+                        container.append(a_characters);
                     } else {
-                        const all_h = document.createElement('h2'); h.textContent = "All characters";
+                        const allH = document.createElement('h2'); allH.textContent = "All characters";
+                        a_characters.appendChild(allH)
                         for (const ch_entry of data.all_c) {
                             // previous note div
-                            const a_characters = document.createElement('div');
                             // creating the date and body of the note
-                            const a_name = document.createElement('h3'); a_name.textContent = ch_entry.name;
-                            const a_info = document.createElement('p'); a_info.textContent = ch_entry.info;
-                            const a_stats = document.createElement('p'); a_stats.textContent = ch_entry.stats;
-                            a_characters.appendChild(a_name);
-                            a_characters.appendChild(a_info);
-                            a_characters.appendChild(a_stats);
+                            if (data.all_c.length === 0) {
+                                const p = document.createElement('p'); p.textContent = 'No characters yet.';
+                                u_characters.appendChild(p)
+                            } else {
+                                const a_name = document.createElement('h3'); a_name.textContent = ch_entry.name;
+                                const a_info = document.createElement('p'); a_info.textContent = ch_entry.info;
+                                const a_stats = document.createElement('p'); a_stats.textContent = ch_entry.stats;
+                                a_characters.appendChild(a_name);
+                                a_characters.appendChild(a_info);
+                                a_characters.appendChild(a_stats);
+                            };
                         };
+                        container.appendChild(a_characters)
                     };
-                    container.append(a_characters);
                 }
             } catch (error) {
                 console.error(error);

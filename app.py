@@ -36,18 +36,19 @@ def init_db():
             user_id INTEGER NOT NULL REFERENCES logins(id),
             title TEXT NOT NULL,
             body TEXT NOT NULL,
-            date INTEGER NOT NULL
+            date TEXT NOT NULL
         );
         CREATE TABLE IF NOT EXISTS charsheets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL REFERENCES logins(id),
-            general_info TEXT NOT NULL,
+            name TEXT NOT NULL,
+            info TEXT NOT NULL,
             stats TEXT NOT NULL
         );
         CREATE TABLE IF NOT EXISTS notes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL REFERENCES logins(id),
-            date DATE NOT NULL,
+            date TEXT NOT NULL,
             notes TEXT NOT NULL
         );
         CREATE TABLE IF NOT EXISTS profile (
@@ -126,11 +127,11 @@ def manifest():
 
 @app.route('/slices')
 def slices():
-    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/json')
+    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
 
-@app.route('/username')
-def user():
-    return session.get('username')
+# @app.route('/username')
+# def user():
+#     return session.get('username')
 
 #APIs
 
@@ -155,10 +156,9 @@ def verify_login():
             user_id = cursor.fetchone()
 
             session['user_id'] = int(user_id[0])
-            cursor.execute('SELECT display_name FROM profile WHERE user_id = ?', (session['user_id'],))
-            username = cursor.fetchone()
-            session['username'] = username
-            # default setting: the browser cookie is non-permanent, user will log out when browser is closed
+            # cursor.execute('SELECT display_name FROM profile WHERE user_id = ?', (session['user_id'],))
+            # username = cursor.fetchone()
+            # default setting: the browser cookie is permanent
             session.permanent = True
             cursor.close()
             conn.close()
@@ -214,8 +214,26 @@ def save_login():
 
 @app.route('/api/saveprofile', methods=['POST'])
 def save_profile():
-    data = request.json()
-    conn = 
+    try:
+        if 'user_id' in session:
+            data = request.json
+            conn = sqlite3.connect('dnd.db')
+            cursor = conn.cursor()
+            display_n = data.get('display_name')   
+            bio = data.get('bio')
+            cursor.execute('''
+                INSERT INTO profile (user_id, display_name, bio)
+                VALUES (?, ?, ?)
+            ''', (session.get('user_id'), display_n, bio))
+            conn.commit()
+            conn.close()
+            return jsonify({'status': 'success'})
+        else:
+            return jsonify({'status':'fail','message':'unauthenticated'})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
 
 #logout
 @app.route('/api/logout', methods=['GET'])
@@ -241,8 +259,9 @@ def admin_createnotice():
     if 'user_id' in session:
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
-        cursor.execute('SELECT id FROM logins WHERE role = admin')
-        adminIDs = cursor.fetchall()
+        cursor.execute('SELECT id FROM logins WHERE role = ?', ("admin",))
+        #retrieving JUST the ids, not anything else
+        adminIDs = (r[0] for r in cursor.fetchall())
         if session.get('user_id') in adminIDs:
             return jsonify({'admin': True})
         else:
@@ -273,7 +292,7 @@ def save_char():
             stats = data.get('stats')
             # try:
             cursor.execute('''
-                INSERT INTO char (user_id, general_info, stats)
+                INSERT INTO charsheets (user_id, general_info, stats)
                 VALUES (?, ?, ?)
             ''', (session['user_id'], general_info, stats))
             conn.commit()
@@ -291,22 +310,23 @@ def get_chars():
     try:
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
-        cursor.execute('''SELECT logins.email, c.name, c.info, c.stats 
+        cursor.execute('''SELECT logins.id, profile.display_name, c.name, c.info, c.stats 
                     FROM charsheets c 
-                    JOIN logins ON logins.id = c.user_id 
-                    GROUP BY logins.email
-                    ORDER BY logins.email DESC 
+                    JOIN profile ON profile.user_id = c.user_id 
+                    JOIN logins ON logins.id = c.user_id
+                    ORDER BY profile.display_name ASC 
                 ''')
         rows = cursor.fetchall()
         if 'user_id' in session:
             all_characters = []
             user_characters = []
-            cursor.execute('SELECT email FROM logins WHERE id = ?', (session.get('user_id'),))
+            # cursor.execute('SELECT id FROM logins WHERE email = ?', rows[0])
+            # ids = cursor.fetchall()
             for c in rows:
-                if c[0] == session.get('user_id'):
-                    user_characters.append({'name': c[1], 'info': c[2], 'stats': c[3]})
+                if rows[0] == session.get('user_id'):
+                    user_characters.append({'name': c[2], 'info': c[3], 'stats': c[4]})
                 else:
-                    all_characters.append({'user': c[0], 'name': c[1], 'info': c[2], 'stats': c[3]})
+                    all_characters.append({'user': c[1], 'name': c[2], 'info': c[3], 'stats': c[4]})
             print(all_characters)
             print(user_characters)
             conn.close()
@@ -314,7 +334,7 @@ def get_chars():
         else:
             user_characters = []
             for c in rows:
-                all_characters.append({'user': c[0], 'name': c[1], 'info': c[2], 'stats': c[3]})
+                all_characters.append({'user': c[1], 'name': c[2], 'info': c[3], 'stats': c[4]})
             print(all_characters)
             conn.close()
             return jsonify({'status': 'success', 'signedin': False, 'all_c': all_characters})
