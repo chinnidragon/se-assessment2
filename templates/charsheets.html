@@ -15,7 +15,7 @@
     <h2>
         View everyone else's characters!
     </h2>
-    <a class="btn" href='{{ url_for("view_chars")}}'></a>
+    <a class="btn" href='{{ url_for("view_chars")}}'> hell freaking yeah </a>
     <h2>
         Template
     </h2>
@@ -57,16 +57,16 @@
                 e.preventDefault();
                 // loading all information into a dictionary to send to the backend
                 const ch_info = {}
-                const general_info = {}
+                const info = {}
                 const name = document.getElementById('ch_name').value;
                 //.value returns a str, parseInt makes it a number (base 10) 
                 const age = parseInt(document.getElementById('ch_age').value, 10);
                 const desc = document.getElementById('ch_desc').value;
                 const race = document.getElementById('ch_race').value;
-                general_info['name'] = name
-                general_info['age'] = age
-                general_info['desc'] = desc
-                general_info['race'] = race
+                // general_info['name'] = name
+                info['age'] = age
+                info['desc'] = desc
+                info['race'] = race
                 const stats = {}
                 const str = parseInt(document.getElementById('ch_str').value, 10);
                 const dex = parseInt(document.getElementById('ch_dex').value, 10);
@@ -76,7 +76,8 @@
                 stats['dex'] = dex
                 stats['con'] = con
                 stats['int'] = int
-                ch_info['general_info'] = general_info
+                ch_info['name'] = name
+                ch_info['info'] = info
                 ch_info['stats'] = stats
 
                 try {
@@ -93,7 +94,7 @@
                         // debug
                         // console.log('Hello, World!')
                 } else {
-                        alert("Error, try again later")
+                        alert(`Error, ${data.error}`)
                 }
             } catch (error) {
                 // console.error("Error saving membership", error);

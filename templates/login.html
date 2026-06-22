@@ -9,32 +9,34 @@
 
 <body>
     <div class="login">
-        <h2>
-            Login
-        </h2>
-        <div class="content">
-            <form class="form" id="form">
-                <div class="card">
-                    <div style="display: flex; flex-direction: column; max-width: fit-content;">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+        <div class="loginform">
+            <h2>
+                Login
+            </h2>
+            <div class="content">
+                <form class="form" id="form">
+                    <div class="card">
+                        <div style="display: flex; flex-direction: column; max-width: fit-content;">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div style="display: flex; flex-direction: column; max-width: fit-content;" >
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
                     </div>
-                    <div style="display: flex; flex-direction: column; max-width: fit-content;" >
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
+                    <div>
+                        <input class="btn" type="submit" value="Let's Go!!">
                     </div>
-                </div>
-                <div>
-                    <input class="btn" type="submit" value="Let's Go!!">
-                </div>
-            </form>
-            <h3>
-                <a href="{{ url_for('signup') }}">Request membership</a>
-            </h3>
+                </form>
+                <h3>
+                    <a href="{{ url_for('signup') }}">Request membership</a>
+                </h3>
+            </div>
         </div>
-
+        <img src="{{ url_for('static', filename='images/millionsslices.png')}}" width="500px">
     </div>
-    <img src="{{ url_for('static', filename='images/millionsslices.png')}}">
+
 
     <script>
         const form = document.getElementById('form');

@@ -56,6 +56,8 @@ h3 {
     gap: 10px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 24px;
+    background-color: rgb(236, 212, 212);
+    color: rgb(116, 12, 12);
 }
 
 
@@ -72,15 +74,24 @@ h3 {
 }
 
 .content {
-    display: grid;
+    /* display: grid;
     grid-auto-rows: max-content;
     grid-auto-columns: auto;
     grid-template-columns: repeat(3, 1fr);
     grid-auto-rows: 150px;
     justify-items: center; 
-    align-items: start;
+    align-items: start; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+.content a {
+    max-width: max-content;
+}
+.content button {
+    max-width: max-content;
+}
 /* Flexbox: 1-dimensional layouts (single row or column). Great for navbars, toolbars, aligning items along one axis, simple responsive wrapping.
 Grid: 2-dimensional layouts (rows + columns). Great for full pages, complex component layouts, explicit placement of items. */
 .genericflex {
@@ -89,6 +100,12 @@ Grid: 2-dimensional layouts (rows + columns). Great for full pages, complex comp
     align-items: center;
 
 }
+.login {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
 
 .btn {
     color: rgb(49, 6, 6);
@@ -194,15 +211,27 @@ nav {
     row-gap: 20px;
 }
 
-.login {
+.loginform {
     display: flex;
     flex-direction: column;
     row-gap: 20px;
+    align-items: center;
+    align-content: center;
     .btn {
         padding: 0.5rem 1rem;
         max-width: fit-content;
     }
 }
+
+
+input[type="text"], input[type="email"], input[type="password"], textarea {
+    border: 2px;
+    border-color: #993e34; 
+    border-style: dashed;
+    border-radius: 4px;       
+    padding: 5px;              
+}
+
 
 
 /* 

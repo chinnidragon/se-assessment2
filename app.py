@@ -9,8 +9,9 @@ import secrets #specifically using secrets as it uses OS entropy (more random th
 from werkzeug.security import generate_password_hash, check_password_hash
 #for the dice roll api
 import random
+#for database
+import json
 
-#TODO: add SESSION KEYS.... it needs the user to STAY logged in lol
 
 app = Flask(__name__)
 #checking if there is an existing secret key
@@ -286,15 +287,20 @@ def save_char():
     try:
         if 'user_id' in session:
             data = request.json
+            print(data)
             conn = sqlite3.connect('dnd.db')
             cursor = conn.cursor()
-            general_info = data.get('general_info')   
-            stats = data.get('stats')
+            name = data.get('name')
+            info = json.dumps(data.get('info'))
+            stats = json.dumps(data.get('stats'))
+            print(info)  
+            print(stats)
+            print(session['user_id'])
             # try:
             cursor.execute('''
-                INSERT INTO charsheets (user_id, general_info, stats)
-                VALUES (?, ?, ?)
-            ''', (session['user_id'], general_info, stats))
+                INSERT INTO charsheets (user_id, name, info, stats)
+                VALUES (?, ?, ?, ?)
+            ''', (session['user_id'], name, info, stats))
             conn.commit()
             conn.close()
             return jsonify({'status': 'success'})
