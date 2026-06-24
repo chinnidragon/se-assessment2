@@ -120,11 +120,15 @@ def notices():
 
 @app.route('/notices/create')
 def create_notices():
-    return render_template('create_notice.html')
+    return render_template('create_notices.html')
 
 @app.route('/manifest.json')
 def manifest():
     return send_from_directory('static', 'manifest.json', mimetype='application/json')
+
+# @app.route('/stylesheet.css')
+# def manifest():
+#     return send_from_directory('static', 'manifest.json', mimetype='stylesheet/css')
 
 @app.route('/slices')
 def slices():
@@ -196,14 +200,14 @@ def save_login():
                     VALUES (?, ?, ?)
                 ''', (email, hashed_pass, 'user'))
             
-            cursor.execute('SELECT id FROM logins WHERE email = ?', (email,))
-            user_id = cursor.fetchone()
-            session['user_id'] = int(user_id[0])
-            cursor.execute('SELECT display_name FROM profile WHERE user_id = ?', (session['user_id'],))
-            username = cursor.fetchone()
-            session['username'] = username
-            # default setting: the browser cookie is non-permanent, user will log out when browser is closed
-            session.permanent = True
+            # cursor.execute('SELECT id FROM logins WHERE email = ?', (email,))
+            # user_id = cursor.fetchone()
+            # session['user_id'] = int(user_id[0])
+            # cursor.execute('SELECT display_name FROM profile WHERE user_id = ?', (session['user_id'],))
+            # username = cursor.fetchone()
+            # session['username'] = username
+            # # default setting: the browser cookie is non-permanent, user will log out when browser is closed
+            # session.permanent = True
             conn.commit()
             conn.close()
 
@@ -223,9 +227,10 @@ def save_profile():
             display_n = data.get('display_name')   
             bio = data.get('bio')
             cursor.execute('''
-                INSERT INTO profile (user_id, display_name, bio)
-                VALUES (?, ?, ?)
-            ''', (session.get('user_id'), display_n, bio))
+                UPDATE profile 
+                SET display_name = (?), bio = (?)
+                WHERE user_id = (?)
+            ''', (display_n, bio, session.get('user_id')))
             conn.commit()
             conn.close()
             return jsonify({'status': 'success'})
@@ -235,6 +240,28 @@ def save_profile():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
+@app.route('/api/getprofile', methods=['GET'])
+def get_profile():
+    try:
+        if 'user_id' in session:
+            conn = sqlite3.connect('dnd.db')
+            cursor = conn.cursor()
+            cursor.execute('SELECT display_name, bio FROM profile WHERE user_id = ?', (session['user_id'],))
+            # One because it matches only 1 profile
+            row = cursor.fetchone()
+            print(row)
+            u_profile = {}
+            if row.len == 0:
+                u_profile = "none"
+            else:
+                u_profile['display_name'] = row[0]
+                u_profile['bio'] = row[1]
+            conn.close()
+            return jsonify({'status': 'success', 'profile': u_profile})
+        else:
+            return jsonify({'status':'fail','message':'unauthenticated'})
+    except Exception as e:
+        return jsonify({'status': 'fail', 'message': str(e)}), 500
 
 #logout
 @app.route('/api/logout', methods=['GET'])
@@ -258,15 +285,17 @@ def check_sessionID():
 @app.route('/api/adminnotices', methods=['GET'])
 def admin_createnotice():
     if 'user_id' in session:
+        print('skibidi')
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
+        # admin_idlist = []
         cursor.execute('SELECT id FROM logins WHERE role = ?', ("admin",))
-        #retrieving JUST the ids, not anything else
-        adminIDs = (r[0] for r in cursor.fetchall())
-        if session.get('user_id') in adminIDs:
-            return jsonify({'admin': True})
-        else:
-            return jsonify({'admin': False})
+        adminIDs = cursor.fetchall()
+        print(adminIDs)
+        for a_id in adminIDs:
+            if session.get('user_id') == a_id:
+                return jsonify({'admin': True})
+        return jsonify({'admin': False})
     else:
         return jsonify({'admin': False})
 
@@ -316,11 +345,16 @@ def get_chars():
     try:
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
-        cursor.execute('''SELECT logins.id, profile.display_name, c.name, c.info, c.stats 
+        #if the user hasnt created a profile, it will default to their email (the case ensures that their name isnt completely ignored)
+        cursor.execute('''SELECT logins.id, 
+                    CASE
+                        WHEN profile.display_name IS NULL THEN logins.email
+                        ELSE profile.display_name
+                    END AS display_name, c.name, c.info, c.stats 
                     FROM charsheets c 
-                    JOIN profile ON profile.user_id = c.user_id 
                     JOIN logins ON logins.id = c.user_id
-                    ORDER BY profile.display_name ASC 
+                    LEFT JOIN profile ON profile.user_id = c.user_id 
+                    ORDER BY display_name ASC 
                 ''')
         rows = cursor.fetchall()
         if 'user_id' in session:
@@ -329,10 +363,10 @@ def get_chars():
             # cursor.execute('SELECT id FROM logins WHERE email = ?', rows[0])
             # ids = cursor.fetchall()
             for c in rows:
-                if rows[0] == session.get('user_id'):
-                    user_characters.append({'name': c[2], 'info': c[3], 'stats': c[4]})
+                if c[0] == session.get('user_id'):
+                    user_characters.append({'name': c[2], 'info': json.loads(c[3]), 'stats': json.loads(c[4])})
                 else:
-                    all_characters.append({'user': c[1], 'name': c[2], 'info': c[3], 'stats': c[4]})
+                    all_characters.append({'user': c[1], 'name': c[2], 'info': json.loads(c[3]), 'stats': json.loads(c[4])})
             print(all_characters)
             print(user_characters)
             conn.close()
@@ -340,7 +374,7 @@ def get_chars():
         else:
             user_characters = []
             for c in rows:
-                all_characters.append({'user': c[1], 'name': c[2], 'info': c[3], 'stats': c[4]})
+                all_characters.append({'user': c[1], 'name': c[2], 'info': json.loads(c[3]), 'stats': json.loads(c[4])})
             print(all_characters)
             conn.close()
             return jsonify({'status': 'success', 'signedin': False, 'all_c': all_characters})
@@ -421,7 +455,7 @@ def save_notices():
 def get_notices():
     try:
         if not 'user_id' in session:
-            return jsonify({'status':'fail','message':'unauthenticated'})
+            return jsonify({'status':"fail",'message':'unauthenticated'})
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
         cursor.execute('''
@@ -438,7 +472,7 @@ def get_notices():
         for row in cursor.fetchall():
             notice = {'title': row[0], 'body': row[1], 'date':row[2], 'author':row[3]}
             notices.append(notice)
-        return jsonify({"status": "success", "notices": notices})
+        return jsonify({'status': "success", "notices": notices})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500

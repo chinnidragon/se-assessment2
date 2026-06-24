@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>hey.. its Z.. he/him</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
 </head>
 <body>
@@ -15,40 +15,50 @@
     </div>
     <a class="btn" href="{{ url_for('editprofile') }}">Edit profile</a>
     <script>
-        const form = document.getElementById('form');
-        if (form) {
-            form.addEventListener('submit', async (e) => {
-            // Preventing the default event (here it stops the browser's default behaviour)
-                e.preventDefault();
-                const profile = {}
-                const displayName = document.getElementById('display-name').value;
-                const bio = document.getElementById('bio').value;
-                profile['display_name'] = displayName
-                profile['bio'] = bio
-                //debug
-                // console.log(profile)
-                try {
-                    const response = await fetch("/api/saveprofile", {
-                        method: "POST",
-                        headers: {"Content-Type": "application/json"},
-                        credentials: 'same-origin',
-                        body: JSON.stringify(profile)
-                    });
-                    const result = await response.json();
-                    if (result['status'] == 'success') {
-                        alert('Profile saved!')
-                        window.location.href = ('{{ url_for("profile") }}')
-                    } else {
-                            alert('Error, try again later')
+        async function getprofile() {
+            try {
+                // retrieving the saved notes
+                alert('okay');
+                const response = await fetch('/api/getprofile', {method: "GET", credentials: 'same-origin'});
+                const data = await response.json();
+                // defining the container for these saved notes (the empty div with the previous-notes ID)
+                if (data.status === 'success') {
+                    alert('yay')
+                    const container = document.getElementById('profile_info');
+                    container.innerHTML = '';
+                    // for loop that iterates through all the note entries 
+                        // previous note div
+                    const profileDiv = document.createElement('div');
+                    if (data.profile === "none"){
+                        profileDiv.textContent = "You haven't made one!";
+                        container.appendChild(profileDiv)
+                        return;
+                } else {
+                    // creating the date and body of the note
+                    const name = document.createElement('h3'); name.textContent = data.profile.display_name;
+                    const bio = document.createElement('p'); bio.textContent = data.profile.bio;
+                    bio.style.background = '#FE4036';
+                    profileDiv.appendChild(name);
+                    profileDiv.appendChild(bio);
+                    container.appendChild(profileDiv);
+                };
+            } else {
+                print('no')
+                if (data.message === "unauthenticated") {
+                    alert("Sign in to see/save your profile")
+                    window.location.href = ('{{ url_for("login")}}')
+                } else {
+                    alert(`Error, ${data.message}`);
                 }
-                    } catch (error) {
-                        // console.error("Error saving membership", error);
-                        alert("Error, try again later");
-                    }
-            });
-    } else {
-        console.error("wheres the form vro")
-    }
-    </script>
+                
+        };
+            } catch (error) {
+                alert(error);
+            };
+        };
+
+        getprofile()
+    </script> 
+
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>reinvent urself</title>
 </head>
 <body>
     <form class="form" id="form">
@@ -22,7 +22,40 @@
         </div>
     </form>
     <script>
-        
+const form = document.getElementById('form');
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+            // Preventing the default event (here it stops the browser's default behaviour)
+                e.preventDefault();
+                const profile = {}
+                const displayName = document.getElementById('display-name').value;
+                const bio = document.getElementById('bio').value;
+                profile['display_name'] = displayName
+                profile['bio'] = bio
+                //debug
+                // console.log(profile)
+                try {
+                    const response = await fetch("/api/saveprofile", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        credentials: 'same-origin',
+                        body: JSON.stringify(profile)
+                    });
+                    const result = await response.json();
+                    if (result['status'] == 'success') {
+                        alert('Profile saved!')
+                        window.location.href = ('{{ url_for("profile") }}')
+                    } else {
+                            alert('Error, try again later')
+                }
+                    } catch (error) {
+                        // console.error("Error saving membership", error);
+                        alert("Error, try again later");
+                    }
+            });
+    } else {
+        console.error("wheres the form vro")
+    }
     </script>
 </body>
 </html>

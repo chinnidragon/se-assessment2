@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>admin mention</title>
 </head>
 <body>
     <h1>
         create a notice
     </h1>
 
-    <form id="form" >
+    <form id="form">
         <fieldset>
             <legend>New notice</legend>
             <input type="text" id="notice_title" value="Title">
@@ -22,6 +22,7 @@
 
 
     <script>
+
         if (form) {
             form.addEventListener('submit', async (e) => {
             // Preventing the default event (here it stops the browser's default behaviour)
@@ -44,7 +45,7 @@
                         credentials: 'same-origin',
                         body: JSON.stringify(notices)
                 });
-                r.response = await response.json
+                r.response = await response.json()
                     if (r.response['status'] == 'success') {
                         alert("Notice successfully saved!")
                         window.location.href = "{{ url_for('notices') }}";

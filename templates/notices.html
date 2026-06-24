@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>tick tock brother</title>
 </head>
 <body>
     <h1>
@@ -12,52 +12,62 @@
     <div id="previous-notices">
 
     </div>
+    <div id="notice-button">
+
+    </div>
 
     <script>
-        try {
-            // retrieving the notices
-            const response = await fetch("/api/getnotices", {method: "GET", credentials: 'same-origin'});
-            const data = await response.json();
-            // defining the container for these saved notes (the empty div with the previous-notes ID)
+        async function getnotices() {
+            try {
+                // retrieving the notices
+                const response = await fetch("/api/getnotices", {method: "GET", credentials: 'same-origin'});
+                const data = await response.json();
+                // defining the container for these saved notes (the empty div with the previous-notes ID)
 
-            if (data.status === 'success') {
-                const container = document.getElementById('previous-notices');
-                container.innerHTML = '';
-                // for loop that iterates through all the created notices
-                for (const note of data.notices) {
-                    // previous notice div
-                    const pNotice = document.createElement('div');
-                    // creating the date, body and author of the notice
-                    const h = document.createElement('h3'); h.textContent = note.date;
-                    const author = document.createElement('p'); author.textContent = note.author;
-                    const p = document.createElement('p'); p.textContent = note.body;
-                    pNotice.style.background = '#B00B69';
-                    pNotice.appendChild(h);
-                    pNotice.appendChild(author);
-                    pNotice.appendChild(p);
-                    container.appendChild(pNotice);
-            }
-        } else {
-            alert(`Error:  ${data['message']}`);
-    }
-        } catch (error) {
-            console.error(err);
-            alert("Error, try again later");
+                if (data.status === 'success') {
+                    const container = document.getElementById('previous-notices');
+                    container.innerHTML = '';
+                    // for loop that iterates through all the created notices
+                    for (const note of data.notices) {
+                        // previous notice div
+                        const pNotice = document.createElement('div');
+                        if (note.body.length === 0) {
+                            const p = document.createElement('p'); p.textContent = "No notices";
+                            return;
+                        }
+                        // creating the date, body and author of the notice
+                        const h = document.createElement('h3'); h.textContent = note.date;
+                        const author = document.createElement('p'); author.textContent = note.author;
+                        const p = document.createElement('p'); p.textContent = note.body;
+                        pNotice.style.background = '#B00B69';
+                        pNotice.appendChild(h);
+                        pNotice.appendChild(author);
+                        pNotice.appendChild(p);
+                        container.appendChild(pNotice);
+                }
+            } else {
+                alert(`Error:  ${data['message']}`);
         }
-
-
+            } catch (error) {
+                console.error(error);
+                alert("Error, try again later");
+            }
+    }
         getnotices()
 
-        const response = await fetch('/adminnotices', {methods: ['GET'], credentials:"same-origin"});
-        if (response.admin) {
-            const noticeButtonDiv = document.createElement('div');
+        const response = await fetch('/api/adminnotices', {methods: ['GET'], credentials: 'same-origin'});
+        data = await response.json()
+        if (data.admin) {
+            // const noticeButtonDiv = document.createElement('div');
+            const noticeButtonDiv = document.getElementById("notice-button");
             noticeButtonDiv.innerHTML = `<button id="newnotice">Add new notice</button>`;
-            container.appendChild(previousnote);
+            container.appendChild(noticeButtonDiv);
         }
 
-        newnotice.addEventListener("click", async (e) => {
+        const newnoticeButton = document.getElementById("newnotice");
+        newnoticeButton.addEventListener("click", async (e) => {
             e.preventDefault();
-            window.open("{{ url_for('notices') }}");
+            window.open("{{ url_for('create_notices') }}");
         });
     </script>
 </body>
