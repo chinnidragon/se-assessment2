@@ -282,16 +282,14 @@ def check_sessionID():
     
 
 #checking admin status (specifically for notices)
-@app.route('/api/adminnotices', methods=['GET'])
-def admin_createnotice():
+@app.route('/api/admin', methods=['GET'])
+def admin_check():
     if 'user_id' in session:
-        print('skibidi')
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
         # admin_idlist = []
         cursor.execute('SELECT id FROM logins WHERE role = ?', ("admin",))
         adminIDs = cursor.fetchall()
-        print(adminIDs)
         for a_id in adminIDs:
             if session.get('user_id') == a_id:
                 return jsonify({'admin': True})

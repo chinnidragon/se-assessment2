@@ -55,7 +55,7 @@
     }
         getnotices()
 
-        const response = await fetch('/api/adminnotices', {methods: ['GET'], credentials: 'same-origin'});
+        const response = await fetch('/api/admin', {methods: ['GET'], credentials: 'same-origin'});
         data = await response.json()
         if (data.admin) {
             // const noticeButtonDiv = document.createElement('div');
