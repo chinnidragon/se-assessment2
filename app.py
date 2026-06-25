@@ -238,13 +238,24 @@ def save_profile():
             data = request.json
             conn = sqlite3.connect('dnd.db')
             cursor = conn.cursor()
-            display_n = data.get('display_name')   
-            bio = data.get('bio')
-            cursor.execute('''
-                UPDATE profile 
-                SET display_name = (?), bio = (?)
-                WHERE user_id = (?)
-            ''', (display_n, bio, session.get('user_id')))
+            display_n = data['display_name']
+            bio = data['bio']
+            print(display_n)
+            print(bio)
+            cursor.execute('SELECT 1 FROM profile WHERE user_id = ?', (session.get('user_id'),))
+            profile_exists = cursor.fetchone()
+            print(profile_exists)
+            if profile_exists:
+                cursor.execute('''
+                    UPDATE profile 
+                    SET display_name = ?, bio = ?
+                    WHERE user_id = ?
+                ''', (display_n, bio, session.get('user_id')))
+            else:
+                cursor.execute('''
+                    INSERT INTO profile (user_id, display_name, bio)
+                    VALUES (?, ?, ?)
+                ''', (session.get('user_id'), display_n, bio))
             conn.commit()
             conn.close()
             return jsonify({'status': 'success'})
@@ -266,8 +277,15 @@ def get_profile():
             print(row)
             u_profile = {}
             if not row:
-                u_profile = "none"
+                # u_profile['exists'] = False
+                print(u_profile)
+                cursor.execute('SELECT email FROM logins WHERE id = ?', (session.get('user_id'),))
+                display_name = cursor.fetchone()
+                u_profile['display_name'] = display_name
+                u_profile['bio'] = "I'm a DND player at HGHS!"
+                print(u_profile)
             else:
+                # u_profile['exists'] = True
                 u_profile['display_name'] = row[0]
                 u_profile['bio'] = row[1]
             conn.close()
@@ -469,10 +487,6 @@ def get_notices():
             return jsonify({'status':"fail",'message':'unauthenticated'})
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
-# IF EXISTS (select * from YourTable)
-# SELECT 'Table is not empty'
-# ELSE
-# SELECT 'Table is empty'
         cursor.execute('''
             IF EXISTS (SELECT * from notices)
                 SELECT 
@@ -487,9 +501,11 @@ def get_notices():
                 SELECT 'No notices'
         ''')
         table = cursor.fetchall()
+        print(table)
         notices = []
         if table == "No notices":
             notices = table
+            print(notices)
         else:
             for row in table():
                 notice = {'title': row[0], 'body': row[1], 'date':row[2], 'author':row[3]}

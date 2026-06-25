@@ -22,6 +22,7 @@
                 // retrieving the notices
                 const response = await fetch("/api/getnotices", {method: "GET", credentials: 'same-origin'});
                 const data = await response.json();
+                alert(data)
                 // defining the container for these saved notes (the empty div with the previous-notes ID)
                 if (data.status === 'success') {
                     const container = document.getElementById('previous-notices');

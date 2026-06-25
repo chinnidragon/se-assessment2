@@ -27,19 +27,27 @@
                     // for loop that iterates through all the note entries 
                         // previous note div
                     const profileDiv = document.createElement('div');
-                    if (data.profile === "none"){
-                        profileDiv.textContent = "You haven't made one!";
-                        container.appendChild(profileDiv)
-                        return;
-                } else {
-                    // creating the date and body of the note
                     const name = document.createElement('h3'); name.textContent = data.profile.display_name;
                     const bio = document.createElement('p'); bio.textContent = data.profile.bio;
                     bio.style.background = '#FE4036';
                     profileDiv.appendChild(name);
                     profileDiv.appendChild(bio);
                     container.appendChild(profileDiv);
-                };
+                //     if (data.profile === "none"){
+                //         const name = document.createElement('h3'); name.textContent = data.profile.display_name;
+                //         const bio = document.createElement('p'); bio.textContent = "Hi! I'm a DND player at HGHS!";
+                //         container.appendChild(name)
+                //         container.appendChild(bio)
+                //         return;
+                // } else {
+                //     // creating the date and body of the note
+                //     const name = document.createElement('h3'); name.textContent = data.profile.display_name;
+                //     const bio = document.createElement('p'); bio.textContent = data.profile.bio;
+                //     bio.style.background = '#FE4036';
+                //     profileDiv.appendChild(name);
+                //     profileDiv.appendChild(bio);
+                //     container.appendChild(profileDiv);
+                // };
             } else {
                 if (data.message === "unauthenticated") {
                     alert("Sign in to see/save your profile")
