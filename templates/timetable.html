@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>tiki tiki tiki tiiiikii</title>
-    <link rel="stylesheet" href="../static/stylesheet.css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
 </head>
 <body>
     <h1>Timetables</h1>
@@ -63,8 +63,28 @@
         <!-- The sessions will be DD/MM/YY followed by Weekday Day Month-->
     </div>
     <script>
+        async function getTimetable() {
+            try {
+                // retrieving the current timetable
+                const response = await fetch("/api/gettimetable", {method: "GET", credentials: 'same-origin'});
+                if (response['status'] === 'success') {
+                    const data = await response.json();
+                    // for loop that iterates through the active dats, adding "scheduled session" text
+                    for (const day of data.active_days) {
+                        const container = document.getElementById(day);
+                        // create a new stylesheet and making it the "active day class"
+                        activeDay = document.createElement('div'); activeDay.innerHTML = `<h2>Scheduled session!</h2>`;
+                        container.appendChild(activeDay);
+                    }
+                } else {
+                    alert("Error,", response['message']);
+            }
+                } catch (error) {
+                    alert("Error, try again later");
+                }
+            }
         // different buttons will be visible for people with different perms
-        async function getevents() {
+        async function getEvents() {
             try {
                 // retrieving the saved notes
                 const response = await fetch("/api/getevents", {method: "GET", credentials: 'same-origin'});
@@ -73,31 +93,34 @@
                 if (response['status'] == 'success') {
                     const data = await response.json();
                     // for loop that iterates through all the note entries, then 
-                    for (const [date, body] of Object.entries(data['еvents'])) {
+                    for (const [date, title, body] of Object.entries(data['еvents'])) {
                         const event = document.createElement('div');
                         event.innerHTML = `<h2>${date}</h2><h3 style="background=#B00B69">${escapeHtml(body)}</h3>`;
                         container.appendChild(event);
+                    }
+                } else {
+                    alert(`Error, ${response['message']}`);
                 }
-            } else {
-                alert("Error,", response['message']);
-        }
             } catch (error) {
                 alert("Error, try again later");
             }
         }
 
-
-        const response = await fetch('/adminnotices', {methods: ['GET'], credentials:"same-origin"});
-        if (response.admin) {
-            const noticeButtonDiv = document.createElement('div');
-            noticeButtonDiv.innerHTML = `<button id="newnotice">Add new notice</button>`;
-            container.appendChild(previousnote);
+        getTimetable()
+        getEvents()
+        const response = await fetch('/api/admin', {methods: ['GET'], credentials:"same-origin"});
+        const data = response.json()
+        if (data.admin) {
+            const container = document.getElementById('upcoming-sess')
+            const eventButtonDiv = document.createElement('div');
+            eventButtonDiv.innerHTML = `<button id="newevent" class="btn">Create new event</button>`;
+            eventButtonDiv.appendChild(eventButtonDiv);
+            eventButton = getElementById()
+            newnotice.addEventListener("click", async (e) => {
+                e.preventDefault();
+                window.open("{{ url_for('t_event') }}");
+            });
         }
-
-        newnotice.addEventListener("click", async (e) => {
-            e.preventDefault();
-            window.open("{{ url_for('notices') }}");
-        });
     </script>
 </body>
 </html>

@@ -65,6 +65,9 @@ def init_db():
             display_name TEXT NOT NULL,
             bio TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS timetable (
+            active_days JSON
+        );
     ''')
     conn.commit()
     conn.close()
@@ -297,13 +300,16 @@ def check_sessionID():
 @app.route('/api/admin', methods=['GET'])
 def admin_check():
     if 'user_id' in session:
+        print('hi')
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
         # admin_idlist = []
         cursor.execute('SELECT id FROM logins WHERE role = ?', ("admin",))
         adminIDs = cursor.fetchall()
+        print('hi')
         for a_id in adminIDs:
             if session.get('user_id') == a_id:
+                print('hi')
                 return jsonify({'admin': True})
         return jsonify({'admin': False})
     else:
@@ -344,8 +350,8 @@ def save_char():
             conn.close()
             return jsonify({'status': 'success'})
         else:
+            print('die')
             return jsonify({'status':'fail','message':'unauthenticated'})
-
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
@@ -370,22 +376,17 @@ def get_chars():
         if 'user_id' in session:
             all_characters = []
             user_characters = []
-            # cursor.execute('SELECT id FROM logins WHERE email = ?', rows[0])
-            # ids = cursor.fetchall()
             for c in rows:
                 if c[0] == session.get('user_id'):
                     user_characters.append({'name': c[2], 'info': json.loads(c[3]), 'stats': json.loads(c[4])})
                 else:
                     all_characters.append({'user': c[1], 'name': c[2], 'info': json.loads(c[3]), 'stats': json.loads(c[4])})
-            print(all_characters)
-            print(user_characters)
             conn.close()
             return jsonify({'status': 'success', 'signedin': True, 'all_c': all_characters, 'user_c': user_characters})
         else:
-            user_characters = []
+            all_characters = []
             for c in rows:
                 all_characters.append({'user': c[1], 'name': c[2], 'info': json.loads(c[3]), 'stats': json.loads(c[4])})
-            print(all_characters)
             conn.close()
             return jsonify({'status': 'success', 'signedin': False, 'all_c': all_characters})
 
@@ -468,26 +469,75 @@ def get_notices():
             return jsonify({'status':"fail",'message':'unauthenticated'})
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
+# IF EXISTS (select * from YourTable)
+# SELECT 'Table is not empty'
+# ELSE
+# SELECT 'Table is empty'
         cursor.execute('''
-            SELECT 
-                notices.title, 
-                notices.body, 
-                notices.date, 
-                logins.email
-            FROM notices 
-            JOIN logins ON notices.user_id = logins.id
-            ORDER BY notices.date DESC
+            IF EXISTS (SELECT * from notices)
+                SELECT 
+                    notices.title, 
+                    notices.body, 
+                    notices.date, 
+                    logins.email
+                FROM notices 
+                JOIN logins ON notices.user_id = logins.id
+                ORDER BY notices.date DESC
+            ELSE
+                SELECT 'No notices'
         ''')
+        table = cursor.fetchall()
         notices = []
-        for row in cursor.fetchall():
-            notice = {'title': row[0], 'body': row[1], 'date':row[2], 'author':row[3]}
-            notices.append(notice)
+        if table == "No notices":
+            notices = table
+        else:
+            for row in table():
+                notice = {'title': row[0], 'body': row[1], 'date':row[2], 'author':row[3]}
+                notices.append(notice)
         return jsonify({'status': "success", "notices": notices})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    
-@app.route('/api/saveevent')
+
+@app.route('/api/savetimetable', methods=['POST'])
+def save_timetable():
+    try:
+        if 'user_id' in session:
+            data = request.json
+            conn = sqlite3.connect('dnd.db')
+            cursor = conn.cursor()
+            days = data.get('days')
+            print(days) 
+            cursor.execute('''
+                UPDATE timetable 
+                SET active_days = ?
+            '''), (days,)
+            conn.commit()
+            conn.close()
+            return jsonify({'status': 'success'})
+        else:
+            return jsonify({'status':'fail','message':'unauthenticated'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/gettimetable', methods=['GET'])
+def get_timetable():
+    try:
+        conn = sqlite3.connect('dnd.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT active_days FROM timetable 
+        ''')
+        active_days = cursor.fetchone()
+        if len(active_days) == 0:
+            active_days = []
+        return jsonify({'status': "success", "active_days": active_days})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/saveevent', methods=['POST'])
 def save_event():
     try:
         if 'user_id' in session:
@@ -509,6 +559,23 @@ def save_event():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
+@app.route('/api/getevents', methods=['GET'])
+def get_events():
+    try:
+        conn = sqlite3.connect('dnd.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT date, title, body FROM event ORDER BY date DESC', (session['user_id'],))
+        # print(cursor.fetchall())
+        rows = cursor.fetchall()
+        print(rows)
+        events = []
+        for r in rows:
+            events.append({'date': r[0], 'title': r[1], 'body':r[2]})
+        conn.close()
+        return jsonify({'status': 'success', 'events': events})
+    except Exception as e:
+        return jsonify({'status': 'fail', 'message': str(e)}), 500
 
 
 # functions defined after this line DO NOT RUN do NOT define a function after this

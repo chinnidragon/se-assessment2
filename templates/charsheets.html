@@ -81,6 +81,7 @@
                 ch_info['stats'] = stats
 
                 try {
+                    alert('hello')
                     const response = await fetch("/api/savechar", {
                         method: "POST",
                         headers: {"Content-Type": "application/json"},
@@ -88,16 +89,20 @@
                         body: JSON.stringify(ch_info)
                 });
                     const data = await response.json();
-                    if (data.status == 'success') {
+                    if (data.status === 'success') {
                         alert("Character sheet successfully saved!")
                         window.location.href = ('{{ url_for("view_chars")}}')
                         // debug
                         // console.log('Hello, World!')
                 } else {
-                        alert(`Error, ${data.error}`)
+                    if (data.message === "unauthenticated") {
+                        alert("Sign in to see/save your profile")
+                        window.location.href = ('{{ url_for("login")}}')
+                    } else {
+                        alert(`Error, ${data.message}`);
+                    }
                 }
             } catch (error) {
-                // console.error("Error saving membership", error);
                 alert("Error, try again later");
             }
     });

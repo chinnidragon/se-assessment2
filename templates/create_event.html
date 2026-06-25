@@ -27,32 +27,34 @@
         change the current timetable
     </h1>
 
-    Add regular session on:
-<form id="regular-event-form">
-    <fieldset>
-        <legend>Week A</legend>
-        <input type="checkbox" id="weekAMon"> Monday
-        <input type="checkbox" id="weekATue"> Tuesday
-        <input type="checkbox" id="weekAWed"> Wednesday
-        <input type="checkbox" id="weekAThu"> Thursday
-        <input type="checkbox" id="weekAFri"> Friday
-    </fieldset>
+    
+    <form id="regular-timetable-form">
+        Make regular sessions on:
+        <fieldset>
+            <legend>Week A</legend>
+            <input type="checkbox" id="weekAMon" name="dice" value="weekAMon"> Monday
+            <input type="checkbox" id="weekATue" name="dice" value="weekATue"> Tuesday
+            <input type="checkbox" id="weekAWed" name="dice" value="weekAWed"> Wednesday
+            <input type="checkbox" id="weekAThu" name="dice" value="weekAThu"> Thursday
+            <input type="checkbox" id="weekAFri" name="dice" value="weekAFri"> Friday
+        </fieldset>
 
-    <fieldset>
-        <legend>Week B</legend> 
-        <input type="checkbox" id="weekBMon"> Monday
-        <input type="checkbox" id="weekBTue"> Tuesday
-        <input type="checkbox" id="weekBWed"> Wednesday
-        <input type="checkbox" id="weekBThu"> Thursday
-        <input type="checkbox" id="weekBFri"> Friday
-    </fieldset>
-
-</form>
+        <fieldset>
+            <legend>Week B</legend> 
+            <input type="checkbox" id="weekBMon" name="dice" value="weekBMon"> Monday
+            <input type="checkbox" id="weekBTue" name="dice" value="weekBTue"> Tuesday
+            <input type="checkbox" id="weekBWed" name="dice" value="weekBWed"> Wednesday
+            <input type="checkbox" id="weekBThu" name="dice" value="weekBThu"> Thursday
+            <input type="checkbox" id="weekBFri" name="dice" value="weekBFri"> Friday
+        </fieldset>
+    <input type="submit" class="btn" value="Create event">
+    </form>
 
     <script>
-
-        if (form) {
-            form.addEventListener('submit', async (e) => {
+        const eventform = document.getElementById('custom-event-form')
+        const timetableform = document.getElementById('regular-timetable-form')
+        if (eventform) {
+            eventform.addEventListener('submit', async (e) => {
             // Preventing the default event (here it stops the browser's default behaviour)
                 e.preventDefault();
                 // loading all information into a dictionary to send to the backend
@@ -74,7 +76,7 @@
                         credentials: 'same-origin',
                         body: JSON.stringify(event)
                 });
-                data = await response.json()
+                const data = await response.json()
                     if (data.status === 'success') {
                         alert("Event successfully saved!")
                         window.location.href = "{{ url_for('timetable') }}";
@@ -85,9 +87,40 @@
                         alert("Error, try again later");
                     }
             });
-    } else {
-        console.error("wheres the form vro")
-    }
+        } else {
+            console.error("wheres the form vro")
+        }
+        if (timetableform) {
+            timetableform.addEventListener('submit', async (e) => {
+            // Preventing the default event (here it stops the browser's default behaviour)
+            e.preventDefault();
+            // selecting EVERY day that was picked
+            const days = Array.from(document.querySelectorAll('input[name="day"]:checked').value);
+            if (!days) {
+                alert('Please select a day')
+                return;
+            } else {
+                const response = await fetch("/api/savetimetable", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(days)
+                });
+                const data = await response.json()
+                    if (data.status === 'success') {
+                        alert("Timetable successfully edited!")
+                        window.location.href = "{{ url_for('timetable') }}";
+                } else {
+                    alert("Error, try again later")
+                };
+                    
+            };
+
+    });
+
+        } else {
+            console.error("wheres the form vro")
+        }
+    
     </script>
 </body>
 </html>
