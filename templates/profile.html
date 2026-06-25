@@ -18,12 +18,10 @@
         async function getprofile() {
             try {
                 // retrieving the saved notes
-                alert('okay');
                 const response = await fetch('/api/getprofile', {method: "GET", credentials: 'same-origin'});
                 const data = await response.json();
                 // defining the container for these saved notes (the empty div with the previous-notes ID)
                 if (data.status === 'success') {
-                    alert('yay')
                     const container = document.getElementById('profile_info');
                     container.innerHTML = '';
                     // for loop that iterates through all the note entries 
@@ -43,7 +41,6 @@
                     container.appendChild(profileDiv);
                 };
             } else {
-                print('no')
                 if (data.message === "unauthenticated") {
                     alert("Sign in to see/save your profile")
                     window.location.href = ('{{ url_for("login")}}')

@@ -46,6 +46,13 @@ def init_db():
             info TEXT NOT NULL,
             stats TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS event (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL REFERENCES logins(id),
+            date TEXT NOT NULL,
+            title TEXT NOT NULL,
+            body TEXT
+        );
         CREATE TABLE IF NOT EXISTS notes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL REFERENCES logins(id),
@@ -105,6 +112,10 @@ def view_chars():
 @app.route('/timetable')
 def timetable():
     return render_template('timetable.html')
+
+@app.route('/timetable/create')
+def t_event():
+    return render_template('create_event.html')
 
 @app.route('/notes')
 def notes():
@@ -251,7 +262,7 @@ def get_profile():
             row = cursor.fetchone()
             print(row)
             u_profile = {}
-            if row.len == 0:
+            if not row:
                 u_profile = "none"
             else:
                 u_profile['display_name'] = row[0]
@@ -262,6 +273,7 @@ def get_profile():
             return jsonify({'status':'fail','message':'unauthenticated'})
     except Exception as e:
         return jsonify({'status': 'fail', 'message': str(e)}), 500
+
 
 #logout
 @app.route('/api/logout', methods=['GET'])
@@ -474,6 +486,30 @@ def get_notices():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/api/saveevent')
+def save_event():
+    try:
+        if 'user_id' in session:
+            data = request.json
+            conn = sqlite3.connect('dnd.db')
+            cursor = conn.cursor()
+            date = data.get('date') 
+            title = data.get('title')
+            body = data.get('body')
+            cursor.execute('''
+                INSERT INTO event (user_id, title, body, date)
+                VALUES (?, ?, ?, ?)
+            ''', (session['user_id']), title, body, date)
+            conn.commit()
+            conn.close()
+            return jsonify({'status': 'success'})
+        else:
+            return jsonify({'status':'fail','message':'unauthenticated'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 
 # functions defined after this line DO NOT RUN do NOT define a function after this
 if __name__ == '__main__':

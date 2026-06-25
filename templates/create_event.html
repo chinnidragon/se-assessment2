@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin mention part 2</title>
+</head>
+<body>
+    <h1>
+        create an event
+    </h1>
+
+    <form id="custom-event-form">
+        <fieldset>
+            <legend>New event</legend>
+            <label>Event title</label>
+            <input type="text" id="event-title" value="Title" required>
+            <label>When is it?</label>
+            <input type="date" id="event-date" required>
+            <label>(Optional) Any extra info!</label>
+            <textarea name="notice_body" id="event-body" placeholder="Any extra info..."></textarea>
+        </fieldset>
+        <input type="submit" class="btn" value="Create event">
+    </form>
+
+    <h1>
+        change the current timetable
+    </h1>
+
+    Add regular session on:
+<form id="regular-event-form">
+    <fieldset>
+        <legend>Week A</legend>
+        <input type="checkbox" id="weekAMon"> Monday
+        <input type="checkbox" id="weekATue"> Tuesday
+        <input type="checkbox" id="weekAWed"> Wednesday
+        <input type="checkbox" id="weekAThu"> Thursday
+        <input type="checkbox" id="weekAFri"> Friday
+    </fieldset>
+
+    <fieldset>
+        <legend>Week B</legend> 
+        <input type="checkbox" id="weekBMon"> Monday
+        <input type="checkbox" id="weekBTue"> Tuesday
+        <input type="checkbox" id="weekBWed"> Wednesday
+        <input type="checkbox" id="weekBThu"> Thursday
+        <input type="checkbox" id="weekBFri"> Friday
+    </fieldset>
+
+</form>
+
+    <script>
+
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+            // Preventing the default event (here it stops the browser's default behaviour)
+                e.preventDefault();
+                // loading all information into a dictionary to send to the backend
+                const event = {}
+                date = document.getElementById('event-date').value;
+                const eDate = new Date(date);
+                event['date'] = eDate.toDateString()
+                eventTitle = document.getElementById('event-title').value;
+                event['title'] = title
+                body = document.getElementById('event-body').value;
+                event['body'] = body
+                // readable human format
+
+                try {
+                    const response = await fetch("/api/saveevent", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        //mitigating CSRF - ONLY accepts it from 127.0.0.1:5000
+                        credentials: 'same-origin',
+                        body: JSON.stringify(event)
+                });
+                data = await response.json()
+                    if (data.status === 'success') {
+                        alert("Event successfully saved!")
+                        window.location.href = "{{ url_for('timetable') }}";
+                } else {
+                        alert("Error, try again later")
+                }
+                    } catch (error) {
+                        alert("Error, try again later");
+                    }
+            });
+    } else {
+        console.error("wheres the form vro")
+    }
+    </script>
+</body>
+</html>
