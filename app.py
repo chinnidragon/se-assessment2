@@ -149,29 +149,24 @@ def slices():
     return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
 
 @app.route('/20d')
-def twentyd():
+def twenty_d():
     return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
 
 @app.route('/12d')
-def twentyd():
+def twelve_d():
     return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
 
 @app.route('/10d')
-def twentyd():
+def ten_d():
     return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
 
 @app.route('/6d')
-def twentyd():
+def six_d():
     return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
 
 @app.route('/4d')
-def twentyd():
+def four_d():
     return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
-
-@app.route('/20d')
-def twentyd():
-    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
-
 
 # @app.route('/username')
 # def user():
@@ -316,10 +311,12 @@ def get_profile():
 
 
 #logout
-@app.route('/api/logout', methods=['GET'])
+@app.route('/api/logout', methods=['POST'])
 def user_logout():
     try:
+        print(session.get('user_id'))
         session.pop('user_id') 
+        print(session.get('user_id'))
         return jsonify({'status':'success'})
     except Exception as e:
         return jsonify({'status':'fail', 'message':str(e)})
@@ -392,7 +389,7 @@ def save_char():
             print('die')
             return jsonify({'status':'fail','message':'unauthenticated'})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'status': 'fail', 'message' :str(e)}), 500
     
 
 @app.route('/api/getchars', methods=['GET'])

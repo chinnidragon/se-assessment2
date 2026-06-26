@@ -119,9 +119,9 @@
                     //the value of the roll and a new button to reroll
                 const diceDiv = document.createElement('div');
                 diceDiv.id = 'diceDiv'
-                diceDiv.class = 'genericflex'
+                diceDiv.class = 'card'
                 //can add styling and stuff like later.....
-                const diceValueTitle = document.createElement('h1');
+                const diceValueTitle = document.createElement('h3');
                 diceValueTitle.textContent = `With the ${dicesides} side dice:`
 
                 const diceValue = document.createElement('p');
@@ -154,6 +154,7 @@
             // attaching the newly created elements (Dice value, roll button)
             // as a child to the all-encompassing Dice Div
             // which is in turn attached to the DOM (so that it becomes visible)
+            diceDiv.appendChild(diceValueTitle);
             diceDiv.appendChild(diceValue);
             diceDiv.appendChild(roller);
             document.body.appendChild(diceDiv);

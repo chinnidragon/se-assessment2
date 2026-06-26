@@ -13,10 +13,6 @@
     <!--okay so i need it to be like with a TEMPLATE and also a MAKE UR OWN..!!! -->
     <!-- i need to learn how to do dynamic js -->
     <h2>
-        View everyone else's characters!
-    </h2>
-    <a class="btn" href='{{ url_for("view_chars")}}'> hell freaking yeah </a>
-    <h2>
         Template
     </h2>
     <form id="form">
@@ -36,18 +32,19 @@
                 <input name="ch_dex" id="ch_dex" placeholder="Dexterity" type="number" min="0" max="20" required>
                 <input name="ch_con" id="ch_con" placeholder="Constitution" type="number" min="0" max="20" required>
                 <input name="ch_int" id="ch_int" placeholder="Intelligence" type="number" min="0" max="20" required>
+                <input name="ch_wis" id="ch_wis" placeholder="Wisdom" type="number" min="0" max="20" required>
+                <input name="ch_cha" id="ch_cha" placeholder="Charisma" type="number" min="0" max="20" required>
             </div>
 
         </fieldset>
-
-        <!-- <fieldset>
-            <legend>Image of the character</legend>
-            <input class="btn" name="ch_img" id="ch_img" type="file" accept="image/*">
-        </fieldset> -->
     </div>
         <input class="btn" type="submit" name="charsheet-submit" id="charsheet-submit">
     </form>
 
+    <h2>
+        View everyone else's characters!
+    </h2>
+    <a class="btn" href='{{ url_for("view_chars")}}'> hell freaking yeah </a>
 
     <script>
         const form = document.getElementById('form');
@@ -72,16 +69,19 @@
                 const dex = parseInt(document.getElementById('ch_dex').value, 10);
                 const con = parseInt(document.getElementById('ch_con').value, 10);
                 const int = parseInt(document.getElementById('ch_int').value, 10);
+                const wis = parseInt(document.getElementById('ch_wis').value, 10);
+                const cha = parseInt(document.getElementById('ch_cha').value, 10);
                 stats['str'] = str
                 stats['dex'] = dex
                 stats['con'] = con
                 stats['int'] = int
+                stats['wish'] = wis
+                stats['cha'] = cha
                 ch_info['name'] = name
                 ch_info['info'] = info
                 ch_info['stats'] = stats
 
                 try {
-                    alert('hello')
                     const response = await fetch("/api/savechar", {
                         method: "POST",
                         headers: {"Content-Type": "application/json"},

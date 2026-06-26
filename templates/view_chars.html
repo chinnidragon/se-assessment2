@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>
-        Viewing characters
+        See everyone's characters
     </h1>
     <a class="btn" href="{{ url_for('charsheets')}}">Create your own!</a>
     <div id="characters" class="characters">
@@ -39,16 +39,25 @@
                                 const p = document.createElement('p'); p.textContent = 'No characters yet.';
                                 u_characters.appendChild(p)
                             } else {
-                                const c_name = document.createElement('h3'); c_name.textContent = ch_entry.name;
+                                const c_name = document.createElement('h2'); c_name.textContent = ch_entry.name;
+                                const c_infoHead = document.createElement('h3'); c_statsHead.textContent = "General Info"
                                 const c_info = document.createElement('p'); 
                                 c_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}} `
+                                const c_statsHead = document.createElement('h3'); c_statsHead.textContent = "Stats"
                                 const c_stats = document.createElement('p'); 
-                                c_stats.textContent = `Strength: ${ch_entry.stats['str']}, Dexterity: ${ch_entry.stats['dex']}, Cont: ${ch_entry.stats['con']}, Intelligence: ${ch_entry.stats['int']}`;
+                                c_stats.textContent = 
+                                    ```Strength: ${ch_entry.stats['str']}\n
+                                    Dexterity: ${ch_entry.stats['dex']}\n
+                                    Constitution: ${ch_entry.stats['con']}\n
+                                    Intelligence: ${ch_entry.stats['int']}\n
+                                    Wisdom: ${ch_entry.stats['wis']}\n
+                                    Charisma: ${ch_entry.stats['cha']}```;
                                 u_characters.appendChild(c_name);
+                                u_characters.appendChild(c_infoHead);
                                 u_characters.appendChild(c_info);
+                                u_characters.appendChild(c_statsHead);
                                 u_characters.appendChild(c_stats);
                             };
-
                         };
                         
                         const otherH = document.createElement('h2'); otherH.textContent = "Other's characters";
@@ -62,15 +71,25 @@
                                 //breaking the statement
                                 return;
                             } else {
-                                const a_user = document.createElement('h3'); a_user.textContent = ch_entry.user;
-                                const a_name = document.createElement('h3'); a_name.textContent = ch_entry.name;
+                                const a_user = document.createElement('h2'); a_user.textContent = ch_entry.user;
+                                const a_name = document.createElement('h2'); a_name.textContent = ch_entry.name;
+                                const a_infoHead = document.createElement('h3'); a_statsHead.textContent = "General Info"
                                 const a_info = document.createElement('p'); 
-                                a_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}}`;
+                                a_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}} `
+                                const a_statsHead = document.createElement('h3'); a_statsHead.textContent = "Stats"
                                 const a_stats = document.createElement('p'); 
-                                a_stats.textContent = `Strength: ${ch_entry.stats['str']}, Dexterity: ${ch_entry.stats['dex']}, Cont: ${ch_entry.stats['con']}, Intelligence: ${ch_entry.stats['int']}`;
+                                a_stats.textContent = 
+                                    ```Strength: ${ch_entry.stats['str']}\n
+                                    Dexterity: ${ch_entry.stats['dex']}\n
+                                    Constitution: ${ch_entry.stats['con']}\n
+                                    Intelligence: ${ch_entry.stats['int']}\n
+                                    Wisdom: ${ch_entry.stats['wis']}\n
+                                    Charisma: ${ch_entry.stats['cha']}```;
                                 a_characters.appendChild(a_user)
                                 a_characters.appendChild(a_name);
+                                a_characters.appendChild(a_infoHead);
                                 a_characters.appendChild(a_info);
+                                a_characters.appendChild(a_statsHead);
                                 a_characters.appendChild(a_stats);
                             };
                         };
@@ -86,15 +105,25 @@
                                 const p = document.createElement('p'); p.textContent = 'No characters yet.';
                                 u_characters.appendChild(p)
                             } else {
-                                const a_user = document.createElement('h3'); a_user.textContent = ch_entry.user;
-                                const a_name = document.createElement('h3'); a_name.textContent = ch_entry.name;
+                                const a_user = document.createElement('h2'); a_user.textContent = ch_entry.user;
+                                const a_name = document.createElement('h2'); a_name.textContent = ch_entry.name;
+                                const a_infoHead = document.createElement('h3'); a_statsHead.textContent = "General Info"
                                 const a_info = document.createElement('p'); 
-                                a_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}} `;
+                                a_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}} `
+                                const a_statsHead = document.createElement('h3'); a_statsHead.textContent = "Stats"
                                 const a_stats = document.createElement('p'); 
-                                a_stats.textContent = `Strength: ${ch_entry.stats['str']}, Dexterity: ${ch_entry.stats['dex']}, Cont: ${ch_entry.stats['con']}, Intelligence: ${ch_entry.stats['int']}`;
+                                a_stats.textContent = 
+                                    `Strength: ${ch_entry.stats['str']}\n
+                                    Dexterity: ${ch_entry.stats['dex']}\n
+                                    Constitution: ${ch_entry.stats['con']}\n
+                                    Intelligence: ${ch_entry.stats['int']}\n
+                                    Wisdom: ${ch_entry.stats['wis']}\n
+                                    Charisma: ${ch_entry.stats['cha']}`;
                                 a_characters.appendChild(a_user)
                                 a_characters.appendChild(a_name);
+                                a_characters.appendChild(a_infoHead);
                                 a_characters.appendChild(a_info);
+                                a_characters.appendChild(a_statsHead);
                                 a_characters.appendChild(a_stats);
                             };
                         };
@@ -103,7 +132,7 @@
                 }
             } catch (error) {
                 console.error(error);
-                alert("Error, try again later");
+                alert(`Error, ${str(error)}`);
             };
         };
 
