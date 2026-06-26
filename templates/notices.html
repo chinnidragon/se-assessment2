@@ -60,20 +60,25 @@
     }
         getnotices()
 
-        const response = await fetch('/api/admin', {methods: ['GET'], credentials: 'same-origin'});
-        data = await response.json()
-        if (data.admin) {
-            // const noticeButtonDiv = document.createElement('div');
-            const noticeButtonDiv = document.getElementById("notice-button");
-            noticeButtonDiv.innerHTML = `<button id="newnotice">Add new notice</button>`;
-            // container.appendChild(noticeButtonDiv);
+        async function checkAdmin() {
+
+            const response = await fetch('/api/admin', {methods: ['GET'], credentials: 'same-origin'});
+            data = await response.json()
+            if (data.admin) {
+                // const noticeButtonDiv = document.createElement('div');
+                const noticeButtonDiv = document.getElementById("notice-button");
+                noticeButtonDiv.innerHTML = `<button id="newnotice">Add new notice</button>`;
+                // container.appendChild(noticeButtonDiv);
+            }
+            const newnoticeButton = document.getElementById("newnotice");
+            newnoticeButton.addEventListener("click", async (e) => {
+                e.preventDefault();
+                window.open("{{ url_for('create_notices') }}");
+            });
         }
 
-        const newnoticeButton = document.getElementById("newnotice");
-        newnoticeButton.addEventListener("click", async (e) => {
-            e.preventDefault();
-            window.open("{{ url_for('create_notices') }}");
-        });
+        checkAdmin()
+
     </script>
 </body>
 </html>

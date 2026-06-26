@@ -6,15 +6,15 @@
     <title>Document</title>
 </head>
 <body>
-    please wait...
+    <!-- please wait... -->
     <script>
         const response = await fetch('/api/logout', {methods:['GET'], credentials:'same-origin'})
-        logoutSuccess = await response.json()
+        logout = await response.json()
         if (logout.status === "success") {
             alert('Logged out successfuly! Taking you to the start:')
-            window.location.href = "{{ url_for ('home') }}"
+            window.location.href = "{{ url_for('index')}}"
         } else {
-            alert('Error, try again')
+            alert(`Error, try again: ${logout.message}`)
         }
     </script>
 </body>

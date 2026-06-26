@@ -148,6 +148,31 @@ def manifest():
 def slices():
     return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
 
+@app.route('/20d')
+def twentyd():
+    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
+
+@app.route('/12d')
+def twentyd():
+    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
+
+@app.route('/10d')
+def twentyd():
+    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
+
+@app.route('/6d')
+def twentyd():
+    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
+
+@app.route('/4d')
+def twentyd():
+    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
+
+@app.route('/20d')
+def twentyd():
+    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
+
+
 # @app.route('/username')
 # def user():
 #     return session.get('username')
@@ -240,11 +265,8 @@ def save_profile():
             cursor = conn.cursor()
             display_n = data['display_name']
             bio = data['bio']
-            print(display_n)
-            print(bio)
             cursor.execute('SELECT 1 FROM profile WHERE user_id = ?', (session.get('user_id'),))
             profile_exists = cursor.fetchone()
-            print(profile_exists)
             if profile_exists:
                 cursor.execute('''
                     UPDATE profile 
@@ -274,16 +296,13 @@ def get_profile():
             cursor.execute('SELECT display_name, bio FROM profile WHERE user_id = ?', (session['user_id'],))
             # One because it matches only 1 profile
             row = cursor.fetchone()
-            print(row)
             u_profile = {}
             if not row:
                 # u_profile['exists'] = False
-                print(u_profile)
                 cursor.execute('SELECT email FROM logins WHERE id = ?', (session.get('user_id'),))
                 display_name = cursor.fetchone()
                 u_profile['display_name'] = display_name
                 u_profile['bio'] = "I'm a DND player at HGHS!"
-                print(u_profile)
             else:
                 # u_profile['exists'] = True
                 u_profile['display_name'] = row[0]
@@ -300,10 +319,10 @@ def get_profile():
 @app.route('/api/logout', methods=['GET'])
 def user_logout():
     try:
-        session.pop('user_id', None) 
+        session.pop('user_id') 
         return jsonify({'status':'success'})
     except Exception as e:
-        return jsonify({'status':'fail'})
+        return jsonify({'status':'fail', 'message':str(e)})
 
 #checking session ID
 @app.route('/api/sessionID', methods=['GET'])
@@ -317,6 +336,7 @@ def check_sessionID():
 #checking admin status (specifically for notices)
 @app.route('/api/admin', methods=['GET'])
 def admin_check():
+    print('hi')
     if 'user_id' in session:
         print('hi')
         conn = sqlite3.connect('dnd.db')
@@ -324,9 +344,10 @@ def admin_check():
         # admin_idlist = []
         cursor.execute('SELECT id FROM logins WHERE role = ?', ("admin",))
         adminIDs = cursor.fetchall()
+        print(adminIDs)
         print('hi')
         for a_id in adminIDs:
-            if session.get('user_id') == a_id:
+            if session.get('user_id') == a_id[0]:
                 print('hi')
                 return jsonify({'admin': True})
         return jsonify({'admin': False})
@@ -527,7 +548,7 @@ def save_timetable():
             cursor.execute('''
                 UPDATE timetable 
                 SET active_days = ?
-            '''), (days,)
+            ''', (days,))
             conn.commit()
             conn.close()
             return jsonify({'status': 'success'})
@@ -581,7 +602,11 @@ def get_events():
     try:
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
-        cursor.execute('SELECT date, title, body FROM event ORDER BY date DESC', (session['user_id'],))
+        cursor.execute('''
+            SELECT date, title, body 
+            FROM event 
+            ORDER BY date DESC
+        ''')
         # print(cursor.fetchall())
         rows = cursor.fetchall()
         print(rows)
