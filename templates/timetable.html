@@ -132,9 +132,11 @@
                 console.alert('deibruhde')
             }
         };
-        getTimetable()
-        getEvents()
-        checkAdmin()
+        document.addEventListener("DOMContentLoaded", () => {
+            getTimetable();
+            getEvents();
+            checkAdmin();
+        });
     </script>
 </body>
 </html>

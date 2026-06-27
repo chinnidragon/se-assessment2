@@ -27,55 +27,50 @@
                 if (data.status === 'success') {
                     const container = document.getElementById('previous-notices');
                     container.innerHTML = '';
-                    if (data.notices = "No notices") {
+                    if (data.notices === "No notices") {
                         const p = document.createElement('p'); p.textContent = "No notices";
                         return;
                     } else {
                     // for loop that iterates through all the created notices
-                    for (const notice of data.notices) {
-                        // previous notice div
-                        const pNotice = document.createElement('div');
-                        // if (note.body.length === 0) {
-                        //     const p = document.createElement('p'); p.textContent = "No notices";
-                        //     return;
-                        // }
-                        // creating the date, body and author of the notice
-                        const title = document.createElement('h3'); title.textContent = notice.title;
-                        const body = document.createElement('p'); body.textContent = notice.body;
-                        const date = document.createElement('p'); date.textContent = notice.date;
-                        pNotice.style.background = '#B00B69';
-                        pNotice.appendChild(title);
-                        pNotice.appendChild(body);
-                        pNotice.appendChild(date);
-                        container.appendChild(pNotice);
-                    }
-                }
-            } else {
-                alert(`Error:  ${data['message']}`);
-        }
-            } catch (error) {
-                console.error(error);
-                alert("Error, try again later");
+                        for (const notice of data.notices) {
+                            // previous notice div
+                            const pNotice = document.createElement('div');
+                            const title = document.createElement('h3'); title.textContent = notice.title;
+                            const body = document.createElement('p'); body.textContent = notice.body;
+                            const date = document.createElement('p'); date.textContent = notice.date;
+                            pNotice.style.background = '#B00B69';
+                            pNotice.appendChild(title);
+                            pNotice.appendChild(body);
+                            pNotice.appendChild(date);
+                            container.appendChild(pNotice);
+                        }
+                    };
+                } else {
+                    alert(`Error:  ${data['message']}`);
             }
+        } catch (error) {
+            console.error(error);
+            alert("Error, try again later");
+        }
     }
         getnotices()
 
         async function checkAdmin() {
 
-            const response = await fetch('/api/admin', {methods: ['GET'], credentials: 'same-origin'});
-            data = await response.json()
+            const response = await fetch('/api/admin', {method: 'GET', credentials: 'same-origin'});
+            const data = await response.json()
             if (data.admin) {
                 // const noticeButtonDiv = document.createElement('div');
                 const noticeButtonDiv = document.getElementById("notice-button");
                 noticeButtonDiv.innerHTML = `<button id="newnotice">Add new notice</button>`;
                 // container.appendChild(noticeButtonDiv);
-            }
-            const newnoticeButton = document.getElementById("newnotice");
-            newnoticeButton.addEventListener("click", async (e) => {
-                e.preventDefault();
-                window.open("{{ url_for('create_notices') }}");
+                const newnoticeButton = document.getElementById("newnotice");
+                newnoticeButton.addEventListener("click", async (e) => {
+                    e.preventDefault();
+                    window.open("{{ url_for('create_notices') }}");
             });
         }
+    }
 
         checkAdmin()
 

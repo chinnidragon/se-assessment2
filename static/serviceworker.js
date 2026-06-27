@@ -1,88 +1,40 @@
-const VERSION = "v1";
-const CACHE_NAME = `app-cache-${VERSION}`;
+const CACHE_NAME = "pwa-cache-v2";  // Increment version to force update
+const urlsToCache = [
+  "/",
+  "/homepage.html",
+  "/dice.html",
+  "/stylesheet.css",
+  "/millionsslices.png",
+];
 
+// Note that this is coded to minimise caching. This decreases performance but makes debugging easier
+self.addEventListener("install", event => {
+  // Immediately activate the service worker without caching anything
+  self.skipWaiting();
+  console.log("Service Worker installed. No caching performed.");
+});
 
-const APP_STATIC_RESOURCES = [
-    "/",
-    "/index.html",
-    "/stylesheet.css",
-    "/app.js",
-    "/millionsslices.png",
-  ];
-// the cache includes all the NECESSARY files
-// the service worker file itself does NOT need to be cached
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cache => caches.delete(cache))
+      );
+    }).then(() => {
+      console.log("All caches cleared during activation.");
+      return self.clients.claim();
+    })
+  );
+});
 
-self.addEventListener("install", (event) => {
-    event.waitUntil(
-      (async () => {
-        const cache = await caches.open(DND_CACHE);
-        cache.addAll(APP_STATIC_RESOURCES);
-      })(),
-    );
-  });
-
-  self.addEventListener("activate", (event) => {
-    event.waitUntil(
-      (async () => {
-        const names = await caches.keys();
-        await Promise.all(
-          names.map((name) => {
-            if (name !== DND_CACHE) {
-              return caches.delete(name);
-            }
-            return undefined;
-          }),
-        );
-        await clients.claim();
-      })(),
-    );
-  });
-
-
-  self.addEventListener("fetch", (event) => {
-    // when seeking an HTML page
-    if (event.request.mode === "navigate") {
-      // Return to the index.html page
-      event.respondWith(caches.match("/"));
-      return;
-    }
-
-    // For every other request type
-    event.respondWith(
-      (async () => {
-        const cache = await caches.open(DND_CACHE);
-        const cachedResponse = await cache.match(event.request.url);
-        if (cachedResponse) {
-          // Return the cached response if it's available.
-          return cachedResponse;
-        }
-        // Respond with a HTTP 404 response status.
-        return new Response(null, { status: 404 });
-      })(),
-    );
-  });
-
-
-// Does "serviceWorker" exist
-if ("serviceWorker" in navigator) {
-    // If yes, we register the service worker
-  }
-
-  if ("serviceWorker" in navigator) {
-    // Register the app's service worker
-    // Passing the filename where that worker is defined.
-    navigator.serviceWorker.register("sw.js");
-  }
-
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js").then(
-      (registration) => {
-        console.log("Service worker registration successful:", registration);
-      },
-      (error) => {
-        console.error(`Service worker registration failed: ${error}`);
-      },
-    );
-  } else {
-    console.error("Service workers are not supported.");
-  }
+// Fetch event - Always bypass cache and fetch from network
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      // Fallback to index.html for navigation requests if offline
+      if (event.request.mode === "navigate") {
+        return fetch("/index.html");
+      }
+    })
+  );
+});

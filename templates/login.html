@@ -15,7 +15,7 @@
             </h2>
             <div class="content">
                 <form class="form" id="form">
-                    <div class="card">
+                    <div class="card" style="width: 20vw; height: 10vw; align-items: left; min-width: 300px; min-height: 150px;">
                         <div style="display: flex; flex-direction: column; max-width: fit-content;">
                             <label for="email">Email</label>
                             <input type="email" id="email" name="email" required>
@@ -30,11 +30,11 @@
                     </div>
                 </form>
                 <h3>
-                    <a href="{{ url_for('signup') }}">Request membership</a>
+                    <a href="{{ url_for('signup') }}">Make an account</a>
                 </h3>
             </div>
         </div>
-        <img src="{{ url_for('static', filename='images/millionsslices.png')}}" width="500px">
+        <img src="{{ url_for('static', filename='images/millionsslices.png')}}">
     </div>
 
 

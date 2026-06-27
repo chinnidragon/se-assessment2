@@ -1,5 +1,5 @@
 #server
-from flask import Flask, render_template, request, jsonify, send_from_directory, url_for, session #serverside sessions
+from flask import Flask, redirect, render_template, request, jsonify, send_from_directory, url_for, session #serverside sessions
 #database
 import sqlite3
 # for generating session IDs
@@ -96,16 +96,26 @@ def home():
 def dice():
     return render_template('dice.html')
 
+#protected routes (MUST be signed in), increases security as it prevents bypassing to admin pages by manually entering url
 @app.route('/profile')
 def profile():
+    if 'user_id' not in session:
+            return redirect(url_for('login'))
+    
     return render_template('profile.html')
 
 @app.route('/profile/edit')
 def editprofile():
+    if 'user_id' not in session:
+            return redirect(url_for('login'))
+    
     return render_template('edit_profile.html')
 
 @app.route('/charactersheets')
 def charsheets():
+    if 'user_id' not in session:
+            return redirect(url_for('login'))
+    
     return render_template('charsheets.html')
 
 @app.route('/charactersheets/view')
@@ -118,14 +128,23 @@ def timetable():
 
 @app.route('/timetable/create')
 def t_event():
+    if 'user_id' not in session:
+            return redirect(url_for('login'))
+
     return render_template('create_event.html')
 
 @app.route('/notes')
 def notes():
+    if 'user_id' not in session:
+            return redirect(url_for('login'))
+    
     return render_template('notes.html')
 
 @app.route('/logout')
 def logout():
+    if 'user_id' not in session:
+            return redirect(url_for('login'))
+    session.clear()
     return render_template('logout.html')
 
 @app.route('/notices')
@@ -134,15 +153,15 @@ def notices():
 
 @app.route('/notices/create')
 def create_notices():
+    if 'user_id' not in session:
+            return redirect(url_for('login'))
+    
     return render_template('create_notices.html')
 
 @app.route('/manifest.json')
 def manifest():
     return send_from_directory('static', 'manifest.json', mimetype='application/json')
 
-# @app.route('/stylesheet.css')
-# def manifest():
-#     return send_from_directory('static', 'manifest.json', mimetype='stylesheet/css')
 
 @app.route('/slices')
 def slices():
@@ -167,10 +186,6 @@ def six_d():
 @app.route('/4d')
 def four_d():
     return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
-
-# @app.route('/username')
-# def user():
-#     return session.get('username')
 
 #APIs
 
@@ -233,15 +248,6 @@ def save_login():
                     INSERT INTO logins (email, password, role)
                     VALUES (?, ?, ?)
                 ''', (email, hashed_pass, 'user'))
-            
-            # cursor.execute('SELECT id FROM logins WHERE email = ?', (email,))
-            # user_id = cursor.fetchone()
-            # session['user_id'] = int(user_id[0])
-            # cursor.execute('SELECT display_name FROM profile WHERE user_id = ?', (session['user_id'],))
-            # username = cursor.fetchone()
-            # session['username'] = username
-            # # default setting: the browser cookie is non-permanent, user will log out when browser is closed
-            # session.permanent = True
             conn.commit()
             conn.close()
 
@@ -277,6 +283,7 @@ def save_profile():
             conn.close()
             return jsonify({'status': 'success'})
         else:
+            # additional checking JUST IN CASE redirect fails for whatever reason (done for all functions)
             return jsonify({'status':'fail','message':'unauthenticated'})
 
     except Exception as e:
@@ -311,15 +318,15 @@ def get_profile():
 
 
 #logout
-@app.route('/api/logout', methods=['POST'])
-def user_logout():
-    try:
-        print(session.get('user_id'))
-        session.pop('user_id') 
-        print(session.get('user_id'))
-        return jsonify({'status':'success'})
-    except Exception as e:
-        return jsonify({'status':'fail', 'message':str(e)})
+# @app.route('/api/logout', methods=['POST'])
+# def user_logout():
+#     try:
+#         print(session.get('user_id'))
+#         session.pop('user_id') 
+#         print(session.get('user_id'))
+#         return jsonify({'status':'success'})
+#     except Exception as e:
+#         return jsonify({'status':'fail', 'message':str(e)})
 
 #checking session ID
 @app.route('/api/sessionID', methods=['GET'])
@@ -333,22 +340,24 @@ def check_sessionID():
 #checking admin status (specifically for notices)
 @app.route('/api/admin', methods=['GET'])
 def admin_check():
-    print('hi')
+    # print('hi')
     if 'user_id' in session:
-        print('hi')
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
-        # admin_idlist = []
         cursor.execute('SELECT id FROM logins WHERE role = ?', ("admin",))
         adminIDs = cursor.fetchall()
         print(adminIDs)
         print('hi')
         for a_id in adminIDs:
+            print(a_id)
             if session.get('user_id') == a_id[0]:
                 print('hi')
+                conn.close()
                 return jsonify({'admin': True})
+        conn.close()
         return jsonify({'admin': False})
     else:
+        conn.close()
         return jsonify({'admin': False})
 
 #dice
@@ -448,8 +457,6 @@ def save_notes():
             return jsonify({'status': 'success'})
         else:
             return jsonify({'status':'fail','message':'unauthenticated'})
-        # except sqlite3.IntegrityError: 
-        #         return jsonify({'status': 'fail', 'message': 'Uhmmffff....'})
     except Exception as e:
         return jsonify({'status': 'fail', 'message': str(e)}), 500
 
@@ -460,7 +467,6 @@ def get_notes():
             conn = sqlite3.connect('dnd.db')
             cursor = conn.cursor()
             cursor.execute('SELECT date, notes FROM notes WHERE user_id = ? ORDER BY date DESC', (session['user_id'],))
-            # print(cursor.fetchall())
             rows = cursor.fetchall()
             print(rows)
             notes = []
@@ -501,12 +507,16 @@ def save_notices():
 @app.route('/api/getnotices', methods=['GET'])
 def get_notices():
     try:
-        if not 'user_id' in session:
-            return jsonify({'status':"fail",'message':'unauthenticated'})
+        print('1')
+        # if not 'user_id' in session:
+        #     return jsonify({'status':"fail",'message':'unauthenticated'})
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
-        cursor.execute('''
-            IF EXISTS (SELECT * from notices)
+        cursor.execute('SELECT 1 FROM notices')
+        print('2')
+        notice_exists = cursor.fetchone()
+        if notice_exists:
+            cursor.execute('''
                 SELECT 
                     notices.title, 
                     notices.body, 
@@ -515,9 +525,12 @@ def get_notices():
                 FROM notices 
                 JOIN logins ON notices.user_id = logins.id
                 ORDER BY notices.date DESC
-            ELSE
-                SELECT 'No notices'
         ''')
+        else:
+            cursor.execute('''
+                SELECT 'No notices'
+            ''')
+
         table = cursor.fetchall()
         print(table)
         notices = []
@@ -545,12 +558,13 @@ def save_timetable():
             cursor.execute('''
                 UPDATE timetable 
                 SET active_days = ?
-            ''', (days,))
+            ''', (json.dumps(days),))
             conn.commit()
             conn.close()
             return jsonify({'status': 'success'})
         else:
             return jsonify({'status':'fail','message':'unauthenticated'})
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -562,9 +576,11 @@ def get_timetable():
         cursor.execute('''
             SELECT active_days FROM timetable 
         ''')
-        active_days = cursor.fetchone()
+        row = cursor.fetchone()
         if len(active_days) == 0:
             active_days = []
+        else:
+            active_days = json.loads(row['active_days'])
         return jsonify({'status': "success", "active_days": active_days})
 
     except Exception as e:
@@ -584,7 +600,7 @@ def save_event():
             cursor.execute('''
                 INSERT INTO event (user_id, title, body, date)
                 VALUES (?, ?, ?, ?)
-            ''', (session['user_id']), title, body, date)
+            ''', ((session['user_id']), title, body, date))
             conn.commit()
             conn.close()
             return jsonify({'status': 'success'})
@@ -604,7 +620,6 @@ def get_events():
             FROM event 
             ORDER BY date DESC
         ''')
-        # print(cursor.fetchall())
         rows = cursor.fetchall()
         print(rows)
         events = []

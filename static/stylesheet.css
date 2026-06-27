@@ -46,6 +46,14 @@ h3 {
     letter-spacing: 1.5px;
 }
 
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea {
+    border: 2px;
+    border-color: #993e34; 
+    border-style: solid;
+    border-radius: 2px;       
+    padding: 5px;              
+}
+
 .descriptiontext {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 24px;
@@ -66,11 +74,9 @@ h3 {
 
 
 .indexpage {
-    /* display: grid;
-    grid-area: span; */
-    background-color: rgb(116, 12, 12);
-    background-image:  url_for('static', filename='images/millionsslices.png');
     display: grid;
+    grid-area: span;
+    background-color: rgb(116, 12, 12);
 } 
 
 .indexpage h1 {
@@ -86,8 +92,10 @@ h3 {
     justify-items: center; 
     align-items: start; */
     display: flex;
+    align-self: center;
     flex-direction: column;
     align-items: center;
+    max-width: 75vw;
 }
 
 .content a {
@@ -96,8 +104,7 @@ h3 {
 .content button {
     max-width: max-content;
 }
-/* Flexbox: 1-dimensional layouts (single row or column). Great for navbars, toolbars, aligning items along one axis, simple responsive wrapping.
-Grid: 2-dimensional layouts (rows + columns). Great for full pages, complex component layouts, explicit placement of items. */
+
 .genericflex {
     display: flex;
     justify-content: center;
@@ -154,8 +161,17 @@ button:hover {
     display: flex; 
     flex-direction: column;
     gap: 20px; 
-
 }
+
+.form input[type="number"] {
+    width: 100px;
+    height: 30px;
+    }
+
+.form textarea {
+    width: 100px;
+    resize: vertical;
+    }
 
 .dicebar {
     display: flex;
@@ -168,7 +184,7 @@ button:hover {
     /* width: clamp(10px, 5vw) */
 }
 
-.logolarge {
+.logobig {
     width:auto;
     padding: 12px;
     background-color: rgb(115, 6, 6);
@@ -190,7 +206,6 @@ button:hover {
     min-width:max-content;
 }
 
-
 .navbar a {
     color: aliceblue;
     text-decoration: none;
@@ -200,7 +215,11 @@ button:hover {
     text-decoration: underline;
 }
 
-
+.navlinks {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+}
 .navtext {
     display: flex;
     gap: 20px;
@@ -225,15 +244,6 @@ nav {
         padding: 0.5rem 1rem;
         max-width: fit-content;
     }
-}
-
-
-input[type="text"], input[type="email"], input[type="password"], textarea {
-    border: 2px;
-    border-color: #993e34; 
-    border-style: dashed;
-    border-radius: 4px;       
-    padding: 5px;              
 }
 
 
