@@ -4,7 +4,11 @@ const urlsToCache = [
   "/homepage.html",
   "/dice.html",
   "/stylesheet.css",
-  "/millionsslices.png",
+  "/images/millionsslices.png",
+  "/images/logobig.png",
+  "/images/logosmall.png",
+  "/images/question.png",
+  "/images/favicon.ico"
 ];
 
 // Note that this is coded to minimise caching. This decreases performance but makes debugging easier

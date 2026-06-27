@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>hello there!</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.ico') }}" />
+    <link rel="manifest" href="{{ url_for('manifest') }}" />
 </head>
 <body>
     <div class="indexpage">
@@ -13,10 +15,17 @@
         </div>
     </div>
     <div class="content">
-        <p class="descriptiontext">
+        <p class="fancy_p">
             Do you go to Hornsby Girls High School? Are you a DND Fanatic?
             Or are you UTTERLY clueless, wondering when the dungeons or dragons will even show up?
-            Never fear! The DND club at Hornsby Girls is JUST the place for you! 
+        </p>
+        <fieldset>
+            <h3>
+                Never fear! The DND club at Hornsby Girls is JUST the place for you! 
+            </h3>
+        </fieldset>
+        
+        <p class="descriptiontext">
             Catering to players of ALL skill levels, our helpful leaders Chloe and Colton will create the club experience of a lifetime!
         </p>
         <!-- <a class="btn" href="{{ url_for('login') }}"">
@@ -26,7 +35,14 @@
     </div>
 
     <script>
-
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker
+            .register("{{ url_for('static', filename='service-worker.js') }}")
+            .then(() => console.log("Service Worker Registered"))
+            .catch((err) =>
+                console.error("Service Worker Registration Failed:", err)
+            );
+        };
         const nextpage = document.getElementById("nextpage-btn")
         nextpage.addEventListener("click", async (e) => {
             e.preventDefault();

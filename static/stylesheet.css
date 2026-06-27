@@ -1,3 +1,18 @@
+@font-face {
+    font-family: 'Mmp';
+    src: url('fonts/Metamorphous/Metamorphous-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Playpen';
+    src: url('fonts/Playpen_Sans/PlaypenSans-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: 'Elms';
+    src: url('fonts/Elms_Sans/ElmsSans-VariableFont_wght.ttf');
+}
+
 .logolarge {
     display: block;
     text-align: center; 
@@ -21,8 +36,8 @@ img {
 
 h1 {
     color: rgb(2, 1, 0);
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    font-size: 120px;
+    font-family: 'Mmp';
+    font-size: 100px;
     margin-left: 10%;
     margin-right: 10%;
     text-align: center;
@@ -31,7 +46,7 @@ h1 {
 }
 
 h2 {
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-family: 'Playpen', serif;
     font-size: 50px;
     margin-left: 10%;
     margin-right: 10%;
@@ -41,13 +56,17 @@ h2 {
 }
 
 h3 {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Playpen';
     font-size: 24px;
     margin-left: 10%;
     margin-right: 10%;
     text-align: center;
     word-spacing: 1.5px;
-    letter-spacing: 1.5px;
+    font-style: italic;
+}
+
+p {
+    font-family: 'Elms';
 }
 
 input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea {
@@ -55,18 +74,20 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
     border-color: #993e34; 
     border-style: solid;
     border-radius: 2px;       
-    padding: 5px;              
+    padding: 5px;
+    font-family: 'Elms';
+    font-style: italic;          
 }
 
-.descriptiontext {
-    font-family: Arial, Helvetica, sans-serif;
+.fancy_p {
+    font-family: 'Elms';
     font-size: 24px;
 }
 .card {
     display:flex; 
     flex-direction: column;
     gap: 10px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Normaltext';
     font-size: 24px;
     background-color: rgba(224, 73, 73, 0.67);
     color: rgb(116, 12, 12);
@@ -77,10 +98,13 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
 }
 
 
+
 .indexpage {
     display: grid;
     grid-area: span;
-    background-color: rgb(116, 12, 12);
+    /* background-color: rgb(116, 12, 12); */
+    background: #1f0000;
+    background: linear-gradient(90deg, rgba(31, 0, 0, 1) 0%, rgba(255, 0, 0, 1) 57%, rgba(255, 209, 209, 1) 99%);
 } 
 
 .indexpage h1 {
