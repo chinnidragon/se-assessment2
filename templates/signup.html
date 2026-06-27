@@ -7,30 +7,37 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}">
 </head>
 <body>
-    <h2>
-        Sign up
-    </h2>
-    <form id="form" class="form">
-        <div class="content">
-            <div class="card" style="width: 50vw; height: 10vw; align-items: left; min-width: 300px; min-height: 150px;">
-                    <div style="display: flex; flex-direction: column; max-width: fit-content;">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+    
+    <div class="login">
+    <img src="{{ url_for('static', filename='images/millionsslices.png')}}">
+        <div style="flex-direction: column; align-self: center;">
+            <h2>
+                Sign up
+            </h2>
+            <form id="form" class="form">
+                <div class="content">
+                    <div class="card" style="width: 50vw; height: 10vw; align-items: left; min-width: 300px; min-height: 150px;">
+                        <div style="display: flex; flex-direction: column; max-width: fit-content;">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div style="display: flex; flex-direction: column; max-width: fit-content;" >
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
                     </div>
-                    <div style="display: flex; flex-direction: column; max-width: fit-content;" >
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
+                    <div>
+                        <input class="btn" type="submit" value="Let's Go!!">
                     </div>
                 </div>
-                <div>
-                    <input class="btn" type="submit" value="Let's Go!!">
-            </div>
+            </form>
+            <h3>
+                <a href="{{ url_for('login') }}">Already a member? Login!</a>
+            </h3>
         </div>
-        
-    </form>
-    <h3>
-        <a href="{{ url_for('login') }}">Already a member? Login!</a>
-    </h3>
+
+    </div>
+
     
     <script>
         const form = document.getElementById('form');

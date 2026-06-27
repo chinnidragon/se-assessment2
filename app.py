@@ -145,7 +145,7 @@ def logout():
     if 'user_id' not in session:
             return redirect(url_for('login'))
     session.clear()
-    return render_template('logout.html')
+    return render_template('index.html')
 
 @app.route('/notices')
 def notices():
