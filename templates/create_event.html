@@ -7,50 +7,58 @@
     <title>admin mention part 2</title>
 </head>
 <body>
-    <h1>
-        create an event
-    </h1>
+    <div class="two_forms">
+        <div>
+            <h2>
+                Create an event!
+            </h2>
 
-    <form id="custom-event-form">
-        <fieldset>
-            <legend>New event</legend>
-            <label>Event title</label>
-            <input type="text" id="event-title" value="Title" required>
-            <label>When is it?</label>
-            <input type="date" id="event-date" required>
-            <label>(Optional) Any extra info!</label>
-            <textarea name="notice_body" id="event-body" placeholder="Any extra info..."></textarea>
-        </fieldset>
-        <input type="submit" class="btn" value="Create event">
-    </form>
+            <form id="custom-event-form" class="form">
+                <fieldset style="display: flex; flex-direction: column;">
+                    <legend>New event</legend>
+                    <label>Event title</label>
+                    <input type="text" id="event-title" value="Title" required>
+                    <label>When is it?</label>
+                    <input type="date" id="event-date" required>
+                    <label>(Optional) Any extra info!</label>
+                    <textarea name="notice_body" id="event-body" placeholder="Any extra info..."></textarea>
+                </fieldset>
+                <input type="submit" class="btn" value="Create event">
+            </form>
+        </div>
+        
+        <div>
+            <h2>
+                Change the regular programming!
+            </h2>
 
-    <h1>
-        change the current timetable
-    </h1>
+            
+            <form id="regular-timetable-form">
+                <h3>Make regular sessions on:</h3>
+                <fieldset>
+                    <legend>Week A</legend>
+                    <input type="checkbox" id="weekAMon" name="day" value="weekAMon"> Monday
+                    <input type="checkbox" id="weekATue" name="day" value="weekATue"> Tuesday
+                    <input type="checkbox" id="weekAWed" name="day" value="weekAWed"> Wednesday
+                    <input type="checkbox" id="weekAThu" name="day" value="weekAThu"> Thursday
+                    <input type="checkbox" id="weekAFri" name="day" value="weekAFri"> Friday
+                </fieldset>
 
+                <fieldset>
+                    <legend>Week B</legend> 
+                    <input type="checkbox" id="weekBMon" name="day" value="weekBMon"> Monday
+                    <input type="checkbox" id="weekBTue" name="day" value="weekBTue"> Tuesday
+                    <input type="checkbox" id="weekBWed" name="day" value="weekBWed"> Wednesday
+                    <input type="checkbox" id="weekBThu" name="day" value="weekBThu"> Thursday
+                    <input type="checkbox" id="weekBFri" name="day" value="weekBFri"> Friday
+                </fieldset>
+            <input type="submit" class="btn" value="Change timetable">
+            </form>
+        </div>
+        
+
+    </div>
     
-    <form id="regular-timetable-form">
-        Make regular sessions on:
-        <fieldset>
-            <legend>Week A</legend>
-            <input type="checkbox" id="weekAMon" name="day" value="weekAMon"> Monday
-            <input type="checkbox" id="weekATue" name="day" value="weekATue"> Tuesday
-            <input type="checkbox" id="weekAWed" name="day" value="weekAWed"> Wednesday
-            <input type="checkbox" id="weekAThu" name="day" value="weekAThu"> Thursday
-            <input type="checkbox" id="weekAFri" name="day" value="weekAFri"> Friday
-        </fieldset>
-
-        <fieldset>
-            <legend>Week B</legend> 
-            <input type="checkbox" id="weekBMon" name="day" value="weekBMon"> Monday
-            <input type="checkbox" id="weekBTue" name="day" value="weekBTue"> Tuesday
-            <input type="checkbox" id="weekBWed" name="day" value="weekBWed"> Wednesday
-            <input type="checkbox" id="weekBThu" name="day" value="weekBThu"> Thursday
-            <input type="checkbox" id="weekBFri" name="day" value="weekBFri"> Friday
-        </fieldset>
-    <input type="submit" class="btn" value="Change timetable">
-    </form>
-
     <script>
         const eventform = document.getElementById('custom-event-form')
         const timetableform = document.getElementById('regular-timetable-form')
@@ -98,16 +106,18 @@
             // Preventing the default event (here it stops the browser's default behaviour)
             e.preventDefault();
             // selecting EVERY day that was picked
-            const checkedBoxes = document.querySelectorAll('input[name="day"]:checked').value;
+            const checkedBoxes = document.querySelectorAll('input[name="day"]:checked')
             const days = Array.from(checkedBoxes).map(cb => cb.value);
             if (days.length === 0) {
                 alert('Please select a day');
                 return;
             } else {
+                const active_days = {}
+                active_days['days'] = days
                 const response = await fetch("/api/savetimetable", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(days)
+                    body: JSON.stringify(active_days)
                 });
                 const data = await response.json()
                     if (data.status === 'success') {

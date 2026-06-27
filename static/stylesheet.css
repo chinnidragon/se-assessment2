@@ -217,6 +217,16 @@ button:hover {
     resize: vertical;
     }
 
+
+.two_forms {
+    display: grid;
+    /* grid displays split the screen into FRACTIONS - this makes sure both forms take up equal fractions */
+    grid-template-columns: 1fr 1fr; 
+    gap: 30px;                 
+    max-width: 75vw;             
+    margin: 20px auto;   
+}
+
 .dicebar {
     display: flex;
     align-content: center;

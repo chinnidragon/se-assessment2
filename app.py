@@ -1,5 +1,5 @@
 #server
-from flask import Flask, redirect, render_template, request, jsonify, send_from_directory, url_for, session #serverside sessions
+from flask import Flask, redirect, render_template, request, jsonify, send_from_directory, url_for, session, flash #serverside sessions
 #database
 import sqlite3
 # for generating session IDs
@@ -75,6 +75,30 @@ def init_db():
 # initialise the database when the app starts
 init_db()
 
+from functools import wraps
+from flask import session, redirect, url_for, abort, flash
+
+# Code credited in documentation
+def role_required(role_name): #defining role name so that the function can use it later
+    def decorator(func): #takes the view function (the page rendering app route) as an argument
+        @wraps(func) #basically copying the original code of teh function its wrapping to this function
+        def authorize(*args, **kwargs): #catches all EXTRA variables (with/without names)
+            # FIRST VALIDATION - if users are logged in 
+            if 'user_id' not in session:
+                flash('Sign in to see/save your stuff!', 'error')
+                return redirect(url_for('login'))
+            # SECOND VALIDATION - if they fit the specific role (e.g admin)
+            user_id = session.get('user_id')
+            if role_name == 'admin':
+                # 
+                if not admin_check(user_id):
+                    flash("Oops, you can't be here! Taking you back to the start!")
+                    return redirect(url_for('index'))
+            # if everything passes, the user can see the page
+            return func(*args, **kwargs)
+        return authorize
+    return decorator
+
 #serving page routes
 @app.route('/')
 def index():
@@ -98,24 +122,18 @@ def dice():
 
 #protected routes (MUST be signed in), increases security as it prevents bypassing to admin pages by manually entering url
 @app.route('/profile')
+@role_required('user')
 def profile():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
     return render_template('profile.html')
 
 @app.route('/profile/edit')
+@role_required('user')
 def editprofile():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
     return render_template('edit_profile.html')
 
 @app.route('/charactersheets')
+@role_required('user')
 def charsheets():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
     return render_template('charsheets.html')
 
 @app.route('/charactersheets/view')
@@ -126,36 +144,32 @@ def view_chars():
 def timetable():
     return render_template('timetable.html')
 
+#EXTRA protected routes... you MUST be an admin to see these pages (routes for creation)
 @app.route('/timetable/create')
+@role_required('admin')
 def t_event():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
     return render_template('create_event.html')
 
 @app.route('/notes')
+@role_required('user')
 def notes():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
     return render_template('notes.html')
 
 @app.route('/logout')
+@role_required('user')
 def logout():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
+    flash('Successfully logged out! Taking you to the start...')
     session.clear()
     return render_template('index.html')
 
 @app.route('/notices')
+@role_required('user')
 def notices():
     return render_template('notices.html')
 
 @app.route('/notices/create')
+@role_required('admin')
 def create_notices():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
     return render_template('create_notices.html')
 
 @app.route('/manifest.json')
@@ -237,7 +251,7 @@ def save_login():
         password = data.get('password')
         hashed_pass = generate_password_hash(password)
         try:
-            # might not be that secure lol
+            # checking admins (the dnd club owners will have to come to ME to add more admins...)
             if email in ('chloedndadmin@gmail.com', 'coltondndadmin@gmail.com'):
                 cursor.execute('''
                     INSERT INTO logins (email, password, role)
@@ -250,10 +264,10 @@ def save_login():
                 ''', (email, hashed_pass, 'user'))
             conn.commit()
             conn.close()
-
             return jsonify({'status': 'success'})
+        #no signing up with the same email!
         except sqlite3.IntegrityError:
-                return jsonify({'status': 'fail', 'message': 'Email already registered'})
+            return jsonify({'status': 'fail', 'message': 'Email already registered'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -316,18 +330,6 @@ def get_profile():
     except Exception as e:
         return jsonify({'status': 'fail', 'message': str(e)}), 500
 
-
-#logout
-# @app.route('/api/logout', methods=['POST'])
-# def user_logout():
-#     try:
-#         print(session.get('user_id'))
-#         session.pop('user_id') 
-#         print(session.get('user_id'))
-#         return jsonify({'status':'success'})
-#     except Exception as e:
-#         return jsonify({'status':'fail', 'message':str(e)})
-
 #checking session ID
 @app.route('/api/sessionID', methods=['GET'])
 def check_sessionID():
@@ -340,7 +342,6 @@ def check_sessionID():
 #checking admin status (specifically for notices)
 @app.route('/api/admin', methods=['GET'])
 def admin_check():
-    # print('hi')
     if 'user_id' in session:
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
@@ -372,6 +373,7 @@ def roll_dice():
     return jsonify({'number':roll})
 
 @app.route('/api/savechar', methods=['POST'])
+@role_required('user')
 def save_char():
     try:
         if 'user_id' in session:
@@ -439,6 +441,7 @@ def get_chars():
 
 #notes
 @app.route('/api/savenotes', methods=['POST'])
+@role_required('user')
 def save_notes():
     try:
         if 'user_id' in session:
@@ -482,6 +485,7 @@ def get_notes():
 
 #notices basically the EXACT same logic as the notes
 @app.route('/api/savenotices', methods=['POST'])
+@role_required('admin')
 def save_notices():
     try:
         if 'user_id' in session:
@@ -541,6 +545,7 @@ def get_notices():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/savetimetable', methods=['POST'])
+@role_required('admin')
 def save_timetable():
     try:
         if 'user_id' in session:
@@ -549,9 +554,17 @@ def save_timetable():
             cursor = conn.cursor()
             days = data.get('days')
             print(days) 
-            cursor.execute('''
-                UPDATE timetable 
-                SET active_days = ?
+            cursor.execute('SELECT 1 FROM timetable')
+            timetable_exists = cursor.fetchone()
+            if timetable_exists:
+                cursor.execute('''
+                    UPDATE timetable 
+                    SET active_days = ?
+                ''', (json.dumps(days),))
+            else:
+                cursor.execute('''
+                    INSERT INTO timetable (active_days)
+                    VALUES (?) 
             ''', (json.dumps(days),))
             conn.commit()
             conn.close()
@@ -589,6 +602,7 @@ def get_timetable():
 
 
 @app.route('/api/saveevent', methods=['POST'])
+@role_required('admin')
 def save_event():
     try:
         if 'user_id' in session:
