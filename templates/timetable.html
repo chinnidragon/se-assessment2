@@ -7,13 +7,29 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
 </head>
 <body>
-    <h1>Timetables</h1>
-
+    <h1>Timetable</h1>
+<table>
+    <tr>
+        <th>Company</th>
+        <th>Contact</th>
+        <th>Country</th>
+    </tr>
+    <tr>
+        <td>Alfreds Futterkiste</td>
+        <td>Maria Anders</td>
+        <td>Germany</td>
+    </tr>
+    <tr>
+        <td>Centro comercial Moctezuma</td>
+        <td>Francisco Chang</td>
+        <td>Mexico</td>
+    </tr>
+</table>
     <h2>Usual timetable (by school weeks)</h2>
     <div id="no-sess">
 
     </div>
-    <div class="schedule"> 
+    <!-- <div class="schedule"> 
         <h2>Week A</h2>
         <div id="weekAMon">
             Monday
@@ -56,7 +72,45 @@
         <div id="weekBFrid">
             Friday
         </div>
-    </div>
+    </div> -->
+    <table class="timetable">
+        <thead>
+            <tr>
+                <th>Day</th>
+                <th>Week A</th>
+                <th>Week B</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowMon">
+                <td class="day-label">Monday</td>
+                <td id="weekAMon"></td>
+                <td id="weekBMon"></td>
+            </tr>
+            <tr id="rowTues">
+                <td class="day-label">Tuesday</td>
+                <td id="weekATues"></td>
+                <td id="weekBTues"></td>
+            </tr>
+            <tr id="rowWed">
+                <td class="day-label">Wednesday</td>
+                <td id="weekAWed"></td>
+                <td id="weekBWed"></td>
+            </tr>
+            <tr id="rowThurs">
+                <td class="day-label">Thursday</td>
+                <td id="weekAThurs"></td>
+                <td id="weekBThurs"></td>
+            </tr>
+            <tr id="rowFrid">
+                <td class="day-label">Friday</td>
+                <td id="weekAFrid"></td>
+                <td id="weekBFrid"></td>
+            </tr>
+        </tbody>
+    </table>
+
+
 
     <h2>Upcoming sessions</h2>
     <div id="upcoming-sess">

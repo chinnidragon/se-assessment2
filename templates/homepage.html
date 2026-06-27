@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
 </head>
 <body class="homepage">
-    <div class="navbar">
+    <!-- <div class="navbar"> -->
         <div class="logobig">
             <img src="{{ url_for('static', filename='images/logobig.png')}}" width="500" height="100"> 
         </div>
-    </div>
+    <!-- </div> -->
 
     <!-- the navbar -->
     <div class = "navbar">
@@ -30,14 +30,14 @@
             {% if session.get('user_id') %}
                 <a href="{{ url_for('profile')}}">
                     <div class="navlinks">
-                        <img src="{{ url_for('static', filename='images/logosmall.png')}}" width="50" height="50"> 
+                        <img src="{{ url_for('static', filename='images/nav/profile.png')}}" width="50" height="50"> 
                         Your profile
                     </div>
                 </a>
 
                 <a href="{{ url_for('notes')}}">
                     <div class="navlinks">
-                        <img src="{{ url_for('static', filename='images/logosmall.png')}}" width="50" height="50"> 
+                        <img src="{{ url_for('static', filename='images/nav/notes.png')}}" width="50" height="50"> 
                         Notes
                     </div>
                 </a>
@@ -45,7 +45,7 @@
             {% endif %}
             <a href="{{ url_for('notices')}}">
                 <div class="navlinks">
-                    <img src="{{ url_for('static', filename='images/logosmall.png')}}" width="50" height="50"> 
+                    <img src="{{ url_for('static', filename='images/nav/notice.png')}}" width="50" height="50"> 
                     Notices
                 </div>
             </a>
@@ -59,7 +59,7 @@
 
             <a href="{{ url_for('timetable')}}">
                 <div class="navlinks">
-                    <img src="{{ url_for('static', filename='images/logosmall.png')}}" width="50" height="50"> 
+                    <img src="{{ url_for('static', filename='images/nav/time.png')}}" width="50" height="50"> 
                     Timetable
                 </div>
             </a>
