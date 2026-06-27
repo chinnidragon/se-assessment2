@@ -8,9 +8,12 @@
 </head>
 <body class="homepage">
     <!-- <div class="navbar"> -->
+    <div class="logoback">
         <div class="logobig">
             <img src="{{ url_for('static', filename='images/logobig.png')}}" width="500" height="100"> 
         </div>
+    </div>
+
     <!-- </div> -->
 
     <!-- the navbar -->
@@ -21,7 +24,7 @@
         <div>
             <a href="{{ url_for('index')}}">
                 <div class="logosmall">
-                    <img src="{{ url_for('static', filename='images/logosmall.png')}}" width="50" height="50"> 
+                    <img src="{{ url_for('static', filename='images/logosmall.png')}}" width="30" height="30"> 
                 </div>
             </a>
         </div>
@@ -30,14 +33,14 @@
             {% if session.get('user_id') %}
                 <a href="{{ url_for('profile')}}">
                     <div class="navlinks">
-                        <img src="{{ url_for('static', filename='images/nav/profile.png')}}" width="50" height="50"> 
+                        <img src="{{ url_for('static', filename='images/nav/profile.png')}}" width="30" height="30"> 
                         Your profile
                     </div>
                 </a>
 
                 <a href="{{ url_for('notes')}}">
                     <div class="navlinks">
-                        <img src="{{ url_for('static', filename='images/nav/notes.png')}}" width="50" height="50"> 
+                        <img src="{{ url_for('static', filename='images/nav/note.png')}}" width="30" height="30"> 
                         Notes
                     </div>
                 </a>
@@ -45,28 +48,28 @@
             {% endif %}
             <a href="{{ url_for('notices')}}">
                 <div class="navlinks">
-                    <img src="{{ url_for('static', filename='images/nav/notice.png')}}" width="50" height="50"> 
+                    <img src="{{ url_for('static', filename='images/nav/bell.png')}}" width="30" height="30"> 
                     Notices
                 </div>
             </a>
 
             <a href="{{ url_for('view_chars')}}">
                 <div class="navlinks">
-                    <img src="{{ url_for('static', filename='images/logosmall.png')}}" width="50" height="50"> 
+                    <img src="{{ url_for('static', filename='images/nav/char.png')}}" width="30" height="30"> 
                     Characters
                 </div>
             </a>
 
             <a href="{{ url_for('dice')}}">
                 <div class="navlinks">
-                    <img src="{{ url_for('static', filename='images/logosmall.png')}}" width="50" height="50"> 
+                    <img src="{{ url_for('static', filename='images/nav/dice.png')}}" width="30" height="30"> 
                     Dice
                 </div>
             </a>
 
             <a href="{{ url_for('timetable')}}">
                 <div class="navlinks">
-                    <img src="{{ url_for('static', filename='images/nav/time.png')}}" width="50" height="50"> 
+                    <img src="{{ url_for('static', filename='images/nav/time.png')}}" width="30" height="30"> 
                     Timetable
                 </div>
             </a>

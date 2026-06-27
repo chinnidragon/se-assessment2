@@ -69,14 +69,31 @@ p {
     font-family: 'Elms';
 }
 
-input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea {
+label {
+    font-family: Elms;
+    font-style: oblique;
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], textarea {
     border: 2px;
     border-color: #993e34; 
     border-style: solid;
     border-radius: 2px;       
     padding: 5px;
     font-family: 'Elms';
-    font-style: italic;          
+    width: 100%;
+}
+
+a {
+    color: rgb(108, 8, 8);
+    font-style: italic;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: rgb(0, 0, 0);
+    font-style: italic;
+    text-decoration: underline;
 }
 
 .fancy_p {
@@ -144,10 +161,11 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
 .login {
     display: flex;
     align-items: center;
-    padding: 10px;
+    margin: 0;
 }
 
 .login img {
+    width: 300px;
     border-right: 60px 
     solid #000000;
     max-width: 20%;
@@ -157,48 +175,46 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
     width: auto;
 }
 
+.login body {
+    padding: 0px;
+    margin: 0px;
+}
 
 
-.btn {
+.btn, button {
     color: rgb(0, 0, 0);
     border: 0;
     background-color: rgb(213, 55, 55);
-    padding-right: 3%; padding-left: 3%; padding-bottom: 1%; padding-top: 1%;
+    text-decoration: none;
+    font-family: "Elms";
+    font-style: italic;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.btn:hover, button:hover {
+    color: rgb(248, 214, 175);
+    background-color: rgb(49, 5, 5);
     text-decoration: none;
     font-style: italic;
     border-radius: 10px;
     font-size: 20px;
+}
+
+.btn {
+    padding-right: 3%; padding-left: 3%; padding-bottom: 1%; padding-top: 1%;
 }
 
 .btn:hover {
-    color: rgb(248, 214, 175);
-    background-color: rgb(49, 5, 5);
     padding-right: 3%; padding-left: 3%; padding-bottom: 1%; padding-top: 1%;
-    text-decoration: none;
-    font-style: italic;
-    border-radius: 10px;
-    font-size: 20px;
 } 
 
 button {
-    color: rgb(0, 0, 0);
-    border: 0;
-    background-color: rgb(213, 55, 55);
     padding-right: 10%; padding-left: 10%; padding-bottom: 3%; padding-top: 3%;
-    text-decoration: none;
-    font-style: italic;
-    border-radius: 10px;
-    font-size: 20px;
 }
 
 button:hover {
-    color: rgb(248, 214, 175);
-    background-color: rgb(49, 5, 5);
     padding-right: 10%; padding-left: 10%; padding-bottom: 3%; padding-top: 3%;
-    text-decoration: none;
-    font-style: italic;
-    border-radius: 10px;
-    font-size: 20px;
 }
 
 .form {
@@ -242,13 +258,16 @@ button:hover {
     width: auto;
     justify-self: center;
     padding: 12px;
-    background-color: rgb(115, 6, 6);
     justify-content: center;
     align-items: center;
     /* Done using website in credits */
-    background: #ffffff;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 24%, rgba(255, 0, 0, 1) 48%, rgba(255, 255, 255, 1) 77%, rgba(255, 255, 255, 1) 98%);
 }
+
+.logoback {
+    background: #ffffff;
+    background: radial-gradient(circle, rgba(255, 255, 255, 1) 61%, rgba(245, 10, 10, 1) 76%, rgba(115, 6, 6, 1) 100%);
+}
+
 
 .logobig img {
     object-fit: cover;
@@ -348,3 +367,7 @@ nav {
     /* center form inputs in a column (if .form is a flex container) */
     /* .form { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; } */
 }
+
+/* .timetable {
+
+} */
