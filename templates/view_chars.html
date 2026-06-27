@@ -32,26 +32,27 @@
                     if (data.signedin) {
                         const userH = document.createElement('h2'); userH.textContent = "Your characters";
                         u_characters.appendChild(userH);
-                        for (const ch_entry of data.user_c) {
+                        if (data.user_c.length === 0) {
+                            const p = document.createElement('p'); p.textContent = 'No characters yet.';
+                            u_characters.appendChild(p)
+                        } else {
+                            for (const ch_entry of data.user_c) {
                             // previous note div
                             // creating the date and body of the note
-                            if (data.user_c.length === 0) {
-                                const p = document.createElement('p'); p.textContent = 'No characters yet.';
-                                u_characters.appendChild(p)
-                            } else {
+                            
                                 const c_name = document.createElement('h2'); c_name.textContent = ch_entry.name;
-                                const c_infoHead = document.createElement('h3'); c_statsHead.textContent = "General Info"
+                                const c_infoHead = document.createElement('h3'); c_infoHead.textContent = "General Info"
                                 const c_info = document.createElement('p'); 
                                 c_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}} `
                                 const c_statsHead = document.createElement('h3'); c_statsHead.textContent = "Stats"
                                 const c_stats = document.createElement('p'); 
                                 c_stats.textContent = 
-                                    ```Strength: ${ch_entry.stats['str']}\n
+                                    `Strength: ${ch_entry.stats['str']}\n
                                     Dexterity: ${ch_entry.stats['dex']}\n
                                     Constitution: ${ch_entry.stats['con']}\n
                                     Intelligence: ${ch_entry.stats['int']}\n
                                     Wisdom: ${ch_entry.stats['wis']}\n
-                                    Charisma: ${ch_entry.stats['cha']}```;
+                                    Charisma: ${ch_entry.stats['cha']}`;
                                 u_characters.appendChild(c_name);
                                 u_characters.appendChild(c_infoHead);
                                 u_characters.appendChild(c_info);
@@ -59,55 +60,18 @@
                                 u_characters.appendChild(c_stats);
                             };
                         };
-                        
                         const otherH = document.createElement('h2'); otherH.textContent = "Other's characters";
                         a_characters.appendChild(otherH);
-                        for (const ch_entry of data.all_c) {
-                            // previous note div
-                            // creating the date and body of the note
-                            if (data.user_c.length === 0) {
-                                const p = document.createElement('p'); p.textContent = 'No characters yet.';
-                                u_characters.appendChild(p)
-                                //breaking the statement
-                                return;
-                            } else {
+                        if (data.all_c.length === 0) {
+                            const p = document.createElement('p'); p.textContent = 'No characters yet.';
+                            a_characters.appendChild(p)
+                            //breaking the statement
+                            return;
+                        } else {
+                            for (const ch_entry of data.all_c) {
                                 const a_user = document.createElement('h2'); a_user.textContent = ch_entry.user;
                                 const a_name = document.createElement('h2'); a_name.textContent = ch_entry.name;
-                                const a_infoHead = document.createElement('h3'); a_statsHead.textContent = "General Info"
-                                const a_info = document.createElement('p'); 
-                                a_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}} `
-                                const a_statsHead = document.createElement('h3'); a_statsHead.textContent = "Stats"
-                                const a_stats = document.createElement('p'); 
-                                a_stats.textContent = 
-                                    ```Strength: ${ch_entry.stats['str']}\n
-                                    Dexterity: ${ch_entry.stats['dex']}\n
-                                    Constitution: ${ch_entry.stats['con']}\n
-                                    Intelligence: ${ch_entry.stats['int']}\n
-                                    Wisdom: ${ch_entry.stats['wis']}\n
-                                    Charisma: ${ch_entry.stats['cha']}```;
-                                a_characters.appendChild(a_user)
-                                a_characters.appendChild(a_name);
-                                a_characters.appendChild(a_infoHead);
-                                a_characters.appendChild(a_info);
-                                a_characters.appendChild(a_statsHead);
-                                a_characters.appendChild(a_stats);
-                            };
-                        };
-                        container.append(u_characters);
-                        container.append(a_characters);
-                    } else {
-                        const allH = document.createElement('h2'); allH.textContent = "All characters";
-                        a_characters.appendChild(allH)
-                        for (const ch_entry of data.all_c) {
-                            // previous note div
-                            // creating the date and body of the note
-                            if (data.all_c.length === 0) {
-                                const p = document.createElement('p'); p.textContent = 'No characters yet.';
-                                u_characters.appendChild(p)
-                            } else {
-                                const a_user = document.createElement('h2'); a_user.textContent = ch_entry.user;
-                                const a_name = document.createElement('h2'); a_name.textContent = ch_entry.name;
-                                const a_infoHead = document.createElement('h3'); a_statsHead.textContent = "General Info"
+                                const a_infoHead = document.createElement('h3'); a_infoHead.textContent = "General Info"
                                 const a_info = document.createElement('p'); 
                                 a_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}} `
                                 const a_statsHead = document.createElement('h3'); a_statsHead.textContent = "Stats"
@@ -125,11 +89,48 @@
                                 a_characters.appendChild(a_info);
                                 a_characters.appendChild(a_statsHead);
                                 a_characters.appendChild(a_stats);
+                                };
                             };
-                        };
+                        container.append(u_characters);
+                        container.append(a_characters);
+                    } else {
+                        const allH = document.createElement('h2'); allH.textContent = "All characters";
+                        a_characters.appendChild(allH)
+                        if (data.all_c.length === 0) {
+                                const p = document.createElement('p'); p.textContent = 'No characters yet.';
+                                _characters.appendChild(p)
+                        } else {
+                            for (const ch_entry of data.all_c) {
+                                // previous note div
+                                // creating the date and body of the note
+                                
+                                    const a_user = document.createElement('h2'); a_user.textContent = ch_entry.user;
+                                    const a_name = document.createElement('h2'); a_name.textContent = ch_entry.name;
+                                    const a_infoHead = document.createElement('h3'); a_infoHead.textContent = "General Info"
+                                    const a_info = document.createElement('p'); 
+                                    a_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']} `
+                                    const a_statsHead = document.createElement('h3'); a_statsHead.textContent = "Stats"
+                                    const a_stats = document.createElement('p'); 
+                                    a_stats.textContent = 
+                                        `Strength: ${ch_entry.stats['str']}\n
+                                        Dexterity: ${ch_entry.stats['dex']}\n
+                                        Constitution: ${ch_entry.stats['con']}\n
+                                        Intelligence: ${ch_entry.stats['int']}\n
+                                        Wisdom: ${ch_entry.stats['wis']}\n
+                                        Charisma: ${ch_entry.stats['cha']}`;
+                                    a_characters.appendChild(a_user)
+                                    a_characters.appendChild(a_name);
+                                    a_characters.appendChild(a_infoHead);
+                                    a_characters.appendChild(a_info);
+                                    a_characters.appendChild(a_statsHead);
+                                    a_characters.appendChild(a_stats);
+                                };
+                            };
                         container.appendChild(a_characters)
-                    };
-                }
+                        };
+                    } else {
+                        alert('Error, try again later')
+                };
             } catch (error) {
                 console.error(error);
                 alert(`Error, ${str(error)}`);

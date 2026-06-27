@@ -100,21 +100,21 @@ def dice():
 @app.route('/profile')
 def profile():
     if 'user_id' not in session:
-            return redirect(url_for('login'))
+        return redirect(url_for('login'))
     
     return render_template('profile.html')
 
 @app.route('/profile/edit')
 def editprofile():
     if 'user_id' not in session:
-            return redirect(url_for('login'))
+        return redirect(url_for('login'))
     
     return render_template('edit_profile.html')
 
 @app.route('/charactersheets')
 def charsheets():
     if 'user_id' not in session:
-            return redirect(url_for('login'))
+        return redirect(url_for('login'))
     
     return render_template('charsheets.html')
 
@@ -129,21 +129,21 @@ def timetable():
 @app.route('/timetable/create')
 def t_event():
     if 'user_id' not in session:
-            return redirect(url_for('login'))
+        return redirect(url_for('login'))
 
     return render_template('create_event.html')
 
 @app.route('/notes')
 def notes():
     if 'user_id' not in session:
-            return redirect(url_for('login'))
+        return redirect(url_for('login'))
     
     return render_template('notes.html')
 
 @app.route('/logout')
 def logout():
     if 'user_id' not in session:
-            return redirect(url_for('login'))
+        return redirect(url_for('login'))
     session.clear()
     return render_template('index.html')
 
@@ -154,7 +154,7 @@ def notices():
 @app.route('/notices/create')
 def create_notices():
     if 'user_id' not in session:
-            return redirect(url_for('login'))
+        return redirect(url_for('login'))
     
     return render_template('create_notices.html')
 
@@ -357,7 +357,6 @@ def admin_check():
         conn.close()
         return jsonify({'admin': False})
     else:
-        conn.close()
         return jsonify({'admin': False})
 
 #dice
@@ -466,7 +465,7 @@ def get_notes():
         if 'user_id' in session:
             conn = sqlite3.connect('dnd.db')
             cursor = conn.cursor()
-            cursor.execute('SELECT date, notes FROM notes WHERE user_id = ? ORDER BY date DESC', (session['user_id'],))
+            cursor.execute('SELECT date, notes FROM notes WHERE user_id = ? ORDER BY date', (session['user_id'],))
             rows = cursor.fetchall()
             print(rows)
             notes = []
@@ -526,21 +525,16 @@ def get_notices():
                 JOIN logins ON notices.user_id = logins.id
                 ORDER BY notices.date DESC
         ''')
-        else:
-            cursor.execute('''
-                SELECT 'No notices'
-            ''')
-
-        table = cursor.fetchall()
-        print(table)
-        notices = []
-        if table == "No notices":
-            notices = table
-            print(notices)
-        else:
-            for row in table():
+            table = cursor.fetchall()
+            notices = []
+            for row in table:
                 notice = {'title': row[0], 'body': row[1], 'date':row[2], 'author':row[3]}
                 notices.append(notice)
+            print(notices)
+        else:
+            notices = []
+
+        conn.close()
         return jsonify({'status': "success", "notices": notices})
 
     except Exception as e:
@@ -577,10 +571,17 @@ def get_timetable():
             SELECT active_days FROM timetable 
         ''')
         row = cursor.fetchone()
-        if len(active_days) == 0:
+        conn.close()
+        
+        print(row)
+        if not row or not row[0]:
+            print('no days')
             active_days = []
+            print(f"active days {active_days}")
         else:
-            active_days = json.loads(row['active_days'])
+            active_days = json.loads(row[0])
+            print(active_days)
+        
         return jsonify({'status': "success", "active_days": active_days})
 
     except Exception as e:
@@ -622,10 +623,15 @@ def get_events():
         ''')
         rows = cursor.fetchall()
         print(rows)
-        events = []
-        for r in rows:
-            events.append({'date': r[0], 'title': r[1], 'body':r[2]})
         conn.close()
+        events = []
+
+        if not rows or not rows[0]:
+            print('no days')
+        else:
+            for r in rows:
+                events.append({'date': r[0], 'title': r[1], 'body':r[2]})
+        print(events)
         return jsonify({'status': 'success', 'events': events})
     except Exception as e:
         return jsonify({'status': 'fail', 'message': str(e)}), 500

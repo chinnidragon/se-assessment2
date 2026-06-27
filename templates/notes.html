@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}">
     <title>note note note sahur</title>
 </head>
 <body>
@@ -23,7 +24,7 @@
     <h2>
         Previous notes
     </h2>
-    <div id="previous-notes" style="display: flex; flex-direction: column;">
+    <div class="previous_notes" id="previous-notes" style="display: flex; flex-direction: column;">
         
     </div>
 
@@ -42,10 +43,10 @@
                     for (const note of data.notes) {
                         // previous note div
                         const previousnote = document.createElement('div');
+                        previousnote.className = "card"
                         // creating the date and body of the note
                         const h = document.createElement('h3'); h.textContent = note.date;
                         const p = document.createElement('p'); p.textContent = note.notes;
-                        p.style.background = '#FE4036';
                         previousnote.appendChild(h);
                         previousnote.appendChild(p);
                         container.appendChild(previousnote);

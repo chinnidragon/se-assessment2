@@ -56,11 +56,11 @@
         getnotices()
 
         async function checkAdmin() {
-
             const response = await fetch('/api/admin', {method: 'GET', credentials: 'same-origin'});
             const data = await response.json()
             if (data.admin) {
                 // const noticeButtonDiv = document.createElement('div');
+                alert("admin")
                 const noticeButtonDiv = document.getElementById("notice-button");
                 noticeButtonDiv.innerHTML = `<button id="newnotice">Add new notice</button>`;
                 // container.appendChild(noticeButtonDiv);
@@ -68,9 +68,9 @@
                 newnoticeButton.addEventListener("click", async (e) => {
                     e.preventDefault();
                     window.open("{{ url_for('create_notices') }}");
-            });
+                });
+            }
         }
-    }
 
         checkAdmin()
 

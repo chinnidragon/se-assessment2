@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}" />
     <title>admin mention part 2</title>
 </head>
 <body>
@@ -47,7 +48,7 @@
             <input type="checkbox" id="weekBThu" name="day" value="weekBThu"> Thursday
             <input type="checkbox" id="weekBFri" name="day" value="weekBFri"> Friday
         </fieldset>
-    <input type="submit" class="btn" value="Create event">
+    <input type="submit" class="btn" value="Change timetable">
     </form>
 
     <script>
@@ -57,16 +58,18 @@
             eventform.addEventListener('submit', async (e) => {
             // Preventing the default event (here it stops the browser's default behaviour)
                 e.preventDefault();
+                alert('hello')
                 // loading all information into a dictionary to send to the backend
-                const event = {}
+                const event = {};
                 date = document.getElementById('event-date').value;
                 const eDate = new Date(date);
                 event['date'] = eDate.toDateString()
+
                 eventTitle = document.getElementById('event-title').value;
-                event['title'] = title
+                event['title'] = eventTitle
+
                 body = document.getElementById('event-body').value;
                 event['body'] = body
-                // readable human format
 
                 try {
                     const response = await fetch("/api/saveevent", {
@@ -95,9 +98,10 @@
             // Preventing the default event (here it stops the browser's default behaviour)
             e.preventDefault();
             // selecting EVERY day that was picked
-            const days = Array.from(document.querySelectorAll('input[name="day"]:checked').value);
-            if (!days) {
-                alert('Please select a day')
+            const checkedBoxes = document.querySelectorAll('input[name="day"]:checked').value;
+            const days = Array.from(checkedBoxes).map(cb => cb.value);
+            if (days.length === 0) {
+                alert('Please select a day');
                 return;
             } else {
                 const response = await fetch("/api/savetimetable", {

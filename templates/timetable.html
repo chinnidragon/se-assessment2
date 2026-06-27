@@ -13,7 +13,7 @@
     <div id="no-sess">
 
     </div>
-    <div> 
+    <div class="schedule"> 
         <h2>Week A</h2>
         <div id="weekAMon">
             Monday
@@ -70,13 +70,13 @@
             try {
                 // retrieving the current timetable
                 const response = await fetch("/api/gettimetable", {method: "GET", credentials: 'same-origin'});
-                if (response.status === 'success') {
-                    const data = await response.json();
+                const data = await response.json();
+                if (data.status === 'success') {
                     // for loop that iterates through the active dats, adding "scheduled session" text
-                    
                     if (data.active_days.length === 0) {
                         noSess = document.getElementById('no-sess');
-                        noSess.innerHTML = "No active sessions!"
+                        noSess.innerHTML = `<p>Timetable is looking a little empty...</p>`
+                        return;
                     } else {
                         for (const day of data.active_days) {
                             const container = document.getElementById(day);
@@ -85,7 +85,6 @@
                             container.appendChild(activeDay);
                         }
                     }
-
                 } else {
                     alert("Error,", response['message']);
             }
@@ -98,32 +97,41 @@
             try {
                 // retrieving the saved notes
                 const response = await fetch("/api/getevents", {method: "GET", credentials: 'same-origin'});
+                const data = await response.json()
                 // defining the container for tthe notices
                 const container = document.getElementById('upcoming-sess');
-                if (response.status === 'success') {
-                    const data = await response.json();
+                alert('event2')
+                // alert('event2')
+                if (data.status === 'success') {
                     // for loop that iterates through all the note entries, then 
-                    for (const [date, title, body] of data.events) {
-                        const event = document.createElement('div');
-                        event.innerHTML = `<h2>${date}</h2><h3 style="background=#B00B69">${escapeHtml(body)}</h3>`;
-                        container.appendChild(event);
-                    }
+                    if (data.events.length === 0) {
+                        const noEvent = document.createElement('p'); noEvent.textContent = "No events... yet!"
+                        container.appendChild(noEvent)
+                        return;
+                    };
+                    for (event of data.events) {
+                        alert('event works!')
+                        const eventDiv = document.createElement('div');
+                        eventDiv.innerHTML = `<h2>${event.date}</h2><h3 style="background: #B00B69;">${event.title}</h3><p>${event.body}</p>`;
+                        container.appendChild(eventDiv);
+                    };
+                    
                 } else {
-                    alert(`Error, ${response['message']}`);
+                    alert(`Error, ${data.message}`);
                 }
             } catch (error) {
                 alert("Error, try again later");
             }
         }
         async function checkAdmin () {
-            const response = await fetch('/api/admin', {method: ['GET'], credentials:"same-origin"});
+            const response = await fetch('/api/admin', {method: 'GET', credentials:"same-origin"});
             const data = await response.json()
             if (data.admin) {
                 const container = document.getElementById('upcoming-sess')
                 const eventButtonDiv = document.createElement('div');
                 eventButtonDiv.innerHTML = `<button id="newevent" class="btn">Create new event</button>`;
                 container.appendChild(eventButtonDiv);
-                eventButton = getElementById('newevent')
+                eventButton = document.getElementById('newevent')
                 eventButton.addEventListener("click", async (e) => {
                     e.preventDefault();
                     window.open("{{ url_for('t_event') }}");
