@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}" />
-    <title>everybody so creative</title>
+    <title>View characters</title>
 </head>
 <body>
     <div class = "navbar">
@@ -111,7 +111,7 @@
                         u_characters.appendChild(p);
                     } else {
                         for (const ch_entry of data.user_c) {
-                            const c_name = document.createElement('h2'); 
+                            const c_name = document.createElement('h3'); 
                             c_name.textContent = `Name: ${ch_entry.name}`;
                             
                             const c_infoHead = document.createElement('h3'); 
@@ -154,7 +154,7 @@
                             const a_user = document.createElement('h2'); 
                             a_user.textContent = `Created by: ${ch_entry.user}`;
                             
-                            const a_name = document.createElement('h2'); 
+                            const a_name = document.createElement('h3'); 
                             a_name.textContent = `Name: ${ch_entry.name}`;
                             
                             const a_infoHead = document.createElement('h3'); 
@@ -203,7 +203,7 @@
                             const a_user = document.createElement('h2'); 
                             a_user.textContent = `Created by: ${ch_entry.user}`;
                             
-                            const a_name = document.createElement('h2'); 
+                            const a_name = document.createElement('h3'); 
                             a_name.textContent = `Name: ${ch_entry.name}`;
                             
                             const a_infoHead = document.createElement('h3'); 

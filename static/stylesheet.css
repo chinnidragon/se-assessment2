@@ -103,7 +103,7 @@ a:hover {
     font-size: 24px;
 }
 
-.card, #login-card, #dice-div, #profile-info {
+.card, #login-card, #dice-div, #profile-info, #p-notice {
     display:flex; 
     flex-direction: column;
     gap: 10px;
@@ -121,7 +121,7 @@ a:hover {
     color: rgb(248, 214, 175);
 }
 
-.card, #dice-div, #profile-info {
+.card, #dice-div, #profile-info, #p-notice {
     background-color: antiquewhite;
 
 }
@@ -129,17 +129,23 @@ a:hover {
     align-items: center;
 }
 
-#characters {
-    align-items: flex-start;
-    margin-left: 10vw; margin-right: 10vw;
+#characters h2, #characters h3, #characters p {
+    align-self: flex-start;
+    margin-left: 10vw;
 }
+
 #characters h2 {
     text-decoration: underline;
+    font-size: 40px;
+    color: rgb(115, 6, 6);
 }
+
 
 .card input[type="email"], input[type="password"] {
     width: 30vw;
 }
+
+
 
 .card label {
     align-self: flex-start;
@@ -210,6 +216,7 @@ a:hover {
 
 .btn {
     padding-right: 3rem; padding-left: 3rem; padding-bottom: 1rem; padding-top: 1rem;
+    text-decoration: none;
 }
 
 button {
@@ -224,11 +231,13 @@ button {
     font-style: italic;
     border-radius: 10px;
     font-size: 20px;
+    text-decoration: none;
 }
 
 .btn:hover, button:hover {
     color: rgb(248, 214, 175);
     background-color: rgb(49, 5, 5);
+    text-decoration: none;
 }
 
 
@@ -236,6 +245,12 @@ form {
     display: flex; 
     gap: 20px; 
     flex-direction: column;
+}
+
+.form input[type="submit"] {
+    max-width: 75vw;
+    margin-left: 20vw;
+    margin-right: 20vw;
 }
 
 .form input[type="number"] {
@@ -266,12 +281,8 @@ fieldset {
 
 
 .two_forms {
-    display: grid;
-    /* grid displays split the screen into FRACTIONS - this makes sure both forms take up equal fractions */
-    grid-template-columns: 1fr 1fr; 
-    gap: 50px;                 
-    max-width: 75vw;             
-    margin: 20px auto;   
+    display: flex;
+    flex-direction: column;
 }
 
 /* .dicebar {
@@ -320,6 +331,7 @@ fieldset {
     padding: 12px;
     width:auto;
     background-color: rgb(115, 6, 6);
+
 
 }
 

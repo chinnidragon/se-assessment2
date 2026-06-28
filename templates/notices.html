@@ -77,7 +77,7 @@
         </div>
     </div>
     <h1>
-        notices..!
+        Notices
     </h1>
     <div id="notice-button">
 
@@ -104,14 +104,13 @@
                     // for loop that iterates through all the created notices
                         for (const notice of data.notices) {
                             // previous notice div
-                            const pNotice = document.createElement('div'); pNotice.id = "pNotice";
+                            const pNotice = document.createElement('div'); pNotice.id = "p-notice";
                             const title = document.createElement('h3'); title.textContent = notice.title;
                             const body = document.createElement('p'); body.textContent = notice.body;
-                            body.class = "fancy_p"
                             const date = document.createElement('p'); date.textContent = notice.date;
                             pNotice.appendChild(title);
-                            pNotice.appendChild(body);
                             pNotice.appendChild(date);
+                            pNotice.appendChild(body);
                             container.appendChild(pNotice);
                         }
                     };

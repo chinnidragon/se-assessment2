@@ -91,7 +91,7 @@ def role_required(role_name): #defining role name so that the function can use i
                 return redirect(url_for('login'))
             # SECOND VALIDATION - if they fit the specific role (e.g admin)
             if role_name == 'admin':
-                if not admin_check():
+                if not is_user_admin():
                     flash("Oops, you can't be here! Taking you back to the start!")
                     return redirect(url_for('index'))
             # if everything passes, the user can see the page
@@ -163,7 +163,6 @@ def logout():
     return render_template('index.html')
 
 @app.route('/notices')
-@role_required('user')
 def notices():
     return render_template('notices.html')
 
@@ -355,6 +354,21 @@ def admin_check():
         return jsonify({'admin': False})
     else:
         return jsonify({'admin': False})
+
+def is_user_admin():
+    if 'user_id' in session:
+        conn = sqlite3.connect('dnd.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT id FROM logins WHERE role = ?', ("admin",))
+        adminIDs = cursor.fetchall()
+        for a_id in adminIDs:
+            if session.get('user_id') == a_id[0]:
+                conn.close()
+                return jsonify({'admin': True})
+        conn.close()
+        return False
+    else:
+        return True
 
 #dice
 @app.route('/api/dice', methods=['POST'])
