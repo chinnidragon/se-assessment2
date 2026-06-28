@@ -170,7 +170,7 @@
                         alert("Notes successfully saved!")
                         window.location.href = "{{ url_for('home') }}";
                     } else {
-                        alert(`Error, ${result.error}`)
+                        alert("Error, try again later")
                     }
             } catch (error) {
                 alert("Error, try again later");

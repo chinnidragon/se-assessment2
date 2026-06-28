@@ -160,7 +160,7 @@
                         alert("Sign in to see/save your profile")
                         window.location.href = ('{{ url_for("login")}}')
                     } else {
-                        alert(`Error, ${data.message}`);
+                        alert("Error, try again later");
                     }
                 }
             } catch (error) {
