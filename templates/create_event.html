@@ -76,7 +76,7 @@
             {% endif %}
         </div>
     </div>
-    
+
     <div class="two_forms">
         <div>
             <h2>
@@ -136,7 +136,6 @@
             eventform.addEventListener('submit', async (e) => {
             // Preventing the default event (here it stops the browser's default behaviour)
                 e.preventDefault();
-                alert('hello')
                 // loading all information into a dictionary to send to the backend
                 const event = {};
                 date = document.getElementById('event-date').value;
