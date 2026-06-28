@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
-    <title>admin mention</title>
+    <title>Create notice</title>
 </head>
 <body>
     <div class = "navbar">
@@ -76,7 +76,7 @@
         </div>
     </div>
     <h1>
-        create a notice
+        Create a notice
     </h1>
 
     <form id="form">
@@ -89,12 +89,12 @@
             <textarea name="notice_body" id="notice_body" placeholder="Notice body..."></textarea>
         </fieldset>
 
-        <input type="submit" class="btn" value="Create notice">
+        <input type="submit" class="btn" value="Create notice" style="margin-left: 20vw; margin-right: 20vw;">
     </form>
 
 
     <script>
-
+        const form = document.getElementById('form');
         if (form) {
             form.addEventListener('submit', async (e) => {
             // Preventing the default event (here it stops the browser's default behaviour)
@@ -102,9 +102,9 @@
                 // loading all information into a dictionary to send to the backend
                 const notices = {}
                 const now = new Date();
-                title = document.getElementById('notice_title').value;
+                const title = document.getElementById('notice_title').value;
                 notices['title'] = title
-                body = document.getElementById('notice_body').value;
+                const body = document.getElementById('notice_body').value;
                 notices['body'] = body
                 // readable human format
                 notices['date'] = now.toDateString()
@@ -117,12 +117,12 @@
                         credentials: 'same-origin',
                         body: JSON.stringify(notices)
                 });
-                r.response = await response.json()
-                    if (r.response['status'] == 'success') {
+                const data = await response.json()
+                    if (data.status === 'success') {
                         alert("Notice successfully saved!")
                         window.location.href = "{{ url_for('notices') }}";
                 } else {
-                        alert("Error, try again later")
+                    alert("Error, try again later")
                 }
                     } catch (error) {
                         alert("Error, try again later");

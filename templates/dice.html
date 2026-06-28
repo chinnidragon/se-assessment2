@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>lets roll the dice!</title>
+    <title>Dice!</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}" />
 </head>
 <body>
-     <div class = "navbar">
+    <div class = "navbar">
         <div>
             <a href="{{ url_for('index')}}">
                 <div class="logosmall">
@@ -76,65 +76,63 @@
         </div>
     </div>
     <h1>
-        Dice time...!!!!!
+        Dice Rolling!
     </h1>
 
     <div class="genericflex">
 
 
-        <form id="form" style="align-items: center;">
+        <form id="form">
             <fieldset>
                 <legend>Choose a die</legend>
                 <div class="dicebar">
-                <!-- <div style="display: flex; flex-direction: column; row-gap: 10px;"> -->
-                    <!-- need to make these the actual dice images and like nonstatic links lol -->
-                <div>
-                    <img src="../static/images/millionsslices.png" width="70px">
                     <div>
-                        <input id="dice20" name="dice" type="radio" value="20">
-                        <label for="dice20">d20</label>
+                        <img src="{{ url_for('static', filename='images/dice/20.png')}}" width="70px">
+                        <div>
+                            <input id="dice20" name="dice" type="radio" value="20">
+                            <label for="dice20">d20</label>
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <img src="../static/images/millionsslices.png" width="70px">
                     <div>
-                        <input id="dice12" name="dice" type="radio" value="12">
-                        <label for="dice12">d12</label>
+                        <img src="{{ url_for('static', filename='images/dice/12.png')}}" width="70px">
+                        <div>
+                            <input id="dice12" name="dice" type="radio" value="12">
+                            <label for="dice12">d12</label>
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <img src="../static/images/millionsslices.png" width="70px">
                     <div>
-                        <input id="dice10" name="dice" type="radio" value="10">
-                        <label for="dice10">d10</label>
+                        <img src="{{ url_for('static', filename='images/dice/10.png')}}" width="70px">
+                        <div>
+                            <input id="dice10" name="dice" type="radio" value="10">
+                            <label for="dice10">d10</label>
+                        </div>
                     </div>
-                </div>
-                    
-                <div>
-                    <img src="../static/images/millionsslices.png" width="70px">
+                        
                     <div>
-                        <input id="dice8" name="dice" type="radio" value="8">
-                        <label for="dice8">d8</label>
+                        <img src="{{ url_for('static', filename='images/dice/8.png')}}" width="70px">
+                        <div>
+                            <input id="dice8" name="dice" type="radio" value="8">
+                            <label for="dice8">d8</label>
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <img src="../static/images/millionsslices.png" width="70px">
                     <div>
-                        <input id="dice6" name="dice" type="radio" value="6">
-                        <label for="dice6">d6</label>
+                        <img src="{{ url_for('static', filename='images/dice/6.png')}}" width="70px">
+                        <div>
+                            <input id="dice6" name="dice" type="radio" value="6">
+                            <label for="dice6">d6</label>
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <img src="../static/images/millionsslices.png" width="70px">
                     <div>
-                        <input id="dice4" name="dice" type="radio" value="4">
-                        <label for="dice4">d4</label>
+                        <img src="{{ url_for('static', filename='images/dice/4.png')}}" width="70px">
+                        <div>
+                            <input id="dice4" name="dice" type="radio" value="4">
+                            <label for="dice4">d4</label>
+                        </div>
                     </div>
-                </div>
                 </div>
             </fieldset>
             <input class="btn" id="dicesubmit" type="submit" value="Roll with this dice!">
@@ -187,8 +185,8 @@
                     //the value of the roll and a new button to reroll
                 const diceDiv = document.createElement('div');
                 diceDiv.id = 'diceDiv'
-                diceDiv.class = 'card'
                 //can add styling and stuff like later.....
+
                 const diceValueTitle = document.createElement('h3');
                 diceValueTitle.textContent = `With the ${dicesides} side dice:`
 

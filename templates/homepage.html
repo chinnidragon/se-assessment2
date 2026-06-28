@@ -7,15 +7,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
 </head>
 <body class="homepage">
-    <!-- <div class="navbar"> -->
     <div class="logoback">
         <div class="logobig">
             <img src="{{ url_for('static', filename='images/logobig.png')}}" width="500" height="100"> 
         </div>
     </div>
-
-    <!-- </div> -->
-
     <!-- the navbar -->
     <div class = "navbar">
         <div>
@@ -122,21 +118,24 @@
                 </a>
             </ul>
         </fieldset>
-        <div style="display: flex; flex-direction: row; gap: 10px;">
-            <img src="{{ url_for('static', filename='images/question.png')}}" style="max-width: 50px;max-height: 50px;">        
-            <h2>
-                But wait... what IS DND ANYWAY?
-            </h2>
+        <div style="display: flex; flex-direction: column; max-width: 75vw; align-items: center;">
+            <div style="display: flex; flex-direction: row; gap: 10px;">
+                <img src="{{ url_for('static', filename='images/question.png')}}" style="max-width: 50px;max-height: 50px;">        
+                <h2>
+                    But wait... what IS DND ANYWAY?
+                </h2>
+            </div>
+            
+            <a class="btn" href="https://en.wikipedia.org/wiki/Dungeons_%26_Dragons" >
+                Go to the DND wikipedia page!
+            </a>
+            <p class="descriptiontext">
+                ...That might be a little confronting at first though. 
+                It's okay! Our club's admins, <b>Chloe</b> and <b>Colton</b>, would be more than welcome to show you around!
+                Click below to become a member!
+            </p>
         </div>
         
-        <a class="btn" href="https://en.wikipedia.org/wiki/Dungeons_%26_Dragons">
-            Go to the DND wikipedia page!
-        </a>
-        <p class="descriptiontext">
-            ...That might be a little confronting at first though. 
-            It's okay! Our club's admins, <b>Chloe</b> and <b>Colton</b>, would be more than welcome to show you around!
-            Click below to become a member!
-        </p>
 
     </nav>
 

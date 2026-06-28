@@ -13,20 +13,21 @@
     src: url('fonts/Elms_Sans/ElmsSans-VariableFont_wght.ttf');
 }
 
-.logolarge {
-    display: block;
-    text-align: center; 
-    padding: 30px;
-}
 
 .homepage body {
     background-color: rgb(244, 184, 184);
 }
 
-.homepage legend {
+/* .homepage legend {
     color: black;
     font-family: Arial, Helvetica, sans-serif;
 
+} */
+
+legend {
+    color: #993e34;
+    font-family: 'Playpen';
+    font-size: 30px;
 }
 
 img {
@@ -81,6 +82,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
     border-radius: 2px;       
     padding: 5px;
     font-family: 'Elms';
+    font-size: 20px;
     width: 100%;
 }
 
@@ -100,25 +102,46 @@ a:hover {
     font-family: 'Elms';
     font-size: 24px;
 }
-.card {
+
+.card, #diceDiv, #pNotice {
     display:flex; 
     flex-direction: column;
     gap: 10px;
-    font-family: 'Normaltext';
+    font-family: 'Elms';
     font-size: 24px;
-    background-color: rgba(224, 73, 73, 0.67);
-    color: rgb(116, 12, 12);
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin: 20px;
     padding: 20px;
 }
 
+.card {
+    background: #000000;
+    background: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 51%, rgba(117, 21, 21, 1) 100%);
+    color: rgb(248, 214, 175);
+}
+
+#diceDiv, #pNotice {
+    background-color: antiquewhite;
+    align-items: center;
+}
+
+#pNotice h3 {
+    size: 36px;
+    align-items: flex-start;
+}
+
+.card input[type="email"], input[type="password"] {
+    width: 30vw;
+}
+
+.card label {
+    align-self: flex-start;
+}
 
 .indexpage {
     display: grid;
     grid-area: span;
-    /* background-color: rgb(116, 12, 12); */
     background: #1f0000;
     background: linear-gradient(90deg, rgba(31, 0, 0, 1) 0%, rgba(255, 0, 0, 1) 57%, rgba(255, 209, 209, 1) 99%);
 } 
@@ -159,13 +182,9 @@ a:hover {
     align-items: center;
 
 }
-.login {
-    display: flex;
-    align-items: center;
-    margin: 0;
-}
 
-.login img {
+
+.loginimg {
     width: 300px;
     border-right: 60px 
     solid #000000;
@@ -181,6 +200,22 @@ a:hover {
     margin: 0px;
 }
 
+.login {
+    display: flex;
+    align-items: center;
+}
+
+.login .card {
+    margin-left: 10vw; margin-right: 10vw;
+}
+
+.btn {
+    padding-right: 3rem; padding-left: 3rem; padding-bottom: 1rem; padding-top: 1rem;
+}
+
+button {
+    padding-right: 10rem; padding-left: 10rem; padding-bottom: 3rem; padding-top: 3rem;
+}
 
 .btn, button {
     color: rgb(0, 0, 0);
@@ -196,38 +231,19 @@ a:hover {
 .btn:hover, button:hover {
     color: rgb(248, 214, 175);
     background-color: rgb(49, 5, 5);
-    text-decoration: none;
-    font-style: italic;
-    border-radius: 10px;
-    font-size: 20px;
 }
 
-.btn {
-    padding-right: 3%; padding-left: 3%; padding-bottom: 1%; padding-top: 1%;
-}
 
-.btn:hover {
-    padding-right: 3%; padding-left: 3%; padding-bottom: 1%; padding-top: 1%;
-} 
-
-button {
-    padding-right: 10%; padding-left: 10%; padding-bottom: 3%; padding-top: 3%;
-}
-
-button:hover {
-    padding-right: 10%; padding-left: 10%; padding-bottom: 3%; padding-top: 3%;
-}
-
-.form {
+form {
     display: flex; 
-    flex-direction: column;
     gap: 20px; 
+    flex-direction: column;
 }
 
 .form input[type="number"] {
     width: 100px;
     height: 30px;
-    }
+}
 
 .form input[type="checkbox"] {
     border: #2c1403;
@@ -242,8 +258,14 @@ button:hover {
 fieldset {
     font-family: 'Playpen';
     font-style: italic;
-    color: rgb(115, 6, 6);
+    color: rgb(42, 0, 0);
+    background: #ffffff;
+    background: linear-gradient(85deg, rgba(255, 255, 255, 1) 50%, rgba(245, 110, 110, 1) 100%);
+    margin-left: 20vw; margin-right: 20vw;
+    padding-top: 2vw; padding-bottom: 2vw;
+    padding-right: 5vw; padding-left: 5vw;
 }
+
 
 .two_forms {
     display: grid;
@@ -254,24 +276,28 @@ fieldset {
     margin: 20px auto;   
 }
 
-.dicebar {
+/* .dicebar {
     display: flex;
+    flex-direction: row;
     align-content: center;
     align-items: center;
-    gap: 5vw;
+    gap: 10vw;
     padding: 12px;
     /* max-width: fit-content; */
     /* min-width:max-content;   */
     /* width: clamp(10px, 5vw) */
+
+.dicebar {
+    display: flex;
+    flex-direction: row;
+    gap: 5vw;
+    justify-content: right;
 }
 
 .logobig {
-    width: auto;
-    justify-self: center;
-    padding: 12px;
-    justify-content: center;
-    align-items: center;
-    /* Done using website in credits */
+    display: block;
+    text-align: center; 
+    padding: 30px;
 }
 
 .logoback {
@@ -362,11 +388,7 @@ nav {
     /* make buttons more compact */
     .btn, button { padding: 0.5rem 1rem; }
 
-    .dicebar {
-        flex-direction: column;
-        gap: 10px;
-        justify-content: right;
-    }
+
 
     /* center form inputs in a column (if .form is a flex container) */
     /* .form { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; } */
@@ -411,6 +433,8 @@ tr:nth-child(even) {
         flex-direction: column;
         gap: 10px;
         justify-content: right;
+        padding: 10px;
+        margin: 0px;
     }
 
     .navtext {
@@ -423,13 +447,9 @@ tr:nth-child(even) {
         max-width: 20vw;
 
     }
+    .dicebar {
+        flex-direction: column;
+    }
 
 }
 
-
-.dynamic h3 {
-    
-}
-/* .timetable {
-
-} */

@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tick tock brother</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}" />
+    <title>Notices</title>
 </head>
 <body>
-     <div class = "navbar">
+    <div class = "navbar">
         <div>
             <a href="{{ url_for('index')}}">
                 <div class="logosmall">
@@ -77,12 +78,13 @@
     <h1>
         notices..!
     </h1>
-    <div id="previous-notices">
-
-    </div>
     <div id="notice-button">
 
     </div>
+    <div id="previous-notices">
+
+    </div>
+
 
     <script>
         async function getnotices() {
@@ -90,7 +92,6 @@
                 // retrieving the notices
                 const response = await fetch("/api/getnotices", {method: "GET", credentials: 'same-origin'});
                 const data = await response.json();
-                alert(data)
                 // defining the container for these saved notes (the empty div with the previous-notes ID)
                 if (data.status === 'success') {
                     const container = document.getElementById('previous-notices');
@@ -102,11 +103,11 @@
                     // for loop that iterates through all the created notices
                         for (const notice of data.notices) {
                             // previous notice div
-                            const pNotice = document.createElement('div');
+                            const pNotice = document.createElement('div'); pNotice.id = "pNotice";
                             const title = document.createElement('h3'); title.textContent = notice.title;
                             const body = document.createElement('p'); body.textContent = notice.body;
+                            body.class = "fancy_p"
                             const date = document.createElement('p'); date.textContent = notice.date;
-                            pNotice.style.background = '#B00B69';
                             pNotice.appendChild(title);
                             pNotice.appendChild(body);
                             pNotice.appendChild(date);
@@ -128,7 +129,6 @@
             const data = await response.json()
             if (data.admin) {
                 // const noticeButtonDiv = document.createElement('div');
-                alert("admin")
                 const noticeButtonDiv = document.getElementById("notice-button");
                 noticeButtonDiv.innerHTML = `<button id="newnotice">Add new notice</button>`;
                 // container.appendChild(noticeButtonDiv);

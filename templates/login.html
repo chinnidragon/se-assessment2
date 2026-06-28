@@ -8,78 +8,7 @@
 </head>
 
 <body class="login">
-    <div class = "navbar">
-        <div>
-            <a href="{{ url_for('index')}}">
-                <div class="logosmall">
-                    <img src="{{ url_for('static', filename='images/logosmall.png')}}" width="50" height="50"> 
-                </div>
-            </a>
-        </div>
 
-        <div class="navtext">
-            {% if session.get('user_id') %}
-                <a href="{{ url_for('profile')}}">
-                    <div class="navlinks">
-                        <img src="{{ url_for('static', filename='images/nav/profile.png')}}" width="30" height="30"> 
-                        Your profile
-                    </div>
-                </a>
-
-                <a href="{{ url_for('notes')}}">
-                    <div class="navlinks">
-                        <img src="{{ url_for('static', filename='images/nav/note.png')}}" width="30" height="30"> 
-                        Notes
-                    </div>
-                </a>
-            {% else %}
-            {% endif %}
-            <a href="{{ url_for('notices')}}">
-                <div class="navlinks">
-                    <img src="{{ url_for('static', filename='images/nav/bell.png')}}" width="30" height="30"> 
-                    Notices
-                </div>
-            </a>
-
-            <a href="{{ url_for('view_chars')}}">
-                <div class="navlinks">
-                    <img src="{{ url_for('static', filename='images/nav/char.png')}}" width="30" height="30"> 
-                    Characters
-                </div>
-            </a>
-
-            <a href="{{ url_for('dice')}}">
-                <div class="navlinks">
-                    <img src="{{ url_for('static', filename='images/nav/dice.png')}}" width="30" height="30"> 
-                    Dice
-                </div>
-            </a>
-
-            <a href="{{ url_for('timetable')}}">
-                <div class="navlinks">
-                    <img src="{{ url_for('static', filename='images/nav/time.png')}}" width="30" height="30"> 
-                    Timetable
-                </div>
-            </a>
-        </div>
-        <div style="align-self: flex-end;">
-            {% if session.get('user_id') %}
-            <div class="navlinks">
-                <a href="{{ url_for('logout')}}">Log out</a>
-            </div>
-
-            {% else %}
-            <div class="navlinks">
-                <a href="{{ url_for('login')}}">Log in</a>
-            </div>
-
-            {% endif %}
-        </div>
-    </div>
-    <div class="login">
-        <img class="loginimg" src="{{ url_for('static', filename='images/millionsslices.png')}}">
-    </div>
-    <div class="loginform">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
             <ul class=flashes>
@@ -90,28 +19,35 @@
         {% endif %}
         {% endwith %}
         {% block body %}{% endblock %}
-        <h2>
-            Login
-        </h2>
-            <form class="form" id="form">
-                <div class="card" style="width: 20vw; height: 10vw; align-items: left; min-width: 300px; min-height: 150px;">
-                    <div style="display: flex; flex-direction: column; max-width: fit-content;">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+    <div class="login">
+        <img class="loginimg" src="{{ url_for('static', filename='images/logindragon.png')}}">
+        <div style="flex-direction: column; align-self: center;">
+            <h2>
+                Log in
+            </h2>
+            <form id="form" class="form">
+                <div class="content">
+                    <div class="card" style="width: 50vw; height: 10vw; align-items: left; min-width: 300px; min-height: 150px;">
+                        <div style="display: flex; flex-direction: column; max-width: fit-content;">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div style="display: flex; flex-direction: column; max-width: fit-content;" >
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
                     </div>
-                    <div style="display: flex; flex-direction: column; max-width: fit-content;" >
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
+                    <div>
+                        <input class="btn" type="submit" value="Let's Go!!">
                     </div>
-                </div>
-                <div>
-                    <input class="btn" type="submit" value="Let's Go!!">
                 </div>
             </form>
             <h3>
-                <a href="{{ url_for('signup') }}">Make an account</a>
+                <a href="{{ url_for('signup') }}">Become a member!</a>
             </h3>
         </div>
+
+    </div>
 
 
 
