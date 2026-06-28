@@ -141,8 +141,8 @@
         if (form) {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const response = await fetch("/api/sessionID", {method: "GET", credentials: 'same-origin'});
-                sessionID = await response.json();
+                const sessResponse = await fetch("/api/sessionID", {method: "GET", credentials: 'same-origin'});
+                sessionID = await sessResponse.json();
                 if (!sessionID.active) {
                     alert("Sign in first");
                     window.location.href = ('{{ url_for("login")}}')
@@ -152,7 +152,7 @@
                 // loading all information into a dictionary to send to the backend
                 const notes = {}
                 const now = new Date();
-                body = document.getElementById('note_body').value;
+                const body = document.getElementById('note_body').value;
                 notes['body'] = body
                 // readable human format
                 notes['date'] = now.toDateString()
@@ -165,7 +165,7 @@
                         credentials: 'same-origin',
                         body: JSON.stringify(notes)
                 });
-                result = await response.json()
+                const result = await response.json()
                     if (result.status === 'success') {
                         alert("Notes successfully saved!")
                         window.location.href = "{{ url_for('home') }}";

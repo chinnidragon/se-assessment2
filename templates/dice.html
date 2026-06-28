@@ -157,7 +157,6 @@
                 }
             const dice = {}
             //max value that the dice can roll (same as the number of sides on the dice)
-            // alert(dice)
             dice["max-value"] = dicesides
             try {
                 //removing the OLD dice roll result ONLY if there is one
@@ -180,23 +179,19 @@
                 const rolledValue = data.number;
                 
                 //dynamically creating new elements to display the user's dice roll
-                    //the value of the roll and a new button to reroll
+                //the value of the roll and a new button to reroll
                 const diceDiv = document.createElement('div');
                 diceDiv.id = 'dice-div'
-                //can add styling and stuff like later.....
 
                 const diceValueTitle = document.createElement('h3');
                 diceValueTitle.textContent = `With the ${dicesides} side dice:`
 
                 const diceValue = document.createElement('p');
                 diceValue.textContent = `You rolled a ${rolledValue}!`
-                // diceValue.className = 'h2';
-                // add styling later...
 
                 const roller = document.createElement('button')
                 roller.className = 'btn';
                 roller.textContent = 'Roll Again!';
-                // add styling later...
                 roller.addEventListener('click', async () => {
                     try {
                         //calling the dice roll api again (when the roll button is clicked)
@@ -211,7 +206,7 @@
                             diceValue.textContent = `You rolled a ${rolledValue}!`
                         }
                     } catch (err) { //having the same error messages to increase security (malicious parties cannot glean information from the error message)
-                        alert("Error: something went wrong! Try again?")
+                        alert("Error, try again later")
                     }
                 });
             
@@ -228,8 +223,8 @@
                 alert("Sorry, there was an error! Try again?");
             }
         });
-    } else { //if the form wasnt found?? lol
-        console.error("wheres the form vro...");
+    } else { 
+        console.error("No form");
     }
     </script>
 </body>
