@@ -5,21 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>fancy seeing you again!</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}" />
 </head>
 
 <body class="login">
-
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class=flashes>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-        {% endwith %}
-        {% block body %}{% endblock %}
     <div class="login">
         <img class="loginimg" src="{{ url_for('static', filename='images/logindragon.png')}}">
         <div style="flex-direction: column; align-self: center;">

@@ -1,16 +1,14 @@
 {
     "name": "HGHS Dungeons & Dragons",
     "short_name": "DND",
-    "start_url": "/index.html",
-    "display": "standalone",
-    "background_color": "#b00b69",
-    "theme_color": "#000000",
+    "start_url": "/",
+    "theme_color":"#ffffff",
+    "background_color":"#ffffff",
+    "display":"standalone",
     "description": "All the mysticality and magicalness of Dungeons and Dragons, now in our VERY OWN SCHOOL!",
-    "icons": [
-      {
-        "src": "images/millionsslices.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      }
+    "icons":
+    [
+      {"src":"/images/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},
+      {"src":"/images/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}
     ]
 }

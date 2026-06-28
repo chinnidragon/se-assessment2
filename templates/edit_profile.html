@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.ico') }}" />
+    <!-- an ico is a special type of image -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}" />
     <title>Edit profile</title>
 </head>
 <body>
-     <div class = "navbar">
+    <div class = "navbar">
         <div>
             <a href="{{ url_for('index')}}">
                 <div class="logosmall">

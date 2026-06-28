@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hello there!</title>
+    <title>Welcome to DND</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}" />
     <link rel="manifest" href="{{ url_for('manifest') }}" />
+    <link rel="manifest" href="{{ url_for('manifest') }}" />
+    <!-- Service Worker -->
+    <script>
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+            .register("{{ url_for('static', filename='service-worker.js') }})")
+            .then(() => console.log("Service Worker Registered"))
+            .catch((err) =>
+                console.error("Service Worker Registration Failed:", err)
+            );
+    }
+    </script>
+
 </head>
 <body>
     <div class = "navbar">
@@ -103,14 +116,6 @@
     </div>
 
     <script>
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker
-            .register("{{ url_for('static', filename='service-worker.js') }}")
-            .then(() => console.log("Service Worker Registered"))
-            .catch((err) =>
-                console.error("Service Worker Registration Failed:", err)
-            );
-        };
         const nextpage = document.getElementById("nextpage-btn")
         nextpage.addEventListener("click", async (e) => {
             e.preventDefault();
