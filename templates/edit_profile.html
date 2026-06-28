@@ -106,8 +106,6 @@
                 if (displayName === "" || bio === "") {
                     alert('Profile cannot be null!')
                 }
-                //debug
-                // console.log(profile)
                 try {
                     const response = await fetch("/api/saveprofile", {
                         method: "POST",

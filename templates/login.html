@@ -54,8 +54,6 @@
                 const password = document.getElementById('password').value;
                 profile['email'] = email
                 profile['password'] = password
-                //debug
-                // console.log(profile)
                 try {
                     const response = await fetch("/api/login", {
                         method: "POST",
