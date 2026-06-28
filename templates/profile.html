@@ -81,7 +81,7 @@
     </h1>
     
     <a class="btn" href="{{ url_for('editprofile') }}" style="margin: 20px;">Edit profile</a>
-    <div id="profile_info" class="card" style="align-items: center;">
+    <div id="profile-info" class="card" style="align-items: center;">
 
     </div>
 
@@ -93,7 +93,7 @@
                 const data = await response.json();
                 // defining the container for these saved notes (the empty div with the previous-notes ID)
                 if (data.status === 'success') {
-                    const container = document.getElementById('profile_info');
+                    const container = document.getElementById('profile-info');
                     container.innerHTML = '';
                     // for loop that iterates through all the note entries 
                         // previous note div

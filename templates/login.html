@@ -10,7 +10,8 @@
 
 <body class="login">
     <div class="login">
-        <img class="loginimg" src="{{ url_for('static', filename='images/logindragon.png')}}">
+        <img class="loginimg" src="{{ url_for('static', filename='images/logindragon.png')}}" alt="A cool black and red image of a dragon">
+
         <div style="flex-direction: column; align-self: center;">
             <h2>
                 Log in
@@ -65,13 +66,10 @@
                     const result = await response.json();
                     if (result['status'] == 'success') {
                         window.location.href = "{{ url_for('home') }}"
-                        // debug
-                        // console.log('Hello, World!')
                     } else {
                             alert('Incorrect email/password. Maybe check your spelling lol')
                 }
                     } catch (error) {
-                        // console.error("Error saving membership", error);
                         alert("Error, try again later");
                     }
             });

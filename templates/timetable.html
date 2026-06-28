@@ -177,7 +177,8 @@
                     };
                     for (event of data.events) {
                         const eventDiv = document.createElement('div');
-                        eventDiv.innerHTML = `<h2>${event.date}</h2><h3 style="background: #B00B69;">${event.title}</h3><p>${event.body}</p>`;
+                        eventDiv.className = 'card'
+                        eventDiv.innerHTML = `<h2>${event.date}</h2><h3 style="color:rgb(115, 6, 6); font-size="36px">${event.title}</h3><p class="fancy_p">${event.body}</p>`;
                         container.appendChild(eventDiv);
                     };
                     

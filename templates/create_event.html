@@ -101,7 +101,7 @@
                 Change the regular programming!
             </h2>
 
-            
+            <!-- Checkbox form -->
             <form id="regular-timetable-form" class="form">
                 <h3>Make regular sessions on:</h3>
                 <fieldset>
@@ -140,6 +140,7 @@
                 const event = {};
                 date = document.getElementById('event-date').value;
                 const eDate = new Date(date);
+                // loading the json body
                 event['date'] = eDate.toDateString()
 
                 eventTitle = document.getElementById('event-title').value;
@@ -168,7 +169,7 @@
                     }
             });
         } else {
-            console.error("wheres the form vro")
+            console.error("No form")
         }
         if (timetableform) {
             timetableform.addEventListener('submit', async (e) => {
@@ -181,6 +182,7 @@
                 alert('Please select a day');
                 return;
             } else {
+                //creating the active days array to be saved in the events table
                 const active_days = {}
                 active_days['days'] = days
                 const response = await fetch("/api/savetimetable", {
@@ -201,7 +203,7 @@
     });
 
         } else {
-            console.error("wheres the form vro")
+            console.error("No form")
         }
     
     </script>

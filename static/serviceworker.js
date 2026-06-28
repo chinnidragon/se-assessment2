@@ -1,7 +1,7 @@
 // Adapted from Mr Horan's Tutorial 
 
 //manually updatinng cache forces app to update
-const CACHE_NAME = "pwa-cache-v4";
+const CACHE_NAME = "pwa-cache-v5";
 
 //all static images (so that the website can still work offline)
 const urlsToCache = [

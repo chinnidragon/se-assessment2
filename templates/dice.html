@@ -136,7 +136,7 @@
                     </div>
                 </div>
             </fieldset>
-            <input class="btn" id="dicesubmit" type="submit" value="Roll with this dice!">
+            <input class="btn" id="dicesubmit" type="submit" value="Roll with this dice!" style="max-width: 75vw; margin-left: 20vw; margin-right: 20vw;">
         </form>
 
     </div>
@@ -164,7 +164,7 @@
                 //could probably also add biases here if i had time sighhh maybe maybe not Okay does anyone even need bias calculators anyway colton ang should die Okayyy like lowkey it doesnt matter and he can just calculate it anyway right...
             try {
                 //removing the OLD dice roll result ONLY if there is one
-                const old = document.getElementById('diceDiv');
+                const old = document.getElementById('dice-div');
                 if (old) old.remove();
                 
                 //calling the dice roll API
@@ -185,7 +185,7 @@
                 //dynamically creating new elements to display the user's dice roll
                     //the value of the roll and a new button to reroll
                 const diceDiv = document.createElement('div');
-                diceDiv.id = 'diceDiv'
+                diceDiv.id = 'dice-div'
                 //can add styling and stuff like later.....
 
                 const diceValueTitle = document.createElement('h3');
