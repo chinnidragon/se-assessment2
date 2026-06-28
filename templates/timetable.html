@@ -104,8 +104,8 @@
             </tr>
             <tr id="rowTues">
                 <td class="day-label">Tuesday</td>
-                <td id="weekATues"></td>
-                <td id="weekBTues"></td>
+                <td id="weekATue"></td>
+                <td id="weekBTue"></td>
             </tr>
             <tr id="rowWed">
                 <td class="day-label">Wednesday</td>
@@ -114,13 +114,13 @@
             </tr>
             <tr id="rowThurs">
                 <td class="day-label">Thursday</td>
-                <td id="weekAThurs"></td>
-                <td id="weekBThurs"></td>
+                <td id="weekAThu"></td>
+                <td id="weekBThu"></td>
             </tr>
             <tr id="rowFrid">
                 <td class="day-label">Friday</td>
-                <td id="weekAFrid"></td>
-                <td id="weekBFrid"></td>
+                <td id="weekAFri"></td>
+                <td id="weekBFri"></td>
             </tr>
         </tbody>
     </table>
@@ -194,12 +194,12 @@
             const data = await response.json()
             if (data.admin) {
                 const eventButtonDiv = document.getElementById('event-button-div');
-                eventButtonDiv.innerHTML = `<button id="newevent" class="btn">Edit</button>`;
+                eventButtonDiv.innerHTML = `<button id="newevent" class="btn">Edit events/timetable</button>`;
                 // container.appendChild(eventButtonDiv);
                 eventButton = document.getElementById('newevent')
                 eventButton.addEventListener("click", async (e) => {
                     e.preventDefault();
-                    window.open("{{ url_for('t_event') }}");
+                    window.location.href = ("{{ url_for('t_event') }}");
                 });
             }; 
         };
