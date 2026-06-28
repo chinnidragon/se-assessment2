@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.ico') }}" />
     <title>everybody so creative</title>
 </head>
 <body>
@@ -116,14 +117,12 @@
                             const c_infoHead = document.createElement('h3'); 
                             c_infoHead.textContent = "General Info";
                             
-                            // CHANGED: Using innerHTML to allow <b> tags and added a <br> after the header text
                             const c_info = document.createElement('p'); 
                             c_info.innerHTML = `<b>Age:</b> ${ch_entry.info['age']}<br><b>Description:</b> ${ch_entry.info['desc']}<br><b>Race:</b> ${ch_entry.info['race']}`;
                             
                             const c_statsHead = document.createElement('h3'); 
                             c_statsHead.textContent = "Stats";
                             
-                            // CHANGED: Added <b> tags to all stat headers
                             const c_stats = document.createElement('p'); 
                             c_stats.innerHTML = 
                                 `<b>Strength:</b> ${ch_entry.stats['str']}<br>
@@ -210,14 +209,12 @@
                             const a_infoHead = document.createElement('h3'); 
                             a_infoHead.textContent = "General Info";
                             
-                            // CHANGED: Using innerHTML to allow <b> tags and added a <br> after the header text
                             const a_info = document.createElement('p'); 
                             a_info.innerHTML = `<b>Age:</b> ${ch_entry.info['age']}<br><b>Description:</b> ${ch_entry.info['desc']}<br><b>Race:</b> ${ch_entry.info['race']}`;
                             
                             const a_statsHead = document.createElement('h3'); 
                             a_statsHead.textContent = "Stats";
                             
-                            // CHANGED: Added <b> tags to all stat headers
                             const a_stats = document.createElement('p'); 
                             a_stats.innerHTML = 
                                 `<b>Strength:</b> ${ch_entry.stats['str']}<br>
