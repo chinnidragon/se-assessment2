@@ -7,57 +7,86 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
 </head>
 <body>
+     <div class = "navbar">
+        <div>
+            <a href="{{ url_for('index')}}">
+                <div class="logosmall">
+                    <img src="{{ url_for('static', filename='images/logosmall.png')}}" width="50" height="50"> 
+                </div>
+            </a>
+        </div>
+
+        <div class="navtext">
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('profile')}}">
+                    <div class="navlinks">
+                        <img src="{{ url_for('static', filename='images/nav/profile.png')}}" width="30" height="30"> 
+                        Your profile
+                    </div>
+                </a>
+
+                <a href="{{ url_for('notes')}}">
+                    <div class="navlinks">
+                        <img src="{{ url_for('static', filename='images/nav/note.png')}}" width="30" height="30"> 
+                        Notes
+                    </div>
+                </a>
+            {% else %}
+            {% endif %}
+            <a href="{{ url_for('notices')}}">
+                <div class="navlinks">
+                    <img src="{{ url_for('static', filename='images/nav/bell.png')}}" width="30" height="30"> 
+                    Notices
+                </div>
+            </a>
+
+            <a href="{{ url_for('view_chars')}}">
+                <div class="navlinks">
+                    <img src="{{ url_for('static', filename='images/nav/char.png')}}" width="30" height="30"> 
+                    Characters
+                </div>
+            </a>
+
+            <a href="{{ url_for('dice')}}">
+                <div class="navlinks">
+                    <img src="{{ url_for('static', filename='images/nav/dice.png')}}" width="30" height="30"> 
+                    Dice
+                </div>
+            </a>
+
+            <a href="{{ url_for('timetable')}}">
+                <div class="navlinks">
+                    <img src="{{ url_for('static', filename='images/nav/time.png')}}" width="30" height="30"> 
+                    Timetable
+                </div>
+            </a>
+        </div>
+        <div style="align-self: flex-end;">
+            {% if session.get('user_id') %}
+            <div class="navlinks">
+                <a href="{{ url_for('logout')}}">Log out</a>
+            </div>
+
+            {% else %}
+            <div class="navlinks">
+                <a href="{{ url_for('login')}}">Log in</a>
+            </div>
+
+            {% endif %}
+        </div>
+    </div>
     <h1>Timetable</h1>
 
+    <div id="event-button-div" style="align-self: center;">
+
+    </div>
 </table>
     <h2>Usual timetable (by school weeks)</h2>
+    <!-- only used if there are no scheduled events at all -->
     <div id="no-sess">
 
     </div>
-    <!-- <div class="schedule"> 
-        <h2>Week A</h2>
-        <div id="weekAMon">
-            Monday
-        </div>
 
-        <div id="weekATues">
-            Tuesday
-        </div>
-
-        <div id="weekAWed">
-            Wednesday
-        </div>
-
-        <div id="weekAThurs">
-            Thursday
-        </div>
-
-        <div id="weekAFrid">
-            Friday
-        </div>
-    </div>
-    <div> 
-        <h2>Week B</h2>
-        <div id="weekBMon">
-            Monday
-        </div>
-
-        <div id="weekBTues">
-            Tuesday
-        </div>
-
-        <div id="weekBWed">
-            Wednesday
-        </div>
-
-        <div id="weekBThurs">
-            Thursday
-        </div>
-
-        <div id="weekBFrid">
-            Friday
-        </div>
-    </div> -->
     <table id="timetable" class="timetable">
         <thead>
             <tr>
@@ -99,7 +128,6 @@
 
     <h2>Upcoming sessions</h2>
     <div id="upcoming-sess">
-        <!-- You have sessions on dates: -->
         <!-- this inner html will be edited by the script..
         which will check what dates there are sessions in -->
         <!-- The sessions will be DD/MM/YY followed by Weekday Day Month-->
@@ -114,13 +142,13 @@
                     // for loop that iterates through the active dats, adding "scheduled session" text
                     if (data.active_days.length === 0) {
                         noSess = document.getElementById('no-sess');
-                        noSess.innerHTML = `<p>Timetable is looking a little empty...</p>`
+                        noSess.innerHTML = `<p class="fancy_p">Timetable is looking a little empty...</p>`
                         return;
                     } else {
                         for (const day of data.active_days) {
                             const container = document.getElementById(day);
                             // create a new stylesheet and making it the "active day class"
-                            activeDay = document.createElement('div'); activeDay.innerHTML = `<h2>Scheduled session!</h2>`;
+                            activeDay = document.createElement('div'); activeDay.innerHTML = `<p class="sched_sess">Scheduled session!</p>`;
                             container.appendChild(activeDay);
                         }
                     }
@@ -139,8 +167,6 @@
                 const data = await response.json()
                 // defining the container for tthe notices
                 const container = document.getElementById('upcoming-sess');
-                alert('event2')
-                // alert('event2')
                 if (data.status === 'success') {
                     // for loop that iterates through all the note entries, then 
                     if (data.events.length === 0) {
@@ -149,7 +175,6 @@
                         return;
                     };
                     for (event of data.events) {
-                        alert('event works!')
                         const eventDiv = document.createElement('div');
                         eventDiv.innerHTML = `<h2>${event.date}</h2><h3 style="background: #B00B69;">${event.title}</h3><p>${event.body}</p>`;
                         container.appendChild(eventDiv);
@@ -166,18 +191,15 @@
             const response = await fetch('/api/admin', {method: 'GET', credentials:"same-origin"});
             const data = await response.json()
             if (data.admin) {
-                const container = document.getElementById('upcoming-sess')
-                const eventButtonDiv = document.createElement('div');
-                eventButtonDiv.innerHTML = `<button id="newevent" class="btn">Create new event</button>`;
-                container.appendChild(eventButtonDiv);
+                const eventButtonDiv = document.getElementById('event-button-div');
+                eventButtonDiv.innerHTML = `<button id="newevent" class="btn">Edit</button>`;
+                // container.appendChild(eventButtonDiv);
                 eventButton = document.getElementById('newevent')
                 eventButton.addEventListener("click", async (e) => {
                     e.preventDefault();
                     window.open("{{ url_for('t_event') }}");
                 });
-            } else {
-                console.alert('deibruhde')
-            }
+            }; 
         };
         document.addEventListener("DOMContentLoaded", () => {
             getTimetable();

@@ -7,6 +7,74 @@
     <title>everybody so creative</title>
 </head>
 <body>
+    <div class = "navbar">
+        <div>
+            <a href="{{ url_for('index')}}">
+                <div class="logosmall">
+                    <img src="{{ url_for('static', filename='images/logosmall.png')}}" width="50" height="50"> 
+                </div>
+            </a>
+        </div>
+
+        <div class="navtext">
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('profile')}}">
+                    <div class="navlinks">
+                        <img src="{{ url_for('static', filename='images/nav/profile.png')}}" width="30" height="30"> 
+                        Your profile
+                    </div>
+                </a>
+
+                <a href="{{ url_for('notes')}}">
+                    <div class="navlinks">
+                        <img src="{{ url_for('static', filename='images/nav/note.png')}}" width="30" height="30"> 
+                        Notes
+                    </div>
+                </a>
+            {% else %}
+            {% endif %}
+            <a href="{{ url_for('notices')}}">
+                <div class="navlinks">
+                    <img src="{{ url_for('static', filename='images/nav/bell.png')}}" width="30" height="30"> 
+                    Notices
+                </div>
+            </a>
+
+            <a href="{{ url_for('view_chars')}}">
+                <div class="navlinks">
+                    <img src="{{ url_for('static', filename='images/nav/char.png')}}" width="30" height="30"> 
+                    Characters
+                </div>
+            </a>
+
+            <a href="{{ url_for('dice')}}">
+                <div class="navlinks">
+                    <img src="{{ url_for('static', filename='images/nav/dice.png')}}" width="30" height="30"> 
+                    Dice
+                </div>
+            </a>
+
+            <a href="{{ url_for('timetable')}}">
+                <div class="navlinks">
+                    <img src="{{ url_for('static', filename='images/nav/time.png')}}" width="30" height="30"> 
+                    Timetable
+                </div>
+            </a>
+        </div>
+        <div style="align-self: flex-end;">
+            {% if session.get('user_id') %}
+            <div class="navlinks">
+                <a href="{{ url_for('logout')}}">Log out</a>
+            </div>
+
+            {% else %}
+            <div class="navlinks">
+                <a href="{{ url_for('login')}}">Log in</a>
+            </div>
+
+            {% endif %}
+        </div>
+    </div>
     <h1>
         See everyone's characters
     </h1>
@@ -15,131 +83,158 @@
 
     </div>
     <script>
+
         async function getchars() {
-            try {
-                // retrieving the saved notes
-                const response = await fetch("/api/getchars", {method: "GET", credentials: 'same-origin'});
-                const data = await response.json();
-                // defining the container for these saved notes (the empty div with the previous-notes ID)
+        try {
+            // retrieving the saved notes
+            const response = await fetch("/api/getchars", { method: "GET", credentials: 'same-origin' });
+            const data = await response.json();
 
-                if (data.status === 'success') {
-                    const container = document.getElementById('characters');
-                    container.innerHTML = '';
-                    //creating the character divs
-                    const u_characters = document.createElement('div');
-                    const a_characters = document.createElement('div');
-                    // for loop that iterates through all the note entries 
-                    if (data.signedin) {
-                        const userH = document.createElement('h2'); userH.textContent = "Your characters";
-                        u_characters.appendChild(userH);
-                        if (data.user_c.length === 0) {
-                            const p = document.createElement('p'); p.textContent = 'No characters yet.';
-                            u_characters.appendChild(p)
-                        } else {
-                            for (const ch_entry of data.user_c) {
-                            // previous note div
-                            // creating the date and body of the note
+            if (data.status === 'success') {
+                alert('hellp')
+                const container = document.getElementById('characters');
+                container.innerHTML = '';
+                
+                // creating the character divs
+                const u_characters = document.createElement('div');
+                const a_characters = document.createElement('div');
+
+                if (data.signedin) {
+                    const userH = document.createElement('h2'); 
+                    userH.textContent = "Your characters";
+                    u_characters.appendChild(userH);
+
+                    if (data.user_c.length === 0) {
+                        const p = document.createElement('p'); 
+                        p.textContent = 'No characters yet.';
+                        u_characters.appendChild(p);
+                    } else {
+                        for (const ch_entry of data.user_c) {
+                            const c_name = document.createElement('h2'); 
+                            c_name.textContent = ch_entry.name;
                             
-                                const c_name = document.createElement('h2'); c_name.textContent = ch_entry.name;
-                                const c_infoHead = document.createElement('h3'); c_infoHead.textContent = "General Info"
-                                const c_info = document.createElement('p'); 
-                                c_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}} `
-                                const c_statsHead = document.createElement('h3'); c_statsHead.textContent = "Stats"
-                                const c_stats = document.createElement('p'); 
-                                c_stats.textContent = 
-                                    `Strength: ${ch_entry.stats['str']}\n
-                                    Dexterity: ${ch_entry.stats['dex']}\n
-                                    Constitution: ${ch_entry.stats['con']}\n
-                                    Intelligence: ${ch_entry.stats['int']}\n
-                                    Wisdom: ${ch_entry.stats['wis']}\n
-                                    Charisma: ${ch_entry.stats['cha']}`;
-                                u_characters.appendChild(c_name);
-                                u_characters.appendChild(c_infoHead);
-                                u_characters.appendChild(c_info);
-                                u_characters.appendChild(c_statsHead);
-                                u_characters.appendChild(c_stats);
-                            };
-                        };
-                        const otherH = document.createElement('h2'); otherH.textContent = "Other's characters";
-                        a_characters.appendChild(otherH);
-                        if (data.all_c.length === 0) {
-                            const p = document.createElement('p'); p.textContent = 'No characters yet.';
-                            a_characters.appendChild(p)
-                            //breaking the statement
-                            return;
-                        } else {
-                            for (const ch_entry of data.all_c) {
-                                const a_user = document.createElement('h2'); a_user.textContent = ch_entry.user;
-                                const a_name = document.createElement('h2'); a_name.textContent = ch_entry.name;
-                                const a_infoHead = document.createElement('h3'); a_infoHead.textContent = "General Info"
-                                const a_info = document.createElement('p'); 
-                                a_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}} `
-                                const a_statsHead = document.createElement('h3'); a_statsHead.textContent = "Stats"
-                                const a_stats = document.createElement('p'); 
-                                a_stats.textContent = 
-                                    `Strength: ${ch_entry.stats['str']}\n
-                                    Dexterity: ${ch_entry.stats['dex']}\n
-                                    Constitution: ${ch_entry.stats['con']}\n
-                                    Intelligence: ${ch_entry.stats['int']}\n
-                                    Wisdom: ${ch_entry.stats['wis']}\n
-                                    Charisma: ${ch_entry.stats['cha']}`;
-                                a_characters.appendChild(a_user)
-                                a_characters.appendChild(a_name);
-                                a_characters.appendChild(a_infoHead);
-                                a_characters.appendChild(a_info);
-                                a_characters.appendChild(a_statsHead);
-                                a_characters.appendChild(a_stats);
-                                };
-                            };
-                        container.append(u_characters);
-                        container.append(a_characters);
+                            const c_infoHead = document.createElement('h3'); 
+                            c_infoHead.textContent = "General Info";
+                            
+                            const c_info = document.createElement('p'); 
+                            c_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}`;
+                            
+                            const c_statsHead = document.createElement('h3'); 
+                            c_statsHead.textContent = "Stats";
+                            
+                            const c_stats = document.createElement('p'); 
+                            c_stats.innerHTML = 
+                                `Strength: ${ch_entry.stats['str']}<br>
+                                Dexterity: ${ch_entry.stats['dex']}<br>
+                                Constitution: ${ch_entry.stats['con']}<br>
+                                Intelligence: ${ch_entry.stats['int']}<br>
+                                Wisdom: ${ch_entry.stats['wis']}<br>
+                                Charisma: ${ch_entry.stats['cha']}`;
+
+                            u_characters.appendChild(c_name);
+                            u_characters.appendChild(c_infoHead);
+                            u_characters.appendChild(c_info);
+                            u_characters.appendChild(c_statsHead);
+                            u_characters.appendChild(c_stats);
+                        }
+                    }
+
+                    const otherH = document.createElement('h2'); 
+                    otherH.textContent = "Other's characters";
+                    a_characters.appendChild(otherH);
+
+                    if (data.all_c.length === 0) {
+                        const p = document.createElement('p'); 
+                        p.textContent = 'No characters yet.';
+                        a_characters.appendChild(p);
                     } else {
-                        const allH = document.createElement('h2'); allH.textContent = "All characters";
-                        a_characters.appendChild(allH)
-                        if (data.all_c.length === 0) {
-                                const p = document.createElement('p'); p.textContent = 'No characters yet.';
-                                _characters.appendChild(p)
-                        } else {
-                            for (const ch_entry of data.all_c) {
-                                // previous note div
-                                // creating the date and body of the note
-                                
-                                    const a_user = document.createElement('h2'); a_user.textContent = ch_entry.user;
-                                    const a_name = document.createElement('h2'); a_name.textContent = ch_entry.name;
-                                    const a_infoHead = document.createElement('h3'); a_infoHead.textContent = "General Info"
-                                    const a_info = document.createElement('p'); 
-                                    a_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']} `
-                                    const a_statsHead = document.createElement('h3'); a_statsHead.textContent = "Stats"
-                                    const a_stats = document.createElement('p'); 
-                                    a_stats.textContent = 
-                                        `Strength: ${ch_entry.stats['str']}\n
-                                        Dexterity: ${ch_entry.stats['dex']}\n
-                                        Constitution: ${ch_entry.stats['con']}\n
-                                        Intelligence: ${ch_entry.stats['int']}\n
-                                        Wisdom: ${ch_entry.stats['wis']}\n
-                                        Charisma: ${ch_entry.stats['cha']}`;
-                                    a_characters.appendChild(a_user)
-                                    a_characters.appendChild(a_name);
-                                    a_characters.appendChild(a_infoHead);
-                                    a_characters.appendChild(a_info);
-                                    a_characters.appendChild(a_statsHead);
-                                    a_characters.appendChild(a_stats);
-                                };
-                            };
-                        container.appendChild(a_characters)
-                        };
+                        for (const ch_entry of data.all_c) {
+                            const a_user = document.createElement('h2'); 
+                            a_user.textContent = ch_entry.user;
+                            
+                            const a_name = document.createElement('h2'); 
+                            a_name.textContent = ch_entry.name;
+                            
+                            const a_infoHead = document.createElement('h3'); 
+                            a_infoHead.textContent = "General Info";
+                            
+                            const a_info = document.createElement('p'); 
+                            a_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}`;
+                            
+                            const a_statsHead = document.createElement('h3'); 
+                            a_statsHead.textContent = "Stats";
+                            
+                            const a_stats = document.createElement('p'); 
+                            a_stats.innerHTML = 
+                                `Strength: ${ch_entry.stats['str']}<br>
+                                Dexterity: ${ch_entry.stats['dex']}<br>
+                                Constitution: ${ch_entry.stats['con']}<br>
+                                Intelligence: ${ch_entry.stats['int']}<br>
+                                Wisdom: ${ch_entry.stats['wis']}<br>
+                                Charisma: ${ch_entry.stats['cha']}`;
+
+                            a_characters.appendChild(a_user);
+                            a_characters.appendChild(a_name);
+                            a_characters.appendChild(a_infoHead);
+                            a_characters.appendChild(a_info);
+                            a_characters.appendChild(a_statsHead);
+                            a_characters.appendChild(a_stats);
+                        }
+                    }
+                    container.append(u_characters);
+                    container.append(a_characters);
+
+                } else {
+                    const allH = document.createElement('h2'); 
+                    allH.textContent = "All characters";
+                    a_characters.appendChild(allH);
+
+                    if (data.all_c.length === 0) {
+                        const p = document.createElement('p'); 
+                        p.textContent = 'No characters yet.';
+                        a_characters.appendChild(p);
                     } else {
-                        alert('Error, try again later')
-                };
-            } catch (error) {
-                console.error(error);
-                alert(`Error, ${str(error)}`);
-            };
-        };
+                        for (const ch_entry of data.all_c) {
+                            const a_user = document.createElement('h2'); 
+                            a_user.textContent = ch_entry.user;
+                            
+                            const a_name = document.createElement('h2'); 
+                            a_name.textContent = ch_entry.name;
+                            
+                            const a_infoHead = document.createElement('h3'); 
+                            a_infoHead.textContent = "General Info";
+                            
+                            const a_info = document.createElement('p'); 
+                            a_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}`;
+                            
+                            const a_statsHead = document.createElement('h3'); 
+                            a_statsHead.textContent = "Stats";
+                            
+                            const a_stats = document.createElement('p'); 
+                            a_stats.innerHTML = 
+                                `Strength: ${ch_entry.stats['str']}<br>
+                                Dexterity: ${ch_entry.stats['dex']}<br>
+                                Constitution: ${ch_entry.stats['con']}<br>
+                                Intelligence: ${ch_entry.stats['int']}<br>
+                                Wisdom: ${ch_entry.stats['wis']}<br>
+                                Charisma: ${ch_entry.stats['cha']}`;
 
-        getchars()
-
-
+                            a_characters.appendChild(a_user);
+                            a_characters.appendChild(a_name);
+                            a_characters.appendChild(a_infoHead);
+                            a_characters.appendChild(a_info);
+                            a_characters.appendChild(a_statsHead);
+                            a_characters.appendChild(a_stats);
+                        }
+                    }
+                    alert('i hate screentime')
+                    container.append(a_characters);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching characters:", error);
+        }
+    }
     </script>
 </body>
 </html>

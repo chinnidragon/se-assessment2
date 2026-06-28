@@ -7,6 +7,74 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}" />
 </head>
 <body>
+     <div class = "navbar">
+        <div>
+            <a href="{{ url_for('index')}}">
+                <div class="logosmall">
+                    <img src="{{ url_for('static', filename='images/logosmall.png')}}" width="50" height="50"> 
+                </div>
+            </a>
+        </div>
+
+        <div class="navtext">
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('profile')}}">
+                    <div class="navlinks">
+                        <img src="{{ url_for('static', filename='images/nav/profile.png')}}" width="30" height="30"> 
+                        Your profile
+                    </div>
+                </a>
+
+                <a href="{{ url_for('notes')}}">
+                    <div class="navlinks">
+                        <img src="{{ url_for('static', filename='images/nav/note.png')}}" width="30" height="30"> 
+                        Notes
+                    </div>
+                </a>
+            {% else %}
+            {% endif %}
+            <a href="{{ url_for('notices')}}">
+                <div class="navlinks">
+                    <img src="{{ url_for('static', filename='images/nav/bell.png')}}" width="30" height="30"> 
+                    Notices
+                </div>
+            </a>
+
+            <a href="{{ url_for('view_chars')}}">
+                <div class="navlinks">
+                    <img src="{{ url_for('static', filename='images/nav/char.png')}}" width="30" height="30"> 
+                    Characters
+                </div>
+            </a>
+
+            <a href="{{ url_for('dice')}}">
+                <div class="navlinks">
+                    <img src="{{ url_for('static', filename='images/nav/dice.png')}}" width="30" height="30"> 
+                    Dice
+                </div>
+            </a>
+
+            <a href="{{ url_for('timetable')}}">
+                <div class="navlinks">
+                    <img src="{{ url_for('static', filename='images/nav/time.png')}}" width="30" height="30"> 
+                    Timetable
+                </div>
+            </a>
+        </div>
+        <div style="align-self: flex-end;">
+            {% if session.get('user_id') %}
+            <div class="navlinks">
+                <a href="{{ url_for('logout')}}">Log out</a>
+            </div>
+
+            {% else %}
+            <div class="navlinks">
+                <a href="{{ url_for('login')}}">Log in</a>
+            </div>
+
+            {% endif %}
+        </div>
+    </div>
     <h1>
         Dice time...!!!!!
     </h1>

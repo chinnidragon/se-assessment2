@@ -2,6 +2,8 @@
 from flask import Flask, redirect, render_template, request, jsonify, send_from_directory, url_for, session, flash #serverside sessions
 #database
 import sqlite3
+#for protected routes
+from functools import wraps
 # for generating session IDs
 import os
 import secrets #specifically using secrets as it uses OS entropy (more random than random module --> more secure)
@@ -88,10 +90,8 @@ def role_required(role_name): #defining role name so that the function can use i
                 flash('Sign in to see/save your stuff!', 'error')
                 return redirect(url_for('login'))
             # SECOND VALIDATION - if they fit the specific role (e.g admin)
-            user_id = session.get('user_id')
             if role_name == 'admin':
-                # 
-                if not admin_check(user_id):
+                if not admin_check():
                     flash("Oops, you can't be here! Taking you back to the start!")
                     return redirect(url_for('index'))
             # if everything passes, the user can see the page
@@ -347,12 +347,8 @@ def admin_check():
         cursor = conn.cursor()
         cursor.execute('SELECT id FROM logins WHERE role = ?', ("admin",))
         adminIDs = cursor.fetchall()
-        print(adminIDs)
-        print('hi')
         for a_id in adminIDs:
-            print(a_id)
             if session.get('user_id') == a_id[0]:
-                print('hi')
                 conn.close()
                 return jsonify({'admin': True})
         conn.close()
@@ -366,10 +362,8 @@ def roll_dice():
     #the data this function needs is the NUMBER OF SIDES on the die
     data = request.json
     side_num = int(data.get("max-value"))
-    # print(side_num)
 
     roll = random.randint(1, side_num)
-    # print(roll)
     return jsonify({'number':roll})
 
 @app.route('/api/savechar', methods=['POST'])
@@ -378,15 +372,11 @@ def save_char():
     try:
         if 'user_id' in session:
             data = request.json
-            print(data)
             conn = sqlite3.connect('dnd.db')
             cursor = conn.cursor()
             name = data.get('name')
             info = json.dumps(data.get('info'))
             stats = json.dumps(data.get('stats'))
-            print(info)  
-            print(stats)
-            print(session['user_id'])
             # try:
             cursor.execute('''
                 INSERT INTO charsheets (user_id, name, info, stats)
@@ -396,7 +386,6 @@ def save_char():
             conn.close()
             return jsonify({'status': 'success'})
         else:
-            print('die')
             return jsonify({'status':'fail','message':'unauthenticated'})
     except Exception as e:
         return jsonify({'status': 'fail', 'message' :str(e)}), 500
@@ -470,7 +459,6 @@ def get_notes():
             cursor = conn.cursor()
             cursor.execute('SELECT date, notes FROM notes WHERE user_id = ? ORDER BY date', (session['user_id'],))
             rows = cursor.fetchall()
-            print(rows)
             notes = []
             for r in rows:
                 notes.append({'date': r[0], 'notes': r[1]})
@@ -510,13 +498,9 @@ def save_notices():
 @app.route('/api/getnotices', methods=['GET'])
 def get_notices():
     try:
-        print('1')
-        # if not 'user_id' in session:
-        #     return jsonify({'status':"fail",'message':'unauthenticated'})
         conn = sqlite3.connect('dnd.db')
         cursor = conn.cursor()
         cursor.execute('SELECT 1 FROM notices')
-        print('2')
         notice_exists = cursor.fetchone()
         if notice_exists:
             cursor.execute('''
@@ -534,7 +518,6 @@ def get_notices():
             for row in table:
                 notice = {'title': row[0], 'body': row[1], 'date':row[2], 'author':row[3]}
                 notices.append(notice)
-            print(notices)
         else:
             notices = []
 
@@ -553,7 +536,6 @@ def save_timetable():
             conn = sqlite3.connect('dnd.db')
             cursor = conn.cursor()
             days = data.get('days')
-            print(days) 
             cursor.execute('SELECT 1 FROM timetable')
             timetable_exists = cursor.fetchone()
             if timetable_exists:
@@ -586,14 +568,10 @@ def get_timetable():
         row = cursor.fetchone()
         conn.close()
         
-        print(row)
         if not row or not row[0]:
-            print('no days')
             active_days = []
-            print(f"active days {active_days}")
         else:
             active_days = json.loads(row[0])
-            print(active_days)
         
         return jsonify({'status': "success", "active_days": active_days})
 

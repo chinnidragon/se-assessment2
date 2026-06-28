@@ -37,7 +37,7 @@ img {
 h1 {
     color: rgb(2, 1, 0);
     font-family: 'Mmp';
-    font-size: 100px;
+    font-size: 60px;
     margin-left: 10%;
     margin-right: 10%;
     text-align: center;
@@ -85,7 +85,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
 }
 
 a {
-    color: rgb(108, 8, 8);
+    color: rgb(115, 6, 6);
     font-style: italic;
     text-decoration: underline;
 }
@@ -124,6 +124,7 @@ a:hover {
 } 
 
 .indexpage h1 {
+    font-size: 100px;
     color: antiquewhite;
 }
 
@@ -228,17 +229,27 @@ button:hover {
     height: 30px;
     }
 
+.form input[type="checkbox"] {
+    border: #2c1403;
+}
+
 .form textarea {
-    width: 100px;
+    width: 500px;
     resize: vertical;
     }
 
+
+fieldset {
+    font-family: 'Playpen';
+    font-style: italic;
+    color: rgb(115, 6, 6);
+}
 
 .two_forms {
     display: grid;
     /* grid displays split the screen into FRACTIONS - this makes sure both forms take up equal fractions */
     grid-template-columns: 1fr 1fr; 
-    gap: 30px;                 
+    gap: 50px;                 
     max-width: 75vw;             
     margin: 20px auto;   
 }
@@ -288,8 +299,19 @@ button:hover {
 
 }
 
+.navbar > div:first-child {
+    margin-left: auto;
+    padding-left: 5vw;
+}
+
+.navbar > div:last-child {
+    margin-left: auto;
+    padding-right: 5vw;
+}
+
 .navbar a {
-    color: aliceblue;
+    font-family: 'Elms';
+    color: rgb(236, 227, 227);
     text-decoration: none;
 }
 .navbar a:hover {
@@ -337,9 +359,50 @@ nav {
     align-items: start;
 }
 
+    /* make buttons more compact */
+    .btn, button { padding: 0.5rem 1rem; }
+
+    .dicebar {
+        flex-direction: column;
+        gap: 10px;
+        justify-content: right;
+    }
+
+    /* center form inputs in a column (if .form is a flex container) */
+    /* .form { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; } */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Playpen';
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+thead {
+    background-color:rgb(115, 6, 6); 
+    color: #fff;
+}
+tr:nth-child(even) {
+    background-color: rgb(248, 214, 175);
+}
+
+.sched_sess {
+    font-family: 'Elms';
+    color: rgb(17, 114, 17);
+    font-style: italic;
+    font-size: 20px;
+}
+
 
 @media (max-width: 500px) {
     h1 { font-size: 40px; }
+    h2 { font-size: 24px; }
+    h3 {font-size: 12px;}
 
     .logobig img {
         width: 100px;
@@ -355,19 +418,18 @@ nav {
         gap: 10px;
     }
 
-    /* make buttons more compact */
-    .btn, button { padding: 0.5rem 1rem; }
+    .two_forms {
+        display: grid;
+        max-width: 20vw;
 
-    .dicebar {
-        flex-direction: column;
-        gap: 10px;
-        justify-content: right;
     }
 
-    /* center form inputs in a column (if .form is a flex container) */
-    /* .form { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; } */
 }
 
+
+.dynamic h3 {
+    
+}
 /* .timetable {
 
 } */
