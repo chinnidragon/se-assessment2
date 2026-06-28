@@ -175,31 +175,6 @@ def create_notices():
 def manifest():
     return send_from_directory('static', 'manifest.json', mimetype='application/json')
 
-
-@app.route('/slices')
-def slices():
-    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
-
-@app.route('/20d')
-def twenty_d():
-    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
-
-@app.route('/12d')
-def twelve_d():
-    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
-
-@app.route('/10d')
-def ten_d():
-    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
-
-@app.route('/6d')
-def six_d():
-    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
-
-@app.route('/4d')
-def four_d():
-    return send_from_directory('static/images', 'millionsslices.png', mimetype='image/png')
-
 #APIs
 
 #logging in 
@@ -223,8 +198,6 @@ def verify_login():
             user_id = cursor.fetchone()
 
             session['user_id'] = int(user_id[0])
-            # cursor.execute('SELECT display_name FROM profile WHERE user_id = ?', (session['user_id'],))
-            # username = cursor.fetchone()
             # default setting: the browser cookie is permanent
             session.permanent = True
             cursor.close()
