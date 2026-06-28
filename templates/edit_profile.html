@@ -101,6 +101,9 @@ const form = document.getElementById('form');
                 const bio = document.getElementById('bio').value;
                 profile['display_name'] = displayName
                 profile['bio'] = bio
+                if (displayName === "" || bio === "") {
+                    alert('Profile cannot be null!')
+                }
                 //debug
                 // console.log(profile)
                 try {

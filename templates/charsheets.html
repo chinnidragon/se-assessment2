@@ -84,11 +84,11 @@
         Template
     </h2>
     <form id="form" class="form">
-        <div style="display:flex; flex-direction: column; padding: 10px;">
+        <div style="display:flex; flex-direction: column; padding: 10px; gap:10px;">
         <fieldset>
             <legend>Character information</legend>
             <textarea name="ch_name" id="ch_name" placeholder="Character's name" required></textarea>
-            <input name="ch_age" id="ch_age" placeholder="Character's age" type="number" min="0" required></input>
+            <input name="ch_age" id="ch_age" placeholder="Character's age" type="number" min="0" style="width:500px;"required></input>
             <textarea name="ch_desc" id="ch_desc" placeholder="Character's description" required></textarea>
             <textarea name="ch_race" id="ch_race" placeholder="Character's race" required></textarea>
         </fieldset>
@@ -106,13 +106,13 @@
 
         </fieldset>
     </div>
-        <input class="btn" type="submit" name="charsheet-submit" id="charsheet-submit">
+        <input class="btn" type="submit" name="charsheet-submit" id="charsheet-submit" style="max-width: 75vw; margin-left: 20vw; margin-right: 20vw;">
     </form>
 
-    <h2>
+    <!-- <h2>
         View everyone else's characters!
     </h2>
-    <a class="btn" href='{{ url_for("view_chars")}}'> hell freaking yeah </a>
+    <a class="btn" href='{{ url_for("view_chars")}}'> hell freaking yeah </a> -->
 
     <script>
         const form = document.getElementById('form');

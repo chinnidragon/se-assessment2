@@ -91,17 +91,17 @@
             const data = await response.json();
 
             if (data.status === 'success') {
-                alert('hellp')
                 const container = document.getElementById('characters');
                 container.innerHTML = '';
                 
                 // creating the character divs
-                const u_characters = document.createElement('div');
-                const a_characters = document.createElement('div');
+                const u_characters = document.createElement('div'); u_characters.className = 'card'; u_characters.id = 'characters';
+                const a_characters = document.createElement('div'); a_characters.className = 'card'; a_characters.id = 'characters';
 
                 if (data.signedin) {
-                    const userH = document.createElement('h2'); 
+                    const userH = document.createElement('h1'); 
                     userH.textContent = "Your characters";
+                    userH.style.backgroundColor = "#FFFFFF"
                     u_characters.appendChild(userH);
 
                     if (data.user_c.length === 0) {
@@ -111,25 +111,27 @@
                     } else {
                         for (const ch_entry of data.user_c) {
                             const c_name = document.createElement('h2'); 
-                            c_name.textContent = ch_entry.name;
+                            c_name.textContent = `Name: ${ch_entry.name}`;
                             
                             const c_infoHead = document.createElement('h3'); 
                             c_infoHead.textContent = "General Info";
                             
+                            // CHANGED: Using innerHTML to allow <b> tags and added a <br> after the header text
                             const c_info = document.createElement('p'); 
-                            c_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}`;
+                            c_info.innerHTML = `<b>Age:</b> ${ch_entry.info['age']}<br><b>Description:</b> ${ch_entry.info['desc']}<br><b>Race:</b> ${ch_entry.info['race']}`;
                             
                             const c_statsHead = document.createElement('h3'); 
                             c_statsHead.textContent = "Stats";
                             
+                            // CHANGED: Added <b> tags to all stat headers
                             const c_stats = document.createElement('p'); 
                             c_stats.innerHTML = 
-                                `Strength: ${ch_entry.stats['str']}<br>
-                                Dexterity: ${ch_entry.stats['dex']}<br>
-                                Constitution: ${ch_entry.stats['con']}<br>
-                                Intelligence: ${ch_entry.stats['int']}<br>
-                                Wisdom: ${ch_entry.stats['wis']}<br>
-                                Charisma: ${ch_entry.stats['cha']}`;
+                                `<b>Strength:</b> ${ch_entry.stats['str']}<br>
+                                <b>Dexterity:</b> ${ch_entry.stats['dex']}<br>
+                                <b>Constitution:</b> ${ch_entry.stats['con']}<br>
+                                <b>Intelligence:</b> ${ch_entry.stats['int']}<br>
+                                <b>Wisdom:</b> ${ch_entry.stats['wis']}<br>
+                                <b>Charisma:</b> ${ch_entry.stats['cha']}`;
 
                             u_characters.appendChild(c_name);
                             u_characters.appendChild(c_infoHead);
@@ -139,8 +141,9 @@
                         }
                     }
 
-                    const otherH = document.createElement('h2'); 
+                    const otherH = document.createElement('h1'); 
                     otherH.textContent = "Other's characters";
+                    otherH.style.backgroundColor = "#FFFFFF"
                     a_characters.appendChild(otherH);
 
                     if (data.all_c.length === 0) {
@@ -150,28 +153,30 @@
                     } else {
                         for (const ch_entry of data.all_c) {
                             const a_user = document.createElement('h2'); 
-                            a_user.textContent = ch_entry.user;
+                            a_user.textContent = `Created by: ${ch_entry.user}`;
                             
                             const a_name = document.createElement('h2'); 
-                            a_name.textContent = ch_entry.name;
+                            a_name.textContent = `Name: ${ch_entry.name}`;
                             
                             const a_infoHead = document.createElement('h3'); 
                             a_infoHead.textContent = "General Info";
                             
+                            // CHANGED: Using innerHTML to allow <b> tags and added a <br> after the header text
                             const a_info = document.createElement('p'); 
-                            a_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}`;
+                            a_info.innerHTML = `<b>Age:</b> ${ch_entry.info['age']}<br><b>Description:</b> ${ch_entry.info['desc']}<br><b>Race:</b> ${ch_entry.info['race']}`;
                             
                             const a_statsHead = document.createElement('h3'); 
                             a_statsHead.textContent = "Stats";
                             
+                            // CHANGED: Added <b> tags to all stat headers
                             const a_stats = document.createElement('p'); 
                             a_stats.innerHTML = 
-                                `Strength: ${ch_entry.stats['str']}<br>
-                                Dexterity: ${ch_entry.stats['dex']}<br>
-                                Constitution: ${ch_entry.stats['con']}<br>
-                                Intelligence: ${ch_entry.stats['int']}<br>
-                                Wisdom: ${ch_entry.stats['wis']}<br>
-                                Charisma: ${ch_entry.stats['cha']}`;
+                                `<b>Strength:</b> ${ch_entry.stats['str']}<br>
+                                <b>Dexterity:</b> ${ch_entry.stats['dex']}<br>
+                                <b>Constitution:</b> ${ch_entry.stats['con']}<br>
+                                <b>Intelligence:</b> ${ch_entry.stats['int']}<br>
+                                <b>Wisdom:</b> ${ch_entry.stats['wis']}<br>
+                                <b>Charisma:</b> ${ch_entry.stats['cha']}`;
 
                             a_characters.appendChild(a_user);
                             a_characters.appendChild(a_name);
@@ -185,8 +190,9 @@
                     container.append(a_characters);
 
                 } else {
-                    const allH = document.createElement('h2'); 
+                    const allH = document.createElement('h1'); 
                     allH.textContent = "All characters";
+                    allH.style.backgroundColor = "#FFFFFF"
                     a_characters.appendChild(allH);
 
                     if (data.all_c.length === 0) {
@@ -196,28 +202,30 @@
                     } else {
                         for (const ch_entry of data.all_c) {
                             const a_user = document.createElement('h2'); 
-                            a_user.textContent = ch_entry.user;
+                            a_user.textContent = `Created by: ${ch_entry.user}`;
                             
                             const a_name = document.createElement('h2'); 
-                            a_name.textContent = ch_entry.name;
+                            a_name.textContent = `Name: ${ch_entry.name}`;
                             
                             const a_infoHead = document.createElement('h3'); 
                             a_infoHead.textContent = "General Info";
                             
+                            // CHANGED: Using innerHTML to allow <b> tags and added a <br> after the header text
                             const a_info = document.createElement('p'); 
-                            a_info.textContent = `Age: ${ch_entry.info['age']}, Description: ${ch_entry.info['desc']}, Race: ${ch_entry.info['race']}`;
+                            a_info.innerHTML = `<b>Age:</b> ${ch_entry.info['age']}<br><b>Description:</b> ${ch_entry.info['desc']}<br><b>Race:</b> ${ch_entry.info['race']}`;
                             
                             const a_statsHead = document.createElement('h3'); 
                             a_statsHead.textContent = "Stats";
                             
+                            // CHANGED: Added <b> tags to all stat headers
                             const a_stats = document.createElement('p'); 
                             a_stats.innerHTML = 
-                                `Strength: ${ch_entry.stats['str']}<br>
-                                Dexterity: ${ch_entry.stats['dex']}<br>
-                                Constitution: ${ch_entry.stats['con']}<br>
-                                Intelligence: ${ch_entry.stats['int']}<br>
-                                Wisdom: ${ch_entry.stats['wis']}<br>
-                                Charisma: ${ch_entry.stats['cha']}`;
+                                `<b>Strength:</b> ${ch_entry.stats['str']}<br>
+                                <b>Dexterity:</b> ${ch_entry.stats['dex']}<br>
+                                <b>Constitution:</b> ${ch_entry.stats['con']}<br>
+                                <b>Intelligence:</b> ${ch_entry.stats['int']}<br>
+                                <b>Wisdom:</b> ${ch_entry.stats['wis']}<br>
+                                <b>Charisma:</b> ${ch_entry.stats['cha']}`;
 
                             a_characters.appendChild(a_user);
                             a_characters.appendChild(a_name);
@@ -230,10 +238,12 @@
                     container.append(a_characters);
                 }
             }
+
         } catch (error) {
             console.error("Error fetching characters:", error);
         }
     }
+    getchars()
     </script>
 </body>
 </html>

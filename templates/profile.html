@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css')}}"/>
 </head>
 <body>
- <div class = "navbar">
+<div class = "navbar">
         <div>
             <a href="{{ url_for('index')}}">
                 <div class="logosmall">
@@ -78,10 +78,12 @@
     <h1>
         Your profile
     </h1>
-    <div id="profile_info">
+    
+    <a class="btn" href="{{ url_for('editprofile') }}" style="margin: 20px;">Edit profile</a>
+    <div id="profile_info" class="card" style="align-items: center;">
 
     </div>
-    <a class="btn" href="{{ url_for('editprofile') }}">Edit profile</a>
+
     <script>
         async function getprofile() {
             try {
@@ -97,25 +99,9 @@
                     const profileDiv = document.createElement('div');
                     const name = document.createElement('h3'); name.textContent = data.profile.display_name;
                     const bio = document.createElement('p'); bio.textContent = data.profile.bio;
-                    bio.style.background = '#FE4036';
                     profileDiv.appendChild(name);
                     profileDiv.appendChild(bio);
                     container.appendChild(profileDiv);
-                //     if (data.profile === "none"){
-                //         const name = document.createElement('h3'); name.textContent = data.profile.display_name;
-                //         const bio = document.createElement('p'); bio.textContent = "Hi! I'm a DND player at HGHS!";
-                //         container.appendChild(name)
-                //         container.appendChild(bio)
-                //         return;
-                // } else {
-                //     // creating the date and body of the note
-                //     const name = document.createElement('h3'); name.textContent = data.profile.display_name;
-                //     const bio = document.createElement('p'); bio.textContent = data.profile.bio;
-                //     bio.style.background = '#FE4036';
-                //     profileDiv.appendChild(name);
-                //     profileDiv.appendChild(bio);
-                //     container.appendChild(profileDiv);
-                // };
             } else {
                 if (data.message === "unauthenticated") {
                     alert("Sign in to see/save your profile")
