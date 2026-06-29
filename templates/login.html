@@ -63,6 +63,7 @@
                     });
                     const result = await response.json();
                     if (result['status'] == 'success') {
+                        alert("Success!")
                         window.location.href = "{{ url_for('home') }}"
                     } else {
                             alert('Incorrect email/password.')
@@ -72,7 +73,7 @@
                     }
             });
     } else {
-        console.error("wheres the form vro")
+        console.error("No form")
     }
     </script>
 </body>

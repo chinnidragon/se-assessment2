@@ -59,19 +59,18 @@
                     body: JSON.stringify(profile)
                 });
                 if (!response.ok) {
-                    throw new Error("oops... try again...");
+                    throw new Error("Error, try again");
                 }
                 else {
                     alert("Account created! Welcome to DND!");
                     window.location.href = "{{ url_for('login') }}"
                 };
                 } catch (error) {
-                    // console.error("Error saving membership", error);
-                    alert("Failed to create account... try again maybe?");
+                    alert("Failed to create account.");
                     }
             });
         } else {
-            console.error("wheres the form vro")
+            console.error("No form")
         }
     </script>
 

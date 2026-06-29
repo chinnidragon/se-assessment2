@@ -195,7 +195,6 @@
             if (data.admin) {
                 const eventButtonDiv = document.getElementById('event-button-div');
                 eventButtonDiv.innerHTML = `<button id="newevent" class="btn">Edit events/timetable</button>`;
-                // container.appendChild(eventButtonDiv);
                 eventButton = document.getElementById('newevent')
                 eventButton.addEventListener("click", async (e) => {
                     e.preventDefault();
